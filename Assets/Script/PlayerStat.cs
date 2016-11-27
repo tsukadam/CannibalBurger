@@ -13,14 +13,16 @@ public class PlayerStat : MonoBehaviour {
     public int StatG = 0;//所持金
     public float StatSus = 0;//SUS値
     public float StatPop = 0;//POP値
+    public int ClearCustomer = 0;
+    public int NowBombCount = 0;//今出ているボムの数
 
-    public int StatBundsLv = 0;//レベル
+    public int StatBunsLv = 0;//レベル
     public int StatPattyLv = 0;//レベル
     public int StatToppingLv = 0;//レベル
     public int StatSourceLv = 0;//レベル
     public int StatBurgerLv = 0;//レベル
 
-    public int StatBundsPower = 0;//パワー
+    public int StatBunsPower = 0;//パワー
     public int StatPattyPower = 0;//パワー
     public int StatToppingPower = 0;//パワー
     public int StatSourcePower = 0;//パワー

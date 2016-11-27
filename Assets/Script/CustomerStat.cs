@@ -13,17 +13,30 @@ public class CustomerStat : MonoBehaviour
 
     public string Image = "image";//イメージ名
     public int Rare = 0;//レアリティ
-    public int HP = 0;//空腹値
-    public int color = 0;//色
+    public int Hp = 0;//空腹値
+    public int Color = 0;//色
     public int PositionRow = 0;//列
     public int PositionColumn = 0;//行
+    public int GetPop = 0;//報酬POP
+    public int GetG = 0;//報酬G
+    public int Bomb = 0;
+    public string BombType = "";
+    public string BombTarget = "";
+    public int BombAmount = 0;
+    public int BombTurn = 0;
+    public string ItemName = "";
 
     //ステータス表示オブジェクトの取得
-    public Object Customer;//自分自身
+    public GameObject Customer;//自分自身
+    public GameObject BombCount;
 
-    //イベントシステムの取得（処理中に切る場合がある）
-    public GameObject EventSystem;
-    
+    //個別FEED押したとき
+    public void FEED1()
+    {
+        GameObject.FindGameObjectWithTag("Script").GetComponent<CustomerController>().FEED1(Customer);
+           }
+
+
     // Use this for initialization
     void Start()
     {

@@ -2,41 +2,30 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class PlayerContraller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     //プレイ中のプレイヤーのステータス周りの描写を行う
 
     //プレイヤーstat
     public GameObject playerstat;
-    
+
     //ステータスの定義
     //プレイ外ステータス
     //プレイ内表示ステータス
 
-//    public int StatBundsLv = 0;//レベル
-//    public int StatPattyLv = 0;//レベル
-//    public int StatToppingLv = 0;//レベル
-//    public int StatSourceLv = 0;//レベル
-//    public int StatBurgerLv = 0;//レベル
-
-//    public int StatBundsPower = 0;//パワー
-//    public int StatPattyPower = 0;//パワー
-//    public int StatToppingPower = 0;//パワー
-//    public int StatSourcePower = 0;//パワー
-//    public int StatBurgerPower = 0;//パワー
 
     //ステータス表示オブジェクトの取得
-//    public Text TextBundsLv;//レベル
-//    public Text TextPattyLv;//レベル
-//    public Text TextToppingLv;//レベル
-//    public Text TextSourceLv;//レベル
-//    public Text TextBurgerLv;//レベル
+    public GameObject TextBunsLv;//レベル
+    public GameObject TextPattyLv;//レベル
+    public GameObject TextToppingLv;//レベル
+    public GameObject TextSourceLv;//レベル
+    public GameObject TextBurgerLv;//レベル
 
-//    public Text TextBundsPower;//パワー
-//    public Text TextPattyPower;//パワー
-//    public Text TextToppingPower;//パワー
-//    public Text TextSourcePower;//パワー
-//    public Text TextBurgerPower;//パワー
+    public GameObject TextBunsPower;//パワー
+    public GameObject TextPattyPower;//パワー
+    public GameObject TextToppingPower;//パワー
+    public GameObject TextSourcePower;//パワー
+    public GameObject TextBurgerPower;//パワー
 
     public RectTransform BarSus;
     public RectTransform BarPop;
@@ -88,15 +77,15 @@ public class PlayerContraller : MonoBehaviour
             else {
                 StatG = StatG - Memori;
             }
-            if (StatG < 0) { StatG = 0; GDraw(); break; }
-            if (StatG > 99999999) { StatG = 99999999; GDraw(); break; }
+            if (StatG < 0) { StatG = 0; DrawG(); break; }
+            if (StatG > 99999999) { StatG = 99999999; DrawG(); break; }
             playerstat.GetComponent<PlayerStat>().StatG = StatG;
-            GDraw();
+            DrawG();
             yield return new WaitForSeconds(0.05f);//描画一回にかける遅延時間
             i = i + Plus;
         }
         StatG = Goal;
-        Debug.Log("StatG: " + Moto + " → " + Goal);
+//        Debug.Log("StatG: " + Moto + " → " + Goal);
         EventSystem.SetActive(true);
     }
 
@@ -140,11 +129,11 @@ public class PlayerContraller : MonoBehaviour
             if (StatSus < 0) { StatSus = 0; break; }
             if (StatSus > 100) { StatSus = 100; break; }
             playerstat.GetComponent<PlayerStat>().StatSus = StatSus;
-            SusDraw();
+            DrawSus();
             yield return new WaitForSeconds(0.1f);//描画一回にかける遅延時間
         }
         StatSus = Goal;
-        Debug.Log("StatSus: " + Moto + " → " + Goal);
+ //       Debug.Log("StatSus: " + Moto + " → " + Goal);
         EventSystem.SetActive(true);
     }
 
@@ -187,32 +176,101 @@ public class PlayerContraller : MonoBehaviour
             if (StatPop < 0) { StatPop = 0; break; }
             if (StatPop > 100) { StatPop = 100; break; }
             playerstat.GetComponent<PlayerStat>().StatPop = StatPop;
-            PopDraw();
+            DrawPop();
             yield return new WaitForSeconds(0.1f);//描画一回にかける遅延時間
         }
         StatPop = Goal;
-        Debug.Log("StatPop: " + Moto + " → " + Goal);
+ //       Debug.Log("StatPop: " + Moto + " → " + Goal);
         EventSystem.SetActive(true);
     }
     //Ｇパネル描画
-    public void GDraw()
+    public void DrawG()
     {
         int StatG = playerstat.GetComponent<PlayerStat>().StatG;//所持金
         string StatGText = StatG.ToString();
         TextG.text = StatGText;
     }
     //Sus描画
-    public void SusDraw()
+    public void DrawSus()
     {
         float StatSus = playerstat.GetComponent<PlayerStat>().StatSus;
         BarSus.sizeDelta = new Vector2(304 * StatSus / 100, 15);
     }
     //Pop描画
-    public void PopDraw()
+    public void DrawPop()
     {
         float StatPop = playerstat.GetComponent<PlayerStat>().StatPop;
         BarPop.sizeDelta = new Vector2(304 * StatPop / 100, 15);
     }
+    //LvPower加減＋描画
+    public void DrawLvPower(string Part, string LvPower, int Value)
+    {
+        int Moto = Value;
+        if (Part == "Buns")
+        {
+            if (LvPower == "Lv") { Moto += playerstat.GetComponent<PlayerStat>().StatBunsLv;
+                playerstat.GetComponent<PlayerStat>().StatBunsLv=Moto;
+                TextBunsLv.GetComponent<Text>().text =Moto.ToString();
+            }
+            else if (LvPower == "Power") { Moto += playerstat.GetComponent<PlayerStat>().StatBunsPower;
+                playerstat.GetComponent<PlayerStat>().StatBunsPower = Moto;
+                TextBunsPower.GetComponent<Text>().text = Moto.ToString();
+            }
+            else { Debug.Log("Bunds LvPower setting error"); }
+        }
+        else if (Part == "Patty")
+        {
+            if (LvPower == "Lv") { Moto += playerstat.GetComponent<PlayerStat>().StatPattyLv;
+                playerstat.GetComponent<PlayerStat>().StatPattyLv = Moto;
+                TextPattyLv.GetComponent<Text>().text = Moto.ToString();
+            }
+            else if (LvPower == "Power") { Moto += playerstat.GetComponent<PlayerStat>().StatPattyPower;
+                playerstat.GetComponent<PlayerStat>().StatPattyPower = Moto;
+                TextPattyPower.GetComponent<Text>().text = Moto.ToString();
+            }
+            else { Debug.Log("Patty LvPower setting error"); }
+        }
+        else if (Part == "Topping")
+        {
+            if (LvPower == "Lv") { Moto += playerstat.GetComponent<PlayerStat>().StatToppingLv;
+                playerstat.GetComponent<PlayerStat>().StatToppingLv = Moto;
+                TextToppingLv.GetComponent<Text>().text = Moto.ToString();
+            }
+            else if (LvPower == "Power") { Moto += playerstat.GetComponent<PlayerStat>().StatToppingPower;
+                playerstat.GetComponent<PlayerStat>().StatToppingPower = Moto;
+                TextToppingPower.GetComponent<Text>().text = Moto.ToString();
+            }
+            else { Debug.Log("Topping LvPower setting error"); }
+        }
+        else if (Part == "Source")
+        {
+            if (LvPower == "Lv") { Moto += playerstat.GetComponent<PlayerStat>().StatSourceLv;
+                playerstat.GetComponent<PlayerStat>().StatSourceLv = Moto;
+                TextSourceLv.GetComponent<Text>().text = Moto.ToString();
+            }
+            else if (LvPower == "Power") { Moto += playerstat.GetComponent<PlayerStat>().StatSourcePower;
+                playerstat.GetComponent<PlayerStat>().StatSourcePower = Moto;
+                TextSourcePower.GetComponent<Text>().text = Moto.ToString();
+            }
+            else { Debug.Log("Source LvPower setting error"); }
+        }
+        else { Debug.Log("Part setting error"); }
+
+        playerstat.GetComponent<PlayerStat>().StatBurgerLv = playerstat.GetComponent<PlayerStat>().StatBunsLv
+            + playerstat.GetComponent<PlayerStat>().StatPattyLv
+            + playerstat.GetComponent<PlayerStat>().StatToppingLv 
+            + playerstat.GetComponent<PlayerStat>().StatSourceLv;
+        TextBurgerLv.GetComponent<Text>().text = playerstat.GetComponent<PlayerStat>().StatBurgerLv.ToString();
+
+        playerstat.GetComponent<PlayerStat>().StatBurgerPower = playerstat.GetComponent<PlayerStat>().StatBunsPower
+    + playerstat.GetComponent<PlayerStat>().StatPattyPower
+    + playerstat.GetComponent<PlayerStat>().StatToppingPower
+    + playerstat.GetComponent<PlayerStat>().StatSourcePower;
+        TextBurgerPower.GetComponent<Text>().text = playerstat.GetComponent<PlayerStat>().StatBurgerPower.ToString();
+
+
+    }
+
     // Use this for initialization
     void Start()
     {

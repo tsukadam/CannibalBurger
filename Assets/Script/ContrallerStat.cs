@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-public class ContrallerStat : MonoBehaviour {
+public class ControllerStat : MonoBehaviour {
     //ステータスの変化はこのオブジェクト内の変数の変更で表現される
     //このオブジェクト内の変数の状態を参照することでステータスの描写を行う
     //描写そのものもこのオブジェクト内にスクリプトを記述する
