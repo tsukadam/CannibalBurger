@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
 
     //プレイヤーstat
     public GameObject playerstat;
+    //タップ切るための板
+    public GameObject TapBlock;
 
     //ステータスの定義
     //プレイ外ステータス
@@ -138,11 +140,11 @@ public class PlayerController : MonoBehaviour
     }
 
     //Pop増減
-    public void PopUp(int Count)
+    public void PopUp(float Count)
     {
         StartCoroutine("PopUpCoroutine", Count);
     }
-    IEnumerator PopUpCoroutine(int Count)
+    IEnumerator PopUpCoroutine(float Count)
     {
         EventSystem.SetActive(false);
         float StatPop = playerstat.GetComponent<PlayerStat>().StatPop;
@@ -202,7 +204,7 @@ public class PlayerController : MonoBehaviour
         float StatPop = playerstat.GetComponent<PlayerStat>().StatPop;
         BarPop.sizeDelta = new Vector2(304 * StatPop / 100, 15);
     }
-    //LvPower加減＋描画
+    //LvPower増減＋描画
     public void DrawLvPower(string Part, string LvPower, int Value)
     {
         int Moto = Value;

@@ -17,7 +17,7 @@ public class CustomerStat : MonoBehaviour
     public int Color = 0;//色
     public int PositionRow = 0;//列
     public int PositionColumn = 0;//行
-    public int GetPop = 0;//報酬POP
+    public float GetPop = 0;//報酬POP
     public int GetG = 0;//報酬G
     public int Bomb = 0;
     public string BombType = "";
@@ -31,10 +31,10 @@ public class CustomerStat : MonoBehaviour
     public GameObject BombCount;
 
     //個別FEED押したとき
-    public void FEED1()
-    {
-        GameObject.FindGameObjectWithTag("Script").GetComponent<CustomerController>().FEED1(Customer);
-           }
+//    public void FEED1()
+//    {
+//        GameObject.FindGameObjectWithTag("Script").GetComponent<CustomerController>().FEED1(Customer);
+//           }
 
 
     // Use this for initialization
