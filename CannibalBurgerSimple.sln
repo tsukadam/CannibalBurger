@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannibalBurgerSimple", "CannibalBurgerSimple.csproj", "{EEE4EEFD-219A-E156-EBB4-A4E54F882942}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannibalBurgerSimple.Plugins", "CannibalBurgerSimple.Plugins.csproj", "{B1E801FE-29F6-E882-E020-F2091477708C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEE4EEFD-219A-E156-EBB4-A4E54F882942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE4EEFD-219A-E156-EBB4-A4E54F882942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE4EEFD-219A-E156-EBB4-A4E54F882942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE4EEFD-219A-E156-EBB4-A4E54F882942}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1E801FE-29F6-E882-E020-F2091477708C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1E801FE-29F6-E882-E020-F2091477708C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1E801FE-29F6-E882-E020-F2091477708C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1E801FE-29F6-E882-E020-F2091477708C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
