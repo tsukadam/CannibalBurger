@@ -9,6 +9,7 @@ public class StatGame : MonoBehaviour
     public float StatSus = 0;//SUS値
     public int StatDays = 0;//日数
     public int StatLv = 0;//レベル
+    public int StatExp = 0;//Exp
 
     //所持アイテム
     //所持アイテムの内容を数列で書き込む
@@ -21,7 +22,7 @@ public class StatGame : MonoBehaviour
     public string[] Item5 = { "Name", "PictuePath", "Power", "Color", "Sus" };//
     public string[] Item6 = { "Name", "PictuePath", "Power", "Color", "Sus" };//
 
-
+    public int DisposeItemID = 0;//廃棄時に使う記憶領域
 
     //ハイスコア記録用、殺人数など
 

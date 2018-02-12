@@ -17,6 +17,10 @@ public class StatCustomer : MonoBehaviour
     public string[] DropMeat = { "Name", "PictuePath", "Power", "Color", "Sus" };//肉にした場合の能力
     public int SaveSus =0;//殺した場合のSus減少値
 
+    //計算用の記録領域
+    public int PointPower = 0;//点数での勝利度合
+    public int PointColor = 0;//色での勝利度合
+
     //ステータス表示オブジェクトの取得
     public GameObject Customer;//自分自身
 

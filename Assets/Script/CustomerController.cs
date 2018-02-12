@@ -36,12 +36,17 @@ public class CustomerController : MonoBehaviour
         Customer.transform.SetParent(CustomerField.transform);
 
         //位置決定
-        int PositionY = Random.Range(200, 400);
+        int PositionY = Random.Range(-200, 200);
         int PositionX = Random.Range(-200, 200);
         Customer.transform.position = new Vector3(PositionX, PositionY, 0);
+        int ForceY = Random.Range(-1, 1);
+        int ForceX = Random.Range(-1, 1);
+        int ForcePower = Random.Range(5000, 50000);
+
+        Customer.GetComponent<Rigidbody2D>().AddForce(new Vector2(ForceX, ForceY) * ForcePower);
 
         //画像決定
-        
+
         string ImagePath = "Customer/" + Image;
         Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
         Customer.GetComponent<Image>().sprite = SpriteImage;
@@ -53,7 +58,10 @@ public class CustomerController : MonoBehaviour
         Color Col = new Color(ColorR/255f, ColorG / 255f, ColorB / 255f, 1f);
 
         Customer.GetComponent<Image>().color = Col;
-
+        //タグをつける
+        Customer.tag = "Customer";
+//アイテム選択時用のボタンを不活性にする
+        Customer.GetComponent<Button>().interactable = false;
 
         //客の情報をカスタマーＳＴＡＴに書き込み
         Customer.GetComponent<StatCustomer>().Name = Name;

@@ -7,7 +7,7 @@ public class StatGameController : MonoBehaviour
     //プレイヤーstat
     public GameObject StatGame;
     //タップ切るための板
-//    public GameObject TapBlock;
+    //    public GameObject TapBlock;
 
     //ステータス表示オブジェクトの取得
 
@@ -33,12 +33,132 @@ public class StatGameController : MonoBehaviour
     public Text Item4_4Power;
 
 
+    public GameObject Item6_1Image;
+    public Text Item6_1Text;
+    public Text Item6_1Power;
+
+    public GameObject Item6_2Image;
+    public Text Item6_2Text;
+    public Text Item6_2Power;
+
+    public GameObject Item6_3Image;
+    public Text Item6_3Text;
+    public Text Item6_3Power;
+
+    public GameObject Item6_4Image;
+    public Text Item6_4Text;
+    public Text Item6_4Power;
+
+    public GameObject Item6_5Image;
+    public Text Item6_5Text;
+    public Text Item6_5Power;
+
+    public GameObject Item6_6Image;
+    public Text Item6_6Text;
+    public Text Item6_6Power;
+
+    public GameObject DisPoseImage;
+    public Text DisPoseText;
+    public Text DisPosePower;
+
+
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
     //ここから描写処理
 
     //アイテム描写
+    //捨てるアイテムの確認ポップアップ
+    public void DrawDisposeItem(string[] DisposeItem)
+    {
+
+        string ImagePath;
+        string ColorText;
+        Color ColorColor;
+        Sprite SpriteImage;
+
+        ImagePath = "Item/" + DisposeItem[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = DisposeItem[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        DisPoseImage.GetComponent<Image>().sprite = SpriteImage;
+        DisPoseText.text = DisposeItem[0];
+        DisPosePower.text = DisposeItem[2];
+        DisPoseImage.GetComponent<Image>().color = ColorColor;
+
+
+
+    }
+    //6Itemsに所持アイテム1～4を表示
+    public void DrawItem6()
+    {
+        string ImagePath;
+        string ColorText;
+        Color ColorColor;
+        Sprite SpriteImage;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item1[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item1[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+            ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        Item6_1Image.GetComponent<Image>().sprite = SpriteImage;
+        Item6_1Text.text = StatGame.GetComponent<StatGame>().Item1[0];
+        Item6_1Power.text = StatGame.GetComponent<StatGame>().Item1[2];
+        Item6_1Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item2[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item2[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        Item6_2Image.GetComponent<Image>().sprite = SpriteImage;
+        Item6_2Text.text = StatGame.GetComponent<StatGame>().Item2[0];
+        Item6_2Power.text = StatGame.GetComponent<StatGame>().Item2[2];
+        Item6_2Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item3[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item3[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        Item6_3Image.GetComponent<Image>().sprite = SpriteImage;
+        Item6_3Text.text = StatGame.GetComponent<StatGame>().Item3[0];
+        Item6_3Power.text = StatGame.GetComponent<StatGame>().Item3[2];
+        Item6_3Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item4[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item4[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        Item6_4Image.GetComponent<Image>().sprite = SpriteImage;
+        Item6_4Text.text = StatGame.GetComponent<StatGame>().Item4[0];
+        Item6_4Power.text = StatGame.GetComponent<StatGame>().Item4[2];
+        Item6_4Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item5[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item5[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        Item6_5Image.GetComponent<Image>().sprite = SpriteImage;
+        Item6_5Text.text = StatGame.GetComponent<StatGame>().Item5[0];
+        Item6_5Power.text = StatGame.GetComponent<StatGame>().Item5[2];
+        Item6_5Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item6[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item6[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        Item6_6Image.GetComponent<Image>().sprite = SpriteImage;
+        Item6_6Text.text = StatGame.GetComponent<StatGame>().Item6[0];
+        Item6_6Power.text = StatGame.GetComponent<StatGame>().Item6[2];
+        Item6_6Image.GetComponent<Image>().color = ColorColor;
+
+    }
     //4Itemsに所持アイテム1～4を表示
     public void DrawItem4()
     {

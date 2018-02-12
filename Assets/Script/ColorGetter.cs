@@ -22,6 +22,17 @@ public class ColorGetter : MonoBehaviour
     }
 
     /// <summary>
+    /// 指定された Color 型を文字列に変換します
+    /// </summary>
+    public string ToColorString (Color Col)
+    {
+        string ColorString=ColorUtility.ToHtmlStringRGBA(Col);
+        return ColorString;
+    }
+
+
+
+    /// <summary>
     /// <para>指定された文字列を Color 型に変換します</para>
     /// <para>変換できなかった場合デフォルト値を返します</para>
     /// </summary>
