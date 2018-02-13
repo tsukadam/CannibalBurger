@@ -306,8 +306,8 @@ public class StatGameController : MonoBehaviour
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
         float AnimeSus = StatGame.GetComponent<StatGame>().StatSus;
 
-        int BarSize = 304;//バー全体の長さ
-        int MemoriSize = 4;//１目盛りの長さ
+        int BarSize = 325;//バー全体の長さ
+        int MemoriSize = 10;//１目盛りの長さ
         float Moto = StatSus;//元のステータス値
         float Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
@@ -375,12 +375,12 @@ public class StatGameController : MonoBehaviour
     public void DrawSus()
     {
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
-        BarSus.sizeDelta = new Vector2(304 * StatSus / 100, 15);
+        BarSus.sizeDelta = new Vector2(325 * StatSus / 100, 52);
     }
     //Sus描画（アニメーション用）
     public void DrawSus2(float AnimeSus)
     {
-        BarSus.sizeDelta = new Vector2(304 * AnimeSus / 100, 15);
+        BarSus.sizeDelta = new Vector2(325 * AnimeSus / 100, 52);
     }
 
     //Exp描画

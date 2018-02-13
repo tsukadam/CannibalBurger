@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: a411ac552b21ea747b26d0bfc82921ef
+timeCreated: 1518547061
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: JF Dot k6x8
+  fontNames:
+  - JF Dot k6x8
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 2
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
