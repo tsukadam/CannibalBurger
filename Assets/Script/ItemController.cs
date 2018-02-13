@@ -14,7 +14,7 @@ public class ItemController : MonoBehaviour
     public GameObject EventSystem;
 
     //アイテム生成
-    public void MakeItem(string Name, string Image, int Power, Color Col, int UpSus,int PositionX,int PositionY,string TagName)
+    public void MakeItem(string Name, string Image, int Power, Color Col, float UpSus,int PositionX,int PositionY,string TagName)
     {
         GameObject Item = (GameObject)Instantiate(
             ItemDrawPrefab,
@@ -37,6 +37,10 @@ public class ItemController : MonoBehaviour
         //パワー表記
         string PowerString = (Power).ToString();
         Item.GetComponent<StatItem>().PowerText.text = PowerString;
+
+        //Sus表記
+//        string UpSusString = (UpSus).ToString();
+
 
         //アイテムの情報をＳＴＡＴに書き込み
         Item.GetComponent<StatItem>().Name = Name;

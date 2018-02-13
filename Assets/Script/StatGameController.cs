@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-//プレイ中のプレイヤーのステータス周りの描写を行う
+//プレイ中のプレイヤーのステータス周りの変化と描写を行う
 public class StatGameController : MonoBehaviour
 {
     //プレイヤーstat
@@ -12,6 +12,7 @@ public class StatGameController : MonoBehaviour
     //ステータス表示オブジェクトの取得
 
     public RectTransform BarSus;
+    public GameObject ObjectSus;
     public Text TextG;
     public Text TextLv;
     public Text TextDays;
@@ -61,6 +62,9 @@ public class StatGameController : MonoBehaviour
     public Text DisPoseText;
     public Text DisPosePower;
 
+    public GameObject GetImage;
+    public Text GetText;
+    public Text GetPower;
 
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
@@ -68,6 +72,29 @@ public class StatGameController : MonoBehaviour
     //ここから描写処理
 
     //アイテム描写
+    //取得アイテムがない時のゲットアイテムの確認ポップアップ
+    public void DrawGetItem(string[] GetItem)
+    {
+
+        string ImagePath;
+        string ColorText;
+        Color ColorColor;
+        Sprite SpriteImage;
+
+        ImagePath = "Item/" + GetItem[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = GetItem[3];
+        if (ColorText == "") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        GetImage.GetComponent<Image>().sprite = SpriteImage;
+        GetText.text = GetItem[0];
+        GetPower.text = GetItem[2];
+        GetImage.GetComponent<Image>().color = ColorColor;
+
+
+
+    }
+
     //捨てるアイテムの確認ポップアップ
     public void DrawDisposeItem(string[] DisposeItem)
     {
@@ -170,6 +197,7 @@ public class StatGameController : MonoBehaviour
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item1[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item1[3];
+        if (ColorText == "") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_1Image.GetComponent<Image>().sprite = SpriteImage;
         Item4_1Text.text = StatGame.GetComponent<StatGame>().Item1[0];
@@ -179,6 +207,7 @@ public class StatGameController : MonoBehaviour
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item2[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item2[3];
+        if (ColorText == "") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_2Image.GetComponent<Image>().sprite = SpriteImage;
         Item4_2Text.text = StatGame.GetComponent<StatGame>().Item2[0];
@@ -188,6 +217,7 @@ public class StatGameController : MonoBehaviour
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item3[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item3[3];
+        if (ColorText == "") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_3Image.GetComponent<Image>().sprite = SpriteImage;
         Item4_3Text.text = StatGame.GetComponent<StatGame>().Item3[0];
@@ -197,6 +227,7 @@ public class StatGameController : MonoBehaviour
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item4[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item4[3];
+        if (ColorText == "") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_4Image.GetComponent<Image>().sprite = SpriteImage;
         Item4_4Text.text = StatGame.GetComponent<StatGame>().Item4[0];
@@ -265,20 +296,22 @@ public class StatGameController : MonoBehaviour
 
 
     //Sus増減
-    public void SusUp(int Count)
+    public void SusUp(float Count)
     {
         StartCoroutine("SusUpCoroutine", Count);
     }
-    IEnumerator SusUpCoroutine(int Count)
+    IEnumerator SusUpCoroutine(float Count)
     {
         EventSystem.SetActive(false);
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
+        float AnimeSus = StatGame.GetComponent<StatGame>().StatSus;
+
         int BarSize = 304;//バー全体の長さ
         int MemoriSize = 4;//１目盛りの長さ
         float Moto = StatSus;//元のステータス値
         float Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
-        else if (Goal > 100) { Goal = 100; }//結果が１００以上なら１００
+        else if (Goal > 100) { Goal = 101.0f;}//結果が１００以上なら１００
         float iCount = Count / (100f / (BarSize / MemoriSize));
         if (Count >= 0)//減少方向のとき描画回数も負になってしまうので正にする（絶対値を取る）
         {
@@ -289,26 +322,45 @@ public class StatGameController : MonoBehaviour
         }
         float Start = Moto - Moto % (100f / (BarSize / MemoriSize));//開始地点を丸める
         float Memori = (100f / (BarSize / MemoriSize));//描画一回の変化量がコレ（4px動く分）
-        StatSus = Start;
+        AnimeSus = Start;
         int i;
         for (i = 1; i <= iCount; i++)
         {
             if (Count >= 0)
             {
-                StatSus = StatSus + Memori;
+                AnimeSus +=Memori;
             }
             else {
-                StatSus = StatSus - Memori;
+                AnimeSus -=Memori;
             }
-            if (StatSus < 0) { StatSus = 0; break; }
-            if (StatSus > 100) { StatSus = 100; break; }
-            StatGame.GetComponent<StatGame>().StatSus = StatSus;
-            DrawSus();
-            yield return new WaitForSeconds(0.1f);//描画一回にかける遅延時間
+            if (AnimeSus < 0) { AnimeSus = 0; break; }
+            if (AnimeSus > 100) { AnimeSus = 100; break; }
+            DrawSus2(AnimeSus);
+            yield return new WaitForSeconds(0.01f);//描画一回にかける遅延時間
         }
-        StatSus = Goal;
- //       Debug.Log("StatSus: " + Moto + " → " + Goal);
+        StatGame.GetComponent<StatGame>().StatSus = Goal;
+        //       Debug.Log("StatSus: " + Moto + " → " + Goal);
         EventSystem.SetActive(true);
+    }
+
+    //Exp増減
+    public void ExpUp(int Count)
+    {
+ StatGame.GetComponent<StatGame>().StatExp+=Count;
+    }
+
+    //Lv増減
+    public void LvUp(int Count)
+    {
+        StatGame.GetComponent<StatGame>().StatLv += Count;
+        DrawLv();
+    }
+
+    //Days増減
+    public void DaysUp(int Count)
+    {
+        StatGame.GetComponent<StatGame>().StatDays += Count;
+        DrawDays();
     }
 
 
@@ -325,6 +377,18 @@ public class StatGameController : MonoBehaviour
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
         BarSus.sizeDelta = new Vector2(304 * StatSus / 100, 15);
     }
+    //Sus描画（アニメーション用）
+    public void DrawSus2(float AnimeSus)
+    {
+        BarSus.sizeDelta = new Vector2(304 * AnimeSus / 100, 15);
+    }
+
+    //Exp描画
+    public void DrawExp()
+    {
+//後で演出入れる
+    }
+
     //レベル描画
     public void DrawLv()
     {
@@ -351,5 +415,12 @@ public class StatGameController : MonoBehaviour
     void Update()
     {
 
+        if (StatGame.GetComponent<StatGame>().StatSus > 90)
+        {
+            ObjectSus.GetComponent<Image>().color = new Color(1f,0,0,1f);
+        }
+        else {
+            ObjectSus.GetComponent<Image>().color = new Color(24f/255, 1f, 150f/255, 1f);
+        }
     }
 }

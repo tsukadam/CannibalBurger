@@ -93,12 +93,12 @@
     <Compile Include="Assets\Font\BitmapFontGenerator.cs" />
     <Compile Include="Assets\Font\BitmapFontScaling.cs" />
     <Compile Include="Assets\Script\ColorGetter.cs" />
-    <Compile Include="Assets\Script\ContrallerStat.cs" />
     <Compile Include="Assets\Script\CSVDataReader.cs" />
     <Compile Include="Assets\Script\CustomerController.cs" />
     <Compile Include="Assets\Script\DebugController.cs" />
     <Compile Include="Assets\Script\GameController.cs" />
     <Compile Include="Assets\Script\ItemController.cs" />
+    <Compile Include="Assets\Script\LvDesignController.cs" />
     <Compile Include="Assets\Script\PlayerPrefsX.cs" />
     <Compile Include="Assets\Script\SelectButton.cs" />
     <Compile Include="Assets\Script\Sorter.cs" />

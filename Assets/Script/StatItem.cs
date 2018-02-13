@@ -11,7 +11,7 @@ public class StatItem : MonoBehaviour
     public string Image = "image";//イメージのファイル名（.png抜き）
     public int Power = 0;//うまさ
     public Color Col;//色
-    public int UpSus = 0;//Sus上昇値
+    public float UpSus = 0;//Sus上昇値
 
     //ステータス表示オブジェクトの取得
     public GameObject Item;//自分自身

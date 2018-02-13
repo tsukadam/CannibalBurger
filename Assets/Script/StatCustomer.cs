@@ -10,8 +10,8 @@ public class StatCustomer : MonoBehaviour
     public string Name = "name";//名前
     public string Image = "image";//イメージのファイル名（.png抜き）
     public int Hp = 0;//舌の肥え具合
-    public int CoreColor = 0;//中心色　あれば色の算出に使う
-    public int Color = 0;//色
+    public string CoreColor = "corecolor";//中心色　あれば色の算出に使う
+    public string Color = "color";//色
     public int DropG = 0;//報酬G
     public string[] DropItem = { "Name", "PictuePath", "Power", "Color", "Sus" };//報酬アイテム（固定）
     public string[] DropMeat = { "Name", "PictuePath", "Power", "Color", "Sus" };//肉にした場合の能力
