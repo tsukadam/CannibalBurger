@@ -7,11 +7,26 @@ public class StatGameController : MonoBehaviour
     //プレイヤーstat
     public GameObject StatGame;
     //タップ切るための板
-    //    public GameObject TapBlock;
+        public GameObject TapBlockSus;
+    public GameObject TapBlockG;
+    public GameObject TapBlockExp;
 
     //ステータス表示オブジェクトの取得
 
+    public GameObject SelectItemItem1Image;
+    public GameObject SelectItemItem2Image;
+    public GameObject SelectItemItem3Image;
+    public GameObject SelectItemItem4Image;
+    public Text SelectItemItem1Power;
+    public Text SelectItemItem2Power;
+    public Text SelectItemItem3Power;
+    public Text SelectItemItem4Power;
+
+
     public RectTransform BarSus;
+
+    public RectTransform BarExp;
+
     public GameObject ObjectSus;
     public Text TextG;
     public Text TextLv;
@@ -78,6 +93,8 @@ public class StatGameController : MonoBehaviour
 
         string ImagePath;
         string ColorText;
+        string PowerText;
+        string NameText;
         Color ColorColor;
         Sprite SpriteImage;
 
@@ -87,8 +104,12 @@ public class StatGameController : MonoBehaviour
         if (ColorText == "") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         GetImage.GetComponent<Image>().sprite = SpriteImage;
-        GetText.text = GetItem[0];
-        GetPower.text = GetItem[2];
+        PowerText = GetItem[2];
+        if (PowerText == "None") { PowerText = " "; }
+        GetPower.text = PowerText;
+        NameText = GetItem[0];
+        if (NameText == "None") { NameText = " "; }
+        GetText.text = NameText;
         GetImage.GetComponent<Image>().color = ColorColor;
 
 
@@ -101,6 +122,8 @@ public class StatGameController : MonoBehaviour
 
         string ImagePath;
         string ColorText;
+        string PowerText;
+        string NameText;
         Color ColorColor;
         Sprite SpriteImage;
 
@@ -110,11 +133,69 @@ public class StatGameController : MonoBehaviour
         if (ColorText == "") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         DisPoseImage.GetComponent<Image>().sprite = SpriteImage;
-        DisPoseText.text = DisposeItem[0];
-        DisPosePower.text = DisposeItem[2];
+        PowerText = DisposeItem[2];
+        if (PowerText == "None") { PowerText = " "; }
+        DisPosePower.text = PowerText;
+        NameText = DisposeItem[0];
+        if (NameText == "None") { NameText = " "; }
+        DisPoseText.text = NameText;
         DisPoseImage.GetComponent<Image>().color = ColorColor;
 
 
+
+    }
+    //アイテムセレクト時に所持アイテム1～4を表示
+    public void DrawItemSelectItem4()
+    {
+        string ImagePath;
+        string ColorText;
+        string PowerText;
+            Color ColorColor;
+        Sprite SpriteImage;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item1[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item1[3];
+        if (ColorText == "None") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        SelectItemItem1Image.GetComponent<Image>().sprite = SpriteImage;
+        PowerText=StatGame.GetComponent<StatGame>().Item1[2];
+        if (PowerText == "None") { PowerText = " "; }
+        SelectItemItem1Power.text = PowerText;
+        SelectItemItem1Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item2[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item2[3];
+        if (ColorText == "None") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        SelectItemItem2Image.GetComponent<Image>().sprite = SpriteImage;
+        PowerText = StatGame.GetComponent<StatGame>().Item2[2];
+        if (PowerText == "None") { PowerText = " "; }
+        SelectItemItem2Power.text = PowerText;
+        SelectItemItem2Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item3[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item3[3];
+        if (ColorText == "None") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        SelectItemItem3Image.GetComponent<Image>().sprite = SpriteImage;
+        PowerText = StatGame.GetComponent<StatGame>().Item3[2];
+        if (PowerText == "None") { PowerText = " "; }
+        SelectItemItem3Power.text = PowerText;
+        SelectItemItem3Image.GetComponent<Image>().color = ColorColor;
+
+        ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item4[1];
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ColorText = StatGame.GetComponent<StatGame>().Item4[3];
+        if (ColorText == "None") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        SelectItemItem4Image.GetComponent<Image>().sprite = SpriteImage;
+        PowerText = StatGame.GetComponent<StatGame>().Item4[2];
+        if (PowerText == "None") { PowerText = " "; }
+        SelectItemItem4Power.text = PowerText;
+        SelectItemItem4Image.GetComponent<Image>().color = ColorColor;
 
     }
     //6Itemsに所持アイテム1～4を表示
@@ -122,67 +203,94 @@ public class StatGameController : MonoBehaviour
     {
         string ImagePath;
         string ColorText;
+        string PowerText;
+        string NameText;
+
         Color ColorColor;
         Sprite SpriteImage;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item1[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item1[3];
-        if (ColorText == "") { ColorText = "#000000"; }
-            ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
+        if (ColorText == "None") { ColorText = "#000000"; }
+        ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item6_1Image.GetComponent<Image>().sprite = SpriteImage;
-        Item6_1Text.text = StatGame.GetComponent<StatGame>().Item1[0];
-        Item6_1Power.text = StatGame.GetComponent<StatGame>().Item1[2];
+        NameText = StatGame.GetComponent<StatGame>().Item1[0];
+        if (NameText == "None") { NameText = " "; }
+        Item6_1Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item1[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item6_1Power.text = PowerText;
         Item6_1Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item2[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item2[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item6_2Image.GetComponent<Image>().sprite = SpriteImage;
-        Item6_2Text.text = StatGame.GetComponent<StatGame>().Item2[0];
-        Item6_2Power.text = StatGame.GetComponent<StatGame>().Item2[2];
+        NameText = StatGame.GetComponent<StatGame>().Item2[0];
+        if (NameText == "None") { NameText = " "; }
+        Item6_2Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item2[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item6_2Power.text = PowerText;
         Item6_2Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item3[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item3[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item6_3Image.GetComponent<Image>().sprite = SpriteImage;
-        Item6_3Text.text = StatGame.GetComponent<StatGame>().Item3[0];
-        Item6_3Power.text = StatGame.GetComponent<StatGame>().Item3[2];
+        NameText = StatGame.GetComponent<StatGame>().Item3[0];
+        if (NameText == "None") { NameText = " "; }
+        Item6_3Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item3[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item6_3Power.text = PowerText;
         Item6_3Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item4[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item4[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item6_4Image.GetComponent<Image>().sprite = SpriteImage;
-        Item6_4Text.text = StatGame.GetComponent<StatGame>().Item4[0];
-        Item6_4Power.text = StatGame.GetComponent<StatGame>().Item4[2];
+        NameText = StatGame.GetComponent<StatGame>().Item4[0];
+        if (NameText == "None") { NameText = " "; }
+        Item6_4Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item4[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item6_4Power.text = PowerText;
         Item6_4Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item5[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item5[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item6_5Image.GetComponent<Image>().sprite = SpriteImage;
-        Item6_5Text.text = StatGame.GetComponent<StatGame>().Item5[0];
-        Item6_5Power.text = StatGame.GetComponent<StatGame>().Item5[2];
+        NameText = StatGame.GetComponent<StatGame>().Item5[0];
+        if (NameText == "None") { NameText = " "; }
+        Item6_5Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item5[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item6_5Power.text = PowerText;
         Item6_5Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item6[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item6[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item6_6Image.GetComponent<Image>().sprite = SpriteImage;
-        Item6_6Text.text = StatGame.GetComponent<StatGame>().Item6[0];
-        Item6_6Power.text = StatGame.GetComponent<StatGame>().Item6[2];
+        NameText = StatGame.GetComponent<StatGame>().Item6[0];
+        if (NameText == "None") { NameText = " "; }
+        Item6_6Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item6[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item6_6Power.text = PowerText;
         Item6_6Image.GetComponent<Image>().color = ColorColor;
 
     }
@@ -191,47 +299,66 @@ public class StatGameController : MonoBehaviour
     {
         string ImagePath;
         string ColorText;
+        string PowerText;
+        string NameText;
+
         Color ColorColor;
         Sprite SpriteImage;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item1[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item1[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_1Image.GetComponent<Image>().sprite = SpriteImage;
-        Item4_1Text.text = StatGame.GetComponent<StatGame>().Item1[0];
-        Item4_1Power.text = StatGame.GetComponent<StatGame>().Item1[2];
+        NameText = StatGame.GetComponent<StatGame>().Item1[0];
+        if (NameText == "None") { NameText = " "; }
+        Item4_1Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item1[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item4_1Power.text = PowerText;
         Item4_1Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item2[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item2[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_2Image.GetComponent<Image>().sprite = SpriteImage;
-        Item4_2Text.text = StatGame.GetComponent<StatGame>().Item2[0];
-        Item4_2Power.text = StatGame.GetComponent<StatGame>().Item2[2];
+        NameText = StatGame.GetComponent<StatGame>().Item2[0];
+        if (NameText == "None") { NameText = " "; }
+        Item4_2Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item2[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item4_2Power.text = PowerText;
         Item4_2Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item3[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item3[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_3Image.GetComponent<Image>().sprite = SpriteImage;
-        Item4_3Text.text = StatGame.GetComponent<StatGame>().Item3[0];
-        Item4_3Power.text = StatGame.GetComponent<StatGame>().Item3[2];
+        NameText = StatGame.GetComponent<StatGame>().Item3[0];
+        if (NameText == "None") { NameText = " "; }
+        Item4_3Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item3[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item4_3Power.text = PowerText;
         Item4_3Image.GetComponent<Image>().color = ColorColor;
 
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item4[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item4[3];
-        if (ColorText == "") { ColorText = "#000000"; }
+        if (ColorText == "None") { ColorText = "#000000"; }
         ColorColor = GetComponent<ColorGetter>().ToColor(ColorText);
         Item4_4Image.GetComponent<Image>().sprite = SpriteImage;
-        Item4_4Text.text = StatGame.GetComponent<StatGame>().Item4[0];
-        Item4_4Power.text = StatGame.GetComponent<StatGame>().Item4[2];
+        NameText = StatGame.GetComponent<StatGame>().Item4[0];
+        if (NameText == "None") { NameText = " "; }
+        Item4_4Text.text = NameText;
+        PowerText = StatGame.GetComponent<StatGame>().Item4[2];
+        if (PowerText == "None") { PowerText = " "; }
+        Item4_4Power.text = PowerText;
         Item4_4Image.GetComponent<Image>().color = ColorColor;
 
         //        Customer.GetComponent<Image>().color = Col;
@@ -247,6 +374,10 @@ public class StatGameController : MonoBehaviour
     }
     IEnumerator GUpCoroutine(int Count)
     {
+        TapBlockG.SetActive(true);
+        EventSystem.SetActive(false);
+
+
         EventSystem.SetActive(false);
         int StatG = StatGame.GetComponent<StatGame>().StatG;//所持金
         int Moto = StatG;//元のステータス値
@@ -289,9 +420,14 @@ public class StatGameController : MonoBehaviour
             yield return new WaitForSeconds(0.05f);//描画一回にかける遅延時間
             i = i + Plus;
         }
+        yield return new WaitUntil(() => i >= iCount-1);
+
         StatG = Goal;
-//        Debug.Log("StatG: " + Moto + " → " + Goal);
+        //        Debug.Log("StatG: " + Moto + " → " + Goal);
+
+        TapBlockG.SetActive(false);
         EventSystem.SetActive(true);
+
     }
 
 
@@ -302,30 +438,26 @@ public class StatGameController : MonoBehaviour
     }
     IEnumerator SusUpCoroutine(float Count)
     {
+        TapBlockSus.SetActive(true);
         EventSystem.SetActive(false);
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
         float AnimeSus = StatGame.GetComponent<StatGame>().StatSus;
 
-        int BarSize = 325;//バー全体の長さ
-        int MemoriSize = 10;//１目盛りの長さ
+        float BarSize = 325;//バー全体の長さ
+        float MemoriSize = 10;//１目盛りの長さ
         float Moto = StatSus;//元のステータス値
         float Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
-        else if (Goal > 100) { Goal = 101.0f;}//結果が１００以上なら１００
-        float iCount = Count / (100f / (BarSize / MemoriSize));
-        if (Count >= 0)//減少方向のとき描画回数も負になってしまうので正にする（絶対値を取る）
-        {
-            iCount = iCount * 1;
-        }
-        else {
-            iCount = iCount * -1;
-        }
-        float Start = Moto - Moto % (100f / (BarSize / MemoriSize));//開始地点を丸める
-        float Memori = (100f / (BarSize / MemoriSize));//描画一回の変化量がコレ（4px動く分）
+        else if (Goal > 100) { Goal = 101.0f;Count = 100 - Moto; }//結果が１００以上なら１００
+        float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
+        float iCount = Mathf.Abs(Count / Memori);
+        float Start = Moto - Moto % Memori;//開始地点を丸める
+
         AnimeSus = Start;
         int i;
         for (i = 1; i <= iCount; i++)
         {
+
             if (Count >= 0)
             {
                 AnimeSus +=Memori;
@@ -336,17 +468,52 @@ public class StatGameController : MonoBehaviour
             if (AnimeSus < 0) { AnimeSus = 0; break; }
             if (AnimeSus > 100) { AnimeSus = 100; break; }
             DrawSus2(AnimeSus);
-            yield return new WaitForSeconds(0.01f);//描画一回にかける遅延時間
+            yield return new WaitForSeconds(0.05f);//描画一回にかける遅延時間
         }
         StatGame.GetComponent<StatGame>().StatSus = Goal;
+        DrawSus();
         //       Debug.Log("StatSus: " + Moto + " → " + Goal);
+        TapBlockSus.SetActive(false);
         EventSystem.SetActive(true);
     }
 
     //Exp増減
     public void ExpUp(int Count)
     {
- StatGame.GetComponent<StatGame>().StatExp+=Count;
+       StartCoroutine("ExpUpCoroutine", Count);
+    }
+    IEnumerator ExpUpCoroutine(int Count)
+    {
+        TapBlockExp.SetActive(true);
+        EventSystem.SetActive(false);
+
+
+        int StatExp = StatGame.GetComponent<StatGame>().StatExp;
+        int AnimeExp = StatGame.GetComponent<StatGame>().StatExp;
+
+        int Moto = StatExp;//元のステータス値
+        int Goal = Moto + Count;//変化後のステータス値
+        if (Goal < 0) { Goal = 0; }//結果が０以下なら０
+        else if (Goal > 100) { Goal = 100; Count = 100 - Moto; }//結果が１００以上なら１００
+        int iCount = Count;
+        int Start = Moto;//開始地点を丸める
+        float AnimeExpFloat = (float)Start;
+
+        int i;
+        for (i = 1; i <= iCount; i++)
+        {
+            AnimeExpFloat += 1;
+            if (AnimeExp < 0) { AnimeExp = 0; break; }
+            if (AnimeExp > 100) { AnimeExp = 100; break; }
+            DrawExp2(AnimeExpFloat);
+            yield return new WaitForSeconds(0.005f);//描画一回にかける遅延時間
+        }
+        StatGame.GetComponent<StatGame>().StatExp = Goal;
+
+
+        DrawExp();
+        TapBlockExp.SetActive(false);
+        EventSystem.SetActive(true);
     }
 
     //Lv増減
@@ -383,10 +550,18 @@ public class StatGameController : MonoBehaviour
         BarSus.sizeDelta = new Vector2(325 * AnimeSus / 100, 52);
     }
 
+    //Exp描画（アニメーション用）
+    public void DrawExp2(float AnimeExp)
+    {
+        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 100);
+    }
+
+
     //Exp描画
     public void DrawExp()
     {
-//後で演出入れる
+        int StatExp = StatGame.GetComponent<StatGame>().StatExp;
+        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 100);
     }
 
     //レベル描画

@@ -15,12 +15,17 @@ public class Sorter : MonoBehaviour
         GameObject TopCustomer = Customers[0];
         int PointPower1;
         int PointPower2;
-        int PointColor1;
-        int PointColor2;
+        float PointColor1;
+        float PointColor2;
+        string Rarerity1;
+        string Rarerity2;
+        int Rarerity1Int;
+        int Rarerity2Int;
         string TagNo = "";
         GameObject[] CustomersNotTop = Customers;
         GameObject[] CustomersNotTopNext = Customers;
-//Loserが４以下の時は取得数も４にする
+
+//Loserが４以下の時は取得数もその数にする
         if (CustomersLength < Count2Max) { Count2Max = CustomersLength;}
         GameObject[] TopCustomers = new GameObject[Count2Max];
 
@@ -46,37 +51,54 @@ public class Sorter : MonoBehaviour
             while (Count1 < CustomersLength -Count2- 1)
             {
                 Count1Plus = Count1 + 1;
-                PointPower1 = TopCustomer.GetComponent<StatCustomer>().PointPower;
-                PointPower2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointPower;
+                PointColor1 = TopCustomer.GetComponent<StatCustomer>().PointColor;
+                PointColor2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointColor;
                 //暫定トップとCount1Plus番目を比較し、低い方は「少なくともトップではない」の箱に入れる
                 //「少なくともトップではない」の箱を使った回数はカウントされる（最大CustomersLength - Count2 - 1）
-                if (PointPower1 > PointPower2)
+                if (PointColor1 > PointColor2)
                 {
                     CustomersNotTopNext[CountNotTopNext] = CustomersNotTop[Count1Plus];
                     CountNotTopNext++;
                 }
-                else if (PointPower1 < PointPower2)
+                else if (PointColor1 < PointColor2)
                 {
                     CustomersNotTopNext[CountNotTopNext] = TopCustomer;
                     CountNotTopNext++;
                     TopCustomer = CustomersNotTop[Count1Plus];
                 }
-                //PointPowerが同じ場合は色勝利度を比較する（同じ場合は暫定トップの負け）
+                //PointColorが同じ場合はレアリティを比較する
                 else
                 {
-                    PointColor1 = TopCustomer.GetComponent<StatCustomer>().PointColor;
-                    PointColor2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointColor;
-                    if (PointColor1 > PointColor2)
+                    Rarerity1 = TopCustomer.GetComponent<StatCustomer>().Rarerity;
+                    Rarerity2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().Rarerity;
+                    Rarerity1Int = GetComponent<LvDesignController>().GetRarerityInt(Rarerity1);
+                    Rarerity2Int = GetComponent<LvDesignController>().GetRarerityInt(Rarerity2);
+
+
+                    if (Rarerity1Int > Rarerity2Int)
                     {
                         CustomersNotTopNext[CountNotTopNext] = CustomersNotTop[Count1Plus];
                         CountNotTopNext++;
                     }
                     else
                     {
-                        CustomersNotTopNext[CountNotTopNext] = TopCustomer;
-                        CountNotTopNext++;
-                        TopCustomer = CustomersNotTop[Count1Plus];
+                        //レアリティも同じなら勝利度を比較する（同じ場合は暫定トップの負け）辛勝の方が残る
+                        PointPower1 = TopCustomer.GetComponent<StatCustomer>().PointPower;
+                        PointPower2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointPower;
+                        if (PointColor1 < PointColor2)
+                        {
+                            CustomersNotTopNext[CountNotTopNext] = CustomersNotTop[Count1Plus];
+                            CountNotTopNext++;
+                        }
+                        else
+                        {
+                            CustomersNotTopNext[CountNotTopNext] = TopCustomer;
+                            CountNotTopNext++;
+                            TopCustomer = CustomersNotTop[Count1Plus];
+                        }
                     }
+
+
                 }
                 Count1++;
             }

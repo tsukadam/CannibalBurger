@@ -19,6 +19,9 @@ public class GameController : MonoBehaviour
 
     //各パーツ
     public GameObject CustomerField;
+    public GameObject CustomerFieldBack;
+    public GameObject CustomerFieldCollider;
+
     //ボタン類
     public GameObject Button4Items;
     public GameObject Button4Items1;
@@ -42,9 +45,18 @@ public class GameController : MonoBehaviour
     public Text SelectItemName2;
     public Text SelectItemPower2;
     public GameObject SelectButtonOK;
+    public GameObject ButtonGoResult;
+
+    public GameObject TapButton;
+
     //ポップアップ類
     public GameObject PopupResultG;
-    public Text PopupResultGText;
+    public Text PopupResultGTextG;
+    public Text PopupResultGTextExp;
+    public Text PopupResultGTextSus;
+    public GameObject SusLine;
+
+
     public GameObject PopupDisposeItem;
     public Text PopupDisposeText;
     public GameObject PopupGetItem;
@@ -64,13 +76,13 @@ public class GameController : MonoBehaviour
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
     //タップ切るための板
-//    public GameObject TapBlock;
+   public GameObject TapBlock;
 
 
 //ゲームスタート
     public void GameStart()
     {
-//        TapBlock.SetActive(true);
+        TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
         //ゲーム画面への遷移
@@ -90,6 +102,11 @@ public class GameController : MonoBehaviour
         PopupGetItem.SetActive(false);
         PopupLvUp.SetActive(false);
         PopupGameOver.SetActive(false);
+        ButtonGoResult.SetActive(false);
+        TapButton.SetActive(false);
+
+        CustomerFieldBack.SetActive(true);
+        CustomerFieldCollider.SetActive(true);
 
         Button4Items1.GetComponent<Button>().interactable = true;
         Button4Items2.GetComponent<Button>().interactable = true;
@@ -100,12 +117,16 @@ public class GameController : MonoBehaviour
         StatGame.GetComponent<StatGame>().StatSus = 0;
         StatGame.GetComponent<StatGame>().StatG = 50;
         StatGame.GetComponent<StatGame>().StatLv = 1;
+//レベル１の客データの読み込み
+        GetComponent<CustomerController>().GetCustomerData(1);
+
         StatGame.GetComponent<StatGame>().StatExp = 0;
         StatGame.GetComponent<StatGame>().StatDays = 1;
         GetComponent<StatGameController>().DrawSus();
         GetComponent<StatGameController>().DrawG();
         GetComponent<StatGameController>().DrawLv();
         GetComponent<StatGameController>().DrawDays();
+        GetComponent<StatGameController>().DrawExp();
 
         //所持アイテム
         StatGame.GetComponent<StatGame>().Item1 = new string[]{ "Name", "niku1", "Power", "Color", "Sus" };
@@ -124,12 +145,16 @@ public class GameController : MonoBehaviour
         //初期客の生成
         GetComponent<LvDesignController>().MakeCustomerFirst();
 
+        TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
 
     //来客開始
     public void CustomerStart()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         //前周の客を破壊
         if (GameObject.FindGameObjectWithTag("Top0") != null) { Destroy(GameObject.FindGameObjectWithTag("Top0")); }
         if (GameObject.FindGameObjectWithTag("Top1") != null) { Destroy(GameObject.FindGameObjectWithTag("Top1")); }
@@ -180,6 +205,12 @@ public class GameController : MonoBehaviour
         PopupGetItem.SetActive(false);
         PopupLvUp.SetActive(false);
         PopupGameOver.SetActive(false);
+        ButtonGoResult.SetActive(false);
+        TapButton.SetActive(false);
+
+        CustomerFieldBack.SetActive(true);
+        CustomerFieldCollider.SetActive(true);
+
 
         Button4Items1.GetComponent<Button>().interactable = true;
         Button4Items2.GetComponent<Button>().interactable = true;
@@ -191,21 +222,25 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawItem4();
 
         //メッセージ表示
-        MessageDraw("使う食材をタップして下さい");
+        MessageDraw("つかう しょくざい を タップしてください");
 
-        //客フィールドの初期化
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
     }
 
 
     //食材選択　→　効果判定　→　Gリザルト表示
     public void Feed(int ItemNum)
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         MessageDraw("");
         Button4Items.SetActive(false);
 
         //どの所持アイテムが押されたか判定、そのアイテムは所持アイテムから消す
         string[] UseItem= new string[4];
-        string[] NoItem = { "", "", "", "", "" };
+        string[] NoItem = { "None", "None", "None", "None", "None" };
         if (ItemNum == 1) { UseItem = StatGame.GetComponent<StatGame>().Item1;
             StatGame.GetComponent<StatGame>().Item1 = NoItem;
         }
@@ -261,9 +296,9 @@ public class GameController : MonoBehaviour
                                    Quaternion.identity);
                         ColorCheck.transform.SetParent(Customers[Count].transform);
                         //位置決定
-                        ColorCheck.transform.localPosition = new Vector3(0, 70, 0);
+                        ColorCheck.transform.localPosition = new Vector3(0, 90, 0);
                         string DistancePerString = (DistancePer).ToString();
-                        ColorCheck.GetComponent<Text>().text = DistancePerString+"";
+            ColorCheck.GetComponent<Text>().text = DistancePerString+"";
 
 
             //Powerを比べる
@@ -280,13 +315,13 @@ public class GameController : MonoBehaviour
                            Quaternion.identity);
                 Heart.transform.SetParent(Customers[Count].transform);
                 //位置決定
-                Heart.transform.localPosition = new Vector3(0, 50, 0);
+                Heart.transform.localPosition = new Vector3(0, 70, 0);
 
                 //タグをつける
                 Customers[Count].tag = "Loser";
                 //勝利度合の記録
                 Customers[Count].GetComponent<StatCustomer>().PointPower =UseItemPower-CustomerHp;
-                Customers[Count].GetComponent<StatCustomer>().PointColor = Random.Range(0, 100);
+                Customers[Count].GetComponent<StatCustomer>().PointColor = DistancePer;
 
                 //賞金取得
                 GetG+=GetComponent<LvDesignController>().VictoryDropG(CustomerDropG,VictoryPoint);
@@ -304,6 +339,30 @@ public class GameController : MonoBehaviour
             Count++;
         }
 
+        float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
+
+        StatGame.GetComponent<StatGame>().ResultGetG =GetG;
+        StatGame.GetComponent<StatGame>().ResultGetExp = GetExp;
+        StatGame.GetComponent<StatGame>().ResultGetSus = ResultGetSus;
+
+        //OKボタン表示
+        ButtonGoResult.SetActive(true);
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+
+    }
+
+    public void PopupResultGPop()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
+        ButtonGoResult.SetActive(false);
+
+        int GetG = StatGame.GetComponent<StatGame>().ResultGetG;
+        int GetExp = StatGame.GetComponent<StatGame>().ResultGetExp;
+        float GetSus = StatGame.GetComponent<StatGame>().ResultGetSus;
 
         //合計賞金を加算
         GetComponent<StatGameController>().GUp(GetG);
@@ -312,30 +371,53 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().ExpUp(GetExp);
 
         //Susを加算
-        float ResultGetSus =GetComponent<LvDesignController>().FeedGetSus(GetSus);
+        GetComponent<StatGameController>().SusUp(GetSus);
+
+        TapButton.SetActive(true);
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+
+    }
+    public void PopupResultGPopPop()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+        TapButton.SetActive(false);
+
+        int GetG = StatGame.GetComponent<StatGame>().ResultGetG;
+        int GetExp = StatGame.GetComponent<StatGame>().ResultGetExp;
+        float GetSus = StatGame.GetComponent<StatGame>().ResultGetSus;
 
         //ポップアップ表示
         PopupResultG.SetActive(true);
-        string TextGetG = (GetG).ToString();
-        string TextGetExp = (GetExp).ToString();
-        string TextGetSus = (ResultGetSus).ToString();
-        if (GetG <= 0) { TextGetG = TextGetG + "Gの赤字です\n"; }
-        else { TextGetG = TextGetG + "Gの売上を獲得\n"; }
-        TextGetExp = TextGetExp + "のExpを獲得\n";
-        if (ResultGetSus > 0) { TextGetSus = "疑惑が"+ TextGetSus+"上がりました"; }
-        else { TextGetSus = ""; }
-        PopupResultGText.text = TextGetG+TextGetExp+TextGetSus;
 
-        //ここでレベルアップＳＵＳ減を判定した後、ＳＵＳゲームオーバーの判定が入る
+        GetG = Mathf.Abs(GetG);
+        string TextGetG = (GetG).ToString();
+        string TextGetExp = GetComponent<LvDesignController>().StringGetExp(GetExp);
+        string TextGetSus = (GetSus).ToString();
+        if (GetG <= 0) { TextGetG = "<color='red'>" + TextGetG + "</color>"; }
+        else { TextGetSus = ""; }
+        if (GetSus > 0) { SusLine.SetActive(true); }
+        else { SusLine.SetActive(false); }
+
+        PopupResultGTextG.text = TextGetG;
+        PopupResultGTextExp.text = TextGetExp;
+        PopupResultGTextSus.text = TextGetSus;
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+        //この直後、ゲームオーバー判定
     }
-    //Ｇ取得の直後　レベルアップ判定→ゲームオーバー判定
+
     public void LevelUp()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         PopupResultG.SetActive(false);
-        if (StatGame.GetComponent<StatGame>().StatExp >= 100)
+        if (GetComponent<LvDesignController>().LvUpCondition())
         {
             StatGame.GetComponent<StatGame>().StatExp = 0;
-            GetComponent<StatGameController>().DrawExp();
 
             PopupLvUp.SetActive(true);
             PopupLvUpText.text = "レベルアップ！";
@@ -344,9 +426,16 @@ public class GameController : MonoBehaviour
             GetComponent<StatGameController>().LvUp(1);
             GetComponent<LvDesignController>().LvUpSaveSus();
 
+            int NowLv = StatGame.GetComponent<StatGame>().StatLv;
+            GetComponent<CustomerController>().GetCustomerData(NowLv);
+
+            TapBlock.SetActive(false);
+            EventSystem.SetActive(true);
 
         }
         else {
+            TapBlock.SetActive(false);
+            EventSystem.SetActive(true);
             CheckGameOver();
         }
 
@@ -354,9 +443,19 @@ public class GameController : MonoBehaviour
     //ゲームオーバー判定
     public void CheckGameOver()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+        GetComponent<StatGameController>().DrawExp();//レベルアップしていたら、Expを０に戻した状態で再描画
 
-        if (StatGame.GetComponent<StatGame>().StatSus > 100) { GameOver(); }
-        else { Select(); }
+        if (StatGame.GetComponent<StatGame>().StatSus > 100) {
+            TapBlock.SetActive(false);
+            EventSystem.SetActive(true);
+            GameOver(); }
+        else
+        {
+            TapBlock.SetActive(false);
+            EventSystem.SetActive(true);
+            Select(); }
     }
 
     //ゲームオーバー時
@@ -369,6 +468,9 @@ public class GameController : MonoBehaviour
     //取得アイテムがないときにアイテムを自動的に１つ得る
     public void GetPickUp()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         string[] PickUpItem = GetComponent<LvDesignController>().GetPickUpItem();
 
         if (StatGame.GetComponent<StatGame>().Item1[0] == "") { StatGame.GetComponent<StatGame>().Item1 = PickUpItem; }
@@ -377,13 +479,20 @@ public class GameController : MonoBehaviour
         else { StatGame.GetComponent<StatGame>().Item4 = PickUpItem; }
 
         PopupGetItem.SetActive(true);
-        PopupGetText.text = "食材が得られなかったので、\n近所で" + PickUpItem[0] + "\nを拾いました";
+        PopupGetText.text = "だれも こなかったので、\nそのへんで" + PickUpItem[0] + "\n を ひろいました";
         GetComponent<StatGameController>().DrawGetItem(PickUpItem);
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+
     }
 
     //アイテムゲット選択画面へ
     public void Select()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         //レベルアップから来た場合のレベルアップポップアップを消す
         PopupLvUp.SetActive(false);
 
@@ -409,14 +518,17 @@ public class GameController : MonoBehaviour
         else {
             //選択アイテム欄出す
             ButtonSelectItem.SetActive(true);
-            Button4Items.SetActive(true);
+            Button4Items.SetActive(false);
             Button4Items1.GetComponent<Button>().interactable = false;
             Button4Items2.GetComponent<Button>().interactable = false;
             Button4Items3.GetComponent<Button>().interactable = false;
             Button4Items4.GetComponent<Button>().interactable = false;
 
-            GetComponent<StatGameController>().DrawItem4();
+            CustomerFieldBack.SetActive(false);
+            CustomerFieldCollider.SetActive(false);
 
+            GetComponent<StatGameController>().DrawItem4();
+            GetComponent<StatGameController>().DrawItemSelectItem4();
             //TOPを取得
             GameObject[] LoserTop = GetComponent<Sorter>().LoserSort(Loser);
             //Top以外は破壊
@@ -445,7 +557,7 @@ public class GameController : MonoBehaviour
             int PositionX=0;
             while (Count < CustomerLength)
             {
-                PositionY = 300;
+                PositionY = 125;
                 PositionX = (150*Count)-220;
                 LoserTop[Count].transform.position = new Vector3(PositionX, PositionY, 0);
                 LoserTop[Count].GetComponent<Rigidbody2D>().constraints=RigidbodyConstraints2D.FreezePosition;
@@ -471,20 +583,24 @@ public class GameController : MonoBehaviour
                 Color UseItemCol = new Color(CoreR + PlusR, CoreG + PlusG, CoreB + PlusB, 1f);
 
 
-                GetComponent<ItemController>().MakeItem(ItemName, ItemImage,ItemPower,UseItemCol,ItemUpSus,PositionX,100,ItemTag);
+                GetComponent<ItemController>().MakeItem(ItemName, ItemImage,ItemPower,UseItemCol,ItemUpSus,PositionX,-90,ItemTag);
 
                 Count++;
             }
-            MessageDraw("食材を２つ選んでＯＫ");
+            MessageDraw(" ２つえらんでＯＫ  （ わくタップでキャンセル ）");
             SelectStart();//選択ワクの初期化
             SelectButtonOK.GetComponent<Button>().interactable = false;
         }
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
 
     }
 
     //選択ワクの初期化
     public void SelectStart()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
         if (GameObject.FindGameObjectWithTag("Box1") != null) { Destroy(GameObject.FindGameObjectWithTag("Box1")); }
         if (GameObject.FindGameObjectWithTag("Box2") != null) { Destroy(GameObject.FindGameObjectWithTag("Box2")); }
 
@@ -510,14 +626,18 @@ public class GameController : MonoBehaviour
         SelectItemImage2.GetComponent<StatItem>().Col = new Color(0, 0, 0, 1f);
         SelectItemImage2.GetComponent<StatItem>().UpSus = 0;
 
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
 
     }
 
-   
+
 
     //アイテムないし人がタップされたら選択状態にする
     public void SelectItem(string TagName)
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
         if (GameObject.FindGameObjectWithTag("Box1") != null & GameObject.FindGameObjectWithTag("Box2") != null)
         {
             //枠が両方とも使われている場合は何も起こらない
@@ -543,8 +663,6 @@ public class GameController : MonoBehaviour
                        Quaternion.identity);
             SelectBox.transform.SetParent(SelectedItem.transform);
 
-            //位置決定
-            SelectBox.transform.localPosition = new Vector3(0, 0, 0);
 
             if (TagName == "Item0" | TagName == "Item1" | TagName == "Item2" | TagName == "Item3")
             {
@@ -582,7 +700,14 @@ public class GameController : MonoBehaviour
                 UseBox.GetComponent<StatItem>().Power = Power;
                 UseBox.GetComponent<StatItem>().Col = Col;
                 UseBox.GetComponent<StatItem>().UpSus = UpSus;
-                //                UseBox.tag = TagName;
+
+                //ワクの位置と大きさ
+                SelectBox.transform.localPosition = new Vector3(0, 15, 0);
+                SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(140, 160);
+                SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(140, 160);
+
+                UseBox.GetComponent<RectTransform>().sizeDelta = new Vector2(130, 65);
+
             }
             //人の場合
             else if (TagName == "Top0" | TagName == "Top1" | TagName == "Top2" | TagName == "Top3")
@@ -625,7 +750,12 @@ public class GameController : MonoBehaviour
                 UseBox.GetComponent<StatItem>().Power = Power;
                 UseBox.GetComponent<StatItem>().Col = Col;
                 UseBox.GetComponent<StatItem>().UpSus = UpSus;
-                //               UseBox.tag = TagName;
+
+                //ワクの位置と大きさ
+                SelectBox.transform.localPosition = new Vector3(0, 0, 0);
+                SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(140, 200);
+                SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(140, 200);
+                UseBox.GetComponent<RectTransform>().sizeDelta = new Vector2(125, 175);
 
             }
             else { Debug.Log("アイテムでも人でもないものが選択されている"); }
@@ -636,10 +766,16 @@ public class GameController : MonoBehaviour
             }
 
         }
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
     }
+
     //既に選択されたワクがタップされたら選択を解除
     public void UnSelectItem(string TagName)
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         //OKボタンを切る
         SelectButtonOK.GetComponent<Button>().interactable = false;
         GameObject UseBox = SelectItemImage1;
@@ -650,8 +786,8 @@ public class GameController : MonoBehaviour
             Destroy(GameObject.FindGameObjectWithTag("Box1"));
             SelectItemImage1.GetComponent<Image>().sprite = null;
             SelectItemImage1.GetComponent<Image>().color = new Color(0, 0, 0, 1f); ;
-            SelectItemName1.text = "";
-            SelectItemPower1.text = "";
+            SelectItemName1.text = " ";
+            SelectItemPower1.text = " ";
 
         }
         else
@@ -660,8 +796,8 @@ public class GameController : MonoBehaviour
             Destroy(GameObject.FindGameObjectWithTag("Box2"));
             SelectItemImage2.GetComponent<Image>().sprite = null;
             SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
-            SelectItemName2.text = "";
-            SelectItemPower2.text = "";
+            SelectItemName2.text = " ";
+            SelectItemPower2.text = " ";
         }
         UseBox.GetComponent<StatItem>().Name = null;
         UseBox.GetComponent<StatItem>().Image = null;
@@ -670,10 +806,15 @@ public class GameController : MonoBehaviour
         UseBox.GetComponent<StatItem>().UpSus = 0;
         //        UseBox.tag = "Untagged";
 
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+
     }
     //選択確定→捨てる画面に遷移
     public void SelectOK()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
 
 
         //選択されていたアイテムを取得
@@ -724,27 +865,33 @@ public class GameController : MonoBehaviour
         Button4Items.SetActive(false);
 
 
-        if (StatGame.GetComponent<StatGame>().Item1[0] == "") { Button6Items1.GetComponent<Button>().interactable = false; }
+        if (StatGame.GetComponent<StatGame>().Item1[0] == "None") { Button6Items1.GetComponent<Button>().interactable = false; }
         else { Button6Items1.GetComponent<Button>().interactable = true; }
-        if (StatGame.GetComponent<StatGame>().Item2[0] == "") { Button6Items2.GetComponent<Button>().interactable = false; }
+        if (StatGame.GetComponent<StatGame>().Item2[0] == "None") { Button6Items2.GetComponent<Button>().interactable = false; }
         else { Button6Items2.GetComponent<Button>().interactable = true; }
-        if (StatGame.GetComponent<StatGame>().Item3[0] == "") { Button6Items3.GetComponent<Button>().interactable = false; }
+        if (StatGame.GetComponent<StatGame>().Item3[0] == "None") { Button6Items3.GetComponent<Button>().interactable = false; }
         else { Button6Items3.GetComponent<Button>().interactable = true; }
-        if (StatGame.GetComponent<StatGame>().Item4[0] == "") { Button6Items4.GetComponent<Button>().interactable = false; }
+        if (StatGame.GetComponent<StatGame>().Item4[0] == "None") { Button6Items4.GetComponent<Button>().interactable = false; }
         else { Button6Items4.GetComponent<Button>().interactable = true; }
-        if (StatGame.GetComponent<StatGame>().Item5[0] == "") { Button6Items5.GetComponent<Button>().interactable = false; }
+        if (StatGame.GetComponent<StatGame>().Item5[0] == "None") { Button6Items5.GetComponent<Button>().interactable = false; }
         else { Button6Items5.GetComponent<Button>().interactable = true; }
-        if (StatGame.GetComponent<StatGame>().Item6[0] == "") { Button6Items6.GetComponent<Button>().interactable = false; }
+        if (StatGame.GetComponent<StatGame>().Item6[0] == "None") { Button6Items6.GetComponent<Button>().interactable = false; }
         else { Button6Items6.GetComponent<Button>().interactable = true; }
 
 
-        MessageDraw("捨てる食材を選んでください");
+        MessageDraw("どれ を すてますか？");
         GetComponent<StatGameController>().DrawItem6();
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
 
     }
     //捨てる確認画面
     public void Dispose(int ItemNum)
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         string[] CheckItem = new string[5];
         if (ItemNum == 1) { CheckItem = StatGame.GetComponent<StatGame>().Item1; }
         else if (ItemNum == 2) { CheckItem = StatGame.GetComponent<StatGame>().Item2; }
@@ -752,10 +899,16 @@ public class GameController : MonoBehaviour
         else if (ItemNum == 4) { CheckItem = StatGame.GetComponent<StatGame>().Item4; }
         else if (ItemNum == 5) { CheckItem = StatGame.GetComponent<StatGame>().Item5; }
         else { CheckItem = StatGame.GetComponent<StatGame>().Item6; }
-        PopupDisposeItem.SetActive(true);
-        PopupDisposeText.text = CheckItem[0]+"\nを捨てていいですか？";
-        GetComponent<StatGameController>().DrawDisposeItem(CheckItem);
-        StatGame.GetComponent<StatGame>().DisposeItemID = ItemNum;
+
+        if (CheckItem[0] == "None") { }
+        else {
+            PopupDisposeItem.SetActive(true);
+            PopupDisposeText.text = CheckItem[0] + "\n を すてます。";
+            GetComponent<StatGameController>().DrawDisposeItem(CheckItem);
+            StatGame.GetComponent<StatGame>().DisposeItemID = ItemNum;
+        }
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
     }
     //捨てる確認画面キャンセル
     public void DisposeCancel()
@@ -766,15 +919,17 @@ public class GameController : MonoBehaviour
     //捨てる確認でＯＫ
     public void DisposeOK()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
         PopupDisposeItem.SetActive(false);
 
         int ItemNum = StatGame.GetComponent<StatGame>().DisposeItemID;
-        if (ItemNum == 1) { StatGame.GetComponent<StatGame>().Item1 =new string[]{ "","","","","" }; }
-        else if (ItemNum == 2) { StatGame.GetComponent<StatGame>().Item2 = new string[] { "", "", "", "", "" }; }
-        else if (ItemNum == 3) { StatGame.GetComponent<StatGame>().Item3 = new string[] { "", "", "", "", "" }; }
-        else if (ItemNum == 4) { StatGame.GetComponent<StatGame>().Item4 = new string[] { "", "", "", "", "" }; }
-        else if (ItemNum == 5) { StatGame.GetComponent<StatGame>().Item5 = new string[] { "", "", "", "", "" }; }
-        else if (ItemNum == 6) { StatGame.GetComponent<StatGame>().Item6 = new string[] { "", "", "", "", "" }; }
+        if (ItemNum == 1) { StatGame.GetComponent<StatGame>().Item1 =new string[]{ "None", "None", "None", "None", "None" }; }
+        else if (ItemNum == 2) { StatGame.GetComponent<StatGame>().Item2 = new string[] { "None", "None", "None", "None", "None" }; }
+        else if (ItemNum == 3) { StatGame.GetComponent<StatGame>().Item3 = new string[] { "None", "None", "None", "None", "None" }; }
+        else if (ItemNum == 4) { StatGame.GetComponent<StatGame>().Item4 = new string[] { "None", "None", "None", "None", "None" }; }
+        else if (ItemNum == 5) { StatGame.GetComponent<StatGame>().Item5 = new string[] { "None", "None", "None", "None", "None" }; }
+        else if (ItemNum == 6) { StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" }; }
         else { Debug.Log("1~6以外のアイテムＩＤが入っています"); }
 
         string[] CheckItem = new string[5];
@@ -790,7 +945,7 @@ public class GameController : MonoBehaviour
             else if (Count == 4) { CheckItem = StatGame.GetComponent<StatGame>().Item5; }
             else { CheckItem = StatGame.GetComponent<StatGame>().Item6; }
 
-            if (CheckItem[0] == "") { }
+            if (CheckItem[0] == "None") { }
             else
             {
                 if (ItemCount == 0) {StatGame.GetComponent<StatGame>().Item1=CheckItem; }
@@ -802,18 +957,29 @@ public class GameController : MonoBehaviour
             Count++;
         }
         Button6Items.SetActive(false);
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+
         CustomerEnd();
+
     }
 
 
     //その周の終わりの処理
     public void CustomerEnd()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
         GetComponent<StatGameController>().DaysUp(1);
         CustomerStart();
 
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
     }
 
 

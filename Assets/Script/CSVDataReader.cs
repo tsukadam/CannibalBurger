@@ -6,6 +6,7 @@ using System.IO;
 
 public class CSVDataReader : MonoBehaviour
 {
+    public GameObject StatGame;
 
     //敵データ格納用の配列データ(とりあえず初期値はnull値)
     private string[,] stageMapDatas = null;
@@ -52,7 +53,8 @@ public class CSVDataReader : MonoBehaviour
                 //カンマ分け
                 string[] readStrData = lines[i].Split(spliter, option);
                 //型変換
-                //readToIntData[i, j] = int.Parse(readStrData[j]);
+                //                readToIntData[i, j] = int.Parse(readStrData[j]);
+                readToIntData[i, j] = readStrData[j];
             }
         }
 
@@ -83,11 +85,13 @@ public class CSVDataReader : MonoBehaviour
     {
         //データパスを設定
         //このデータパスは、Assetフォルダ以下の位置を書くので/で階層を区切り、CSVデータ名まで書かないと読み込んでくれない
-        string path = "/CsvData/DataCustomer.csv";
+        string path = "/Resources/CsvData/CustomerCSV.csv";
         //データを読み込む(引数：データパス)
-        this.stageMapDatas = readCSVData(path);
+        string[,] CustomerAllData = stageMapDatas = readCSVData(path);
 
-        //WriteMapDatas(this.stageMapDatas, this.height, this.width);
+        StatGame.GetComponent<StatGame>().CustomerAllData = CustomerAllData;
+
+//        WriteMapDatas(this.stageMapDatas, this.height, this.width);
     }
 
     void UpDate()

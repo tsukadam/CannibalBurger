@@ -9,46 +9,214 @@ public class LvDesignController : MonoBehaviour
     //ゲームstat
     public GameObject StatGame;
 
+    //CustomerControllerから開始時に渡される、客データの行情報
+    public int LowName;
+    public int LowImage;
+    public int LowPopLv;
+    public int LowDisLv;
+    public int LowRare;
+    public int LowHp;
+    public int LowCoreColor;
+    public int LowSaveSus;
+    public int LowDropG;
+    public int LowDropName;
+    public int LowDropImage;
+    public int LowDropPower;
+    public int LowDropSus;
+    public int LowMeatName;
+    public int LowMeatImage;
+    public int LowMeatPower;
+    public int LowMeatSus;
+
+    //レアリティを数字に変換、高いほど強い
+    public int GetRarerityInt(string Rarerity)
+    {
+        int Result=0;
+        if (Rarerity == "C") { Result = 0; }
+        else if (Rarerity == "UC") { Result = 1; }
+        else if (Rarerity == "R") { Result = 2; }
+        else if (Rarerity == "SR") { Result = 3; }
+        else if (Rarerity == "SSR") { Result = 4; }
+
+        return Result;
+    }
 
     //初回アイテムの生成
     public void MakeItemFirst()
     {
-        StatGame.GetComponent<StatGame>().Item1 = new string[] { "初期肉１", "niku1", "10", "#ff0000", "0" };
-        StatGame.GetComponent<StatGame>().Item2 = new string[] { "初期肉２", "niku1", "15", "#00ff00", "0" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "初期肉３", "niku1", "20", "#0000ff", "0" };
-        StatGame.GetComponent<StatGame>().Item4 = new string[] { "初期人肉４", "niku1", "40", "#666666", "6" };
+        StatGame.GetComponent<StatGame>().Item1 = new string[] { "ネズミにく", "niku1", "10", "#ff0000", "0" };
+        StatGame.GetComponent<StatGame>().Item2 = new string[] { "どてカボチャ", "niku1", "15", "#00ff00", "0" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "かびチーズ", "niku1", "20", "#0000ff", "0" };
+        StatGame.GetComponent<StatGame>().Item4 = new string[] { "きみょうなにく", "niku1", "40", "#666666", "100" };
     }
 
     //初回客の生成
     public void MakeCustomerFirst()
     {
 
-        int count = 0;
-        while (count < 20)
-        {
-            int RandomHp = Random.Range(10, 40);
-            //            int RandomImage = Random.Range(1, 4);
-            GetComponent<CustomerController>().MakeCustomer("ドクター・ヤブ", "doc", RandomHp, "#ff0000", "", 2, new string[] { "患者の肉", "niku1", "10", "Color", "0.05" }, new string[] { "医者の肉", "niku1", "100", "Color", "0.1" }, 0);
-            count++;
-        }
+        MakeCustomerNormal();
+    }
 
+    //レアリティ別出現確率調整
+    public string GetRarerity()
+    {
+        string ResultRarerity="";
+        int ProbableC = 50;
+        int ProbableUC = 30;
+        int ProbableR = 10;
+        int ProbableSR = 8;
+        int ProbableSSR = 2;
+        int RandomCount = Random.Range(0, ProbableC+ ProbableUC+ ProbableR+ ProbableSR+ ProbableSSR);
+
+        if (RandomCount >= 0 & RandomCount <= ProbableC) { ResultRarerity = "C"; }
+        else if (RandomCount >= ProbableC & RandomCount <= ProbableC+ ProbableUC) { ResultRarerity = "UC"; }
+        else if (RandomCount >= ProbableC+ ProbableUC & RandomCount <= ProbableC + ProbableUC+ ProbableR) { ResultRarerity = "R"; }
+        else if (RandomCount >= ProbableC + ProbableUC+ ProbableR & RandomCount <= ProbableC + ProbableUC + ProbableR+ ProbableSR) { ResultRarerity = "SR"; }
+        else { ResultRarerity = "SSR"; }
+
+        return ResultRarerity;
     }
 
     //通常客の生成
     public void MakeCustomerNormal()
     {
+        int GameLv = StatGame.GetComponent<StatGame>().StatLv;
+
+        string SelectedName;
+        string SelectedImage;
+        string SelectedHp;
+        int SelectedHpInt;
+        string SelectedCoreColor;
+        string SelectedColor;
+        string SelectedDropG;
+        int SelectedDropGInt;
+        string SelectedDropName;
+        string SelectedDropImage;
+        string SelectedDropPower;
+        int SelectedDropPowerInt;
+        string SelectedDropColor;
+        string SelectedDropSus;
+        int SelectedDropSusInt;
+        string SelectedMeatName;
+        string SelectedMeatImage;
+        string SelectedMeatPower;
+        int SelectedMeatPowerInt;
+        string SelectedMeatColor;
+        string SelectedMeatSus;
+        int SelectedMeatSusInt;
+        string SelectedSaveSus;
+        int SelectedSaveSusInt;
+        string SelectedRare;
+        string SelectedPopLv;
+        int SelectedPopLvInt;
+        string SelectedDisLv;
+        int SelectedDisLvInt;
+
 
         int count = 0;
-        while (count < 20)
+        while (count < GameLv+4)
         {
-            int RandomHp = Random.Range(10, 40);
-            //            int RandomImage = Random.Range(1, 4);
-            GetComponent<CustomerController>().MakeCustomer("ドクター・ヤブ", "doc", RandomHp, "#0000ff", "", 2, new string[] { "患者の肉", "niku1", "10", "Color", "0.05" }, new string[] { "医者の肉", "niku1", "100", "Color", "0.1" }, 0);
+            string[,] UseCustomer;
+            string ThisRarerity = GetRarerity();
+ 
+            if (ThisRarerity == "C") {
+                if (StatGame.GetComponent<StatGame>().CustmerC[0, 0] == "None")
+                {
+                    UseCustomer = StatGame.GetComponent<StatGame>().CustmerUC;
+                }
+                else {
+                    UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                }
+            }
+            else if (ThisRarerity == "UC")
+            {
+                if (StatGame.GetComponent<StatGame>().CustmerUC[0, 0] == "None")
+                {
+                    UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                }
+                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerUC; }
+            }
+            else if (ThisRarerity == "R") {
+                if (StatGame.GetComponent<StatGame>().CustmerR[0, 0] == "None")
+                {
+                    UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                }
+                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerR; }
+            }
+            else if (ThisRarerity == "SR") {
+                if (StatGame.GetComponent<StatGame>().CustmerSR[0, 0] == "None")
+                {
+                    UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                }
+                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerSR; }
+            }
+            else {
+                if (StatGame.GetComponent<StatGame>().CustmerSSR[0, 0] == "None")
+                {
+                    UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                }
+                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerSSR; } }
+
+            int CustomerLength=UseCustomer.GetLength(0);
+            int RandomCount = Random.Range(0,CustomerLength-1);
+
+
+
+
+            SelectedName = UseCustomer[RandomCount,LowName];
+            SelectedImage = UseCustomer[RandomCount, LowImage];
+            SelectedHp = UseCustomer[RandomCount, LowHp];
+            SelectedHpInt = int.Parse(SelectedHp);
+            SelectedCoreColor = UseCustomer[RandomCount, LowCoreColor];
+            SelectedColor = "";
+            SelectedDropG = UseCustomer[RandomCount, LowDropG];
+            SelectedDropGInt = int.Parse(SelectedDropG);
+            SelectedDropName = UseCustomer[RandomCount, LowDropName];
+            SelectedDropImage = UseCustomer[RandomCount, LowDropImage];
+            SelectedDropPower = UseCustomer[RandomCount, LowDropPower];
+            SelectedDropColor = "";
+            SelectedDropSus = UseCustomer[RandomCount, LowDropSus];
+            SelectedMeatName = UseCustomer[RandomCount, LowMeatName];
+            SelectedMeatImage = UseCustomer[RandomCount, LowMeatImage];
+            SelectedMeatPower = UseCustomer[RandomCount, LowMeatPower];
+            SelectedMeatColor = "";
+            SelectedMeatSus = UseCustomer[RandomCount, LowMeatSus];
+            SelectedSaveSus = UseCustomer[RandomCount, LowSaveSus];
+            SelectedSaveSusInt = int.Parse(SelectedSaveSus);
+            SelectedRare = UseCustomer[RandomCount, LowRare];
+            SelectedPopLv = UseCustomer[RandomCount, LowPopLv];
+            SelectedPopLvInt = int.Parse(SelectedPopLv);
+            SelectedDisLv = UseCustomer[RandomCount, LowDisLv];
+            SelectedDisLvInt = int.Parse(SelectedDisLv);
+
+            GetComponent<CustomerController>().MakeCustomer(
+                SelectedName,
+                SelectedImage, 
+                SelectedHpInt,
+                SelectedCoreColor,
+                SelectedColor,
+                SelectedDropGInt,
+                new string[] { SelectedDropName, SelectedDropImage, SelectedDropPower, SelectedDropColor, SelectedDropSus },
+                new string[] { SelectedMeatName, SelectedMeatImage, SelectedMeatPower, SelectedMeatColor, SelectedMeatSus },
+                 SelectedSaveSusInt,
+                 SelectedRare,
+                 SelectedPopLvInt,
+                 SelectedDisLvInt);
             count++;
         }
 
     }
 
+    //レベルアップ判定
+    public bool LvUpCondition()
+    {
+        int Exp = StatGame.GetComponent<StatGame>().StatExp;
+        bool LvUpBool;
+        if (Exp >= 100) { LvUpBool = true; }
+        else { LvUpBool = false; }
+        return LvUpBool;
+
+    }
 
     //Feedでの勝利条件
     //使ったアイテムのパワーと客ＨＰとの関係で定義
@@ -79,30 +247,42 @@ public int VictoryDropG(int GetG,int VictoryPoint)
     {
         int GetGResult = GetG+ GetG * (VictoryPoint/10);
 
-        GetComponent<StatGameController>().GUp(GetGResult);
         return GetGResult;
     }
 
     //EXP基数から取得EXPを計算して加算
     public int VictoryDropExp(int GetExp, int VictoryPoint)
     {
-        int ResultGetExp=GetExp + GetExp * (VictoryPoint / 100);
-        GetComponent<StatGameController>().ExpUp(ResultGetExp);
-        return ResultGetExp;
+        int GameLv = StatGame.GetComponent<StatGame>().StatLv;
+        float GameLvFloat = (float)GameLv;
+        float ExpLimit = 1/(GameLvFloat/2);
+        float ResultGetExp=(GetExp + GetExp * (VictoryPoint / 100))*ExpLimit;
+        int ResultGetExpInt = (int)ResultGetExp;
+        return ResultGetExpInt;
     }
 
+    //表示上のEXP
+    public string StringGetExp(int GetExp)
+    {
+        string ResultString;
+        int GameLv = StatGame.GetComponent<StatGame>().StatLv;
+
+        int Result = GetExp * GameLv;
+        ResultString = Result.ToString();
+
+            return ResultString;
+    }
     //Sus基数から上昇Susを計算して加算
     public float FeedGetSus(float GetSus)
     {
         float ResultGetSus=GetSus;
-        GetComponent<StatGameController>().SusUp(ResultGetSus);
         return ResultGetSus;
 
     }
     public string[] GetPickUpItem()
     {
 
-        string[] PickUpItem= { "適当な肉","niku1","10","#666666","0"};
+        string[] PickUpItem= { "ネズミにく","niku1","10","#666666","0"};
         return PickUpItem;
 
     }
