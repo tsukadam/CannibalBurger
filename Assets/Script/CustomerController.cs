@@ -15,6 +15,7 @@ public class CustomerController : MonoBehaviour
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
+    public Text DebugLog;
 
     public int LowDataGetCount=0;
 
@@ -40,17 +41,29 @@ public class CustomerController : MonoBehaviour
 
     //そのレベルの客をレアリティごとの配列にして保持する
     public void GetCustomerData(int NowLv)
-    {        
+    {
+        /*
+        //初回はデータ読み込む→CSVリーダのスタートで動かす式にした
+        if (LowDataGetCount == 0)
+        {
+            GetComponent<CSVDataReader>().CustomerCSVRead();
+        }
+*/
+
         string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
-        int CustomerLength= CustomerAllData.GetLength(0);
+
+        int CustomerLength = CustomerAllData.GetLength(0);
         int Count = 1;
         int ThisPopLv;
         int ThisDisLv;
         int LowCount = 0;
 
+
+
         //初回のみ、どの行に何のデータがあるか取得する
         if (LowDataGetCount == 0)
         {
+
             int CustomerLowLength = CustomerAllData.GetLength(1);
             LowCount = 0;
             while (LowCount < CustomerLowLength)
@@ -76,9 +89,10 @@ public class CustomerController : MonoBehaviour
                 LowCount++;
             }
             LowDataGetCount = 1;
-            LowNumber = LowCount;
+            LowNumber = LowCount;//列の数を記録
         }
-        LowCount = LowNumber;
+
+        LowCount = LowNumber;//二回目以降は記録された数から読む
 
         GetComponent<LvDesignController>().LowName = LowName;
         GetComponent<LvDesignController>().LowImage = LowImage;

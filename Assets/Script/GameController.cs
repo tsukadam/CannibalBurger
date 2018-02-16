@@ -11,6 +11,12 @@ public class GameController : MonoBehaviour
     //ゲームstat
     public GameObject StatGame;
 
+    //ハイスコア関連
+    public int MaxKill;//殺人数
+    public int MaxCustomer;//さばいた客の数
+    public int MaxCustomerVictory;//うち魅了した客の数
+    public int MaxGetG;//かせいだ売上の総和
+
     //各画面
     public GameObject Menu;
     public GameObject Game;
@@ -117,8 +123,15 @@ public class GameController : MonoBehaviour
         StatGame.GetComponent<StatGame>().StatSus = 0;
         StatGame.GetComponent<StatGame>().StatG = 50;
         StatGame.GetComponent<StatGame>().StatLv = 1;
-//レベル１の客データの読み込み
-        GetComponent<CustomerController>().GetCustomerData(1);
+
+        MaxKill=0;//殺人数
+        MaxCustomer=0;//さばいた客の数
+        MaxCustomerVictory=0;//うち魅了した客の数
+        MaxGetG=0;//かせいだ売上の総和
+
+
+                       //レベル１の客データの読み込み
+    GetComponent<CustomerController>().GetCustomerData(1);
 
         StatGame.GetComponent<StatGame>().StatExp = 0;
         StatGame.GetComponent<StatGame>().StatDays = 1;
@@ -268,7 +281,9 @@ public class GameController : MonoBehaviour
         int VictoryPoint=0;
         while (Count<CustomerLength)
         {
-            int CustomerHp= Customers[Count].GetComponent<StatCustomer>().Hp;
+            MaxCustomer++;//さばいた客の数
+
+            int CustomerHp = Customers[Count].GetComponent<StatCustomer>().Hp;
             int CustomerDropG = Customers[Count].GetComponent<StatCustomer>().DropG;
             string CustomerColor = Customers[Count].GetComponent<StatCustomer>().Color;
             //Susは勝敗に関わらず上がる
@@ -306,6 +321,7 @@ public class GameController : MonoBehaviour
             VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, UseItemColor, CustomerColor);
             if (VictoryPoint >= 0)
             {
+                MaxCustomerVictory ++;//うち魅了した客の数
 
 
                 //ハートの生成
@@ -373,6 +389,9 @@ public class GameController : MonoBehaviour
         //Susを加算
         GetComponent<StatGameController>().SusUp(GetSus);
 
+        MaxGetG += GetG;//かせいだ売上の総和
+
+
         TapButton.SetActive(true);
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -396,7 +415,6 @@ public class GameController : MonoBehaviour
         string TextGetExp = GetComponent<LvDesignController>().StringGetExp(GetExp);
         string TextGetSus = (GetSus).ToString();
         if (GetG <= 0) { TextGetG = "<color='red'>" + TextGetG + "</color>"; }
-        else { TextGetSus = ""; }
         if (GetSus > 0) { SusLine.SetActive(true); }
         else { SusLine.SetActive(false); }
 
@@ -462,8 +480,28 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         PopupGameOver.SetActive(true);
+
+        GetHighScore();
+        StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
+
     }
 
+    //ハイスコアの記録
+    public void GetHighScore()
+    {
+        StatPlayer.GetComponent<StatPlayer>().TotalCountPlay++;
+
+        StatPlayer.GetComponent<StatPlayer>().MaxKill=MaxKill;//殺人数
+        StatPlayer.GetComponent<StatPlayer>().MaxCustomer=MaxCustomer;//さばいた客の数
+        StatPlayer.GetComponent<StatPlayer>().MaxCustomerVictory=MaxCustomerVictory;//うち魅了した客の数
+        StatPlayer.GetComponent<StatPlayer>().MaxGetG=MaxGetG;//かせいだ売上の総和
+
+        StatPlayer.GetComponent<StatPlayer>().MaxG =StatGame.GetComponent<StatGame>().StatG;
+        StatPlayer.GetComponent<StatPlayer>().MaxLv = StatGame.GetComponent<StatGame>().StatLv;
+        StatPlayer.GetComponent<StatPlayer>().MaxDays = StatGame.GetComponent<StatGame>().StatDays;
+
+
+    }
 
     //取得アイテムがないときにアイテムを自動的に１つ得る
     public void GetPickUp()
@@ -473,9 +511,9 @@ public class GameController : MonoBehaviour
 
         string[] PickUpItem = GetComponent<LvDesignController>().GetPickUpItem();
 
-        if (StatGame.GetComponent<StatGame>().Item1[0] == "") { StatGame.GetComponent<StatGame>().Item1 = PickUpItem; }
-        else if (StatGame.GetComponent<StatGame>().Item2[0] == "") { StatGame.GetComponent<StatGame>().Item2 = PickUpItem; }
-        else if (StatGame.GetComponent<StatGame>().Item3[0] == "") { StatGame.GetComponent<StatGame>().Item3 = PickUpItem; }
+        if (StatGame.GetComponent<StatGame>().Item1[0] == "None") { StatGame.GetComponent<StatGame>().Item1 = PickUpItem; }
+        else if (StatGame.GetComponent<StatGame>().Item2[0] == "None") { StatGame.GetComponent<StatGame>().Item2 = PickUpItem; }
+        else if (StatGame.GetComponent<StatGame>().Item3[0] == "None") { StatGame.GetComponent<StatGame>().Item3 = PickUpItem; }
         else { StatGame.GetComponent<StatGame>().Item4 = PickUpItem; }
 
         PopupGetItem.SetActive(true);
@@ -817,6 +855,15 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(false);
 
 
+        if(SelectItemImage1.tag=="Top0"| SelectItemImage1.tag == "Top1"|SelectItemImage1.tag=="Top2"|SelectItemImage1.tag=="Top3"){
+        MaxKill++;//殺人数    
+    }
+        if (SelectItemImage2.tag == "Top0" | SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3")
+        {
+            MaxKill++;//殺人数    
+        }
+
+
         //選択されていたアイテムを取得
         string PowerString;
         string UpSusString;
@@ -932,30 +979,48 @@ public class GameController : MonoBehaviour
         else if (ItemNum == 6) { StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" }; }
         else { Debug.Log("1~6以外のアイテムＩＤが入っています"); }
 
-        string[] CheckItem = new string[5];
-        int Count = 0;
-        int ItemCount = 0;
-        
-        while (Count < 6)
-        {
-            if (Count == 0) { CheckItem = StatGame.GetComponent<StatGame>().Item1; }
-            else if (Count == 1) { CheckItem = StatGame.GetComponent<StatGame>().Item2; }
-            else if (Count == 2) { CheckItem = StatGame.GetComponent<StatGame>().Item3; }
-            else if (Count == 3) { CheckItem = StatGame.GetComponent<StatGame>().Item4; }
-            else if (Count == 4) { CheckItem = StatGame.GetComponent<StatGame>().Item5; }
-            else { CheckItem = StatGame.GetComponent<StatGame>().Item6; }
 
-            if (CheckItem[0] == "None") { }
+        if (StatGame.GetComponent<StatGame>().Item5[0] != "None") {
+                if (StatGame.GetComponent<StatGame>().Item1[0]=="None")
+            {
+                StatGame.GetComponent<StatGame>().Item1= StatGame.GetComponent<StatGame>().Item5;
+            }
+            else if (StatGame.GetComponent<StatGame>().Item2[0] == "None")
+            {
+                StatGame.GetComponent<StatGame>().Item2 = StatGame.GetComponent<StatGame>().Item5;
+            }
+            else if (StatGame.GetComponent<StatGame>().Item3[0] == "None")
+            {
+                StatGame.GetComponent<StatGame>().Item3 = StatGame.GetComponent<StatGame>().Item5;
+            }
             else
             {
-                if (ItemCount == 0) {StatGame.GetComponent<StatGame>().Item1=CheckItem; }
-                else if (ItemCount == 1) { StatGame.GetComponent<StatGame>().Item2 = CheckItem; }
-                else if (ItemCount == 2) { StatGame.GetComponent<StatGame>().Item3 = CheckItem; }
-                else { StatGame.GetComponent<StatGame>().Item4 = CheckItem; }
-                ItemCount++;
+                StatGame.GetComponent<StatGame>().Item4 = StatGame.GetComponent<StatGame>().Item5;
             }
-            Count++;
+
         }
+
+        if (StatGame.GetComponent<StatGame>().Item6[0] != "None")
+        {
+            if (StatGame.GetComponent<StatGame>().Item1[0] == "None")
+            {
+                StatGame.GetComponent<StatGame>().Item1 = StatGame.GetComponent<StatGame>().Item6;
+            }
+            else if (StatGame.GetComponent<StatGame>().Item2[0] == "None")
+            {
+                StatGame.GetComponent<StatGame>().Item2 = StatGame.GetComponent<StatGame>().Item6;
+            }
+            else if (StatGame.GetComponent<StatGame>().Item3[0] == "None")
+            {
+                StatGame.GetComponent<StatGame>().Item3 = StatGame.GetComponent<StatGame>().Item6;
+            }
+            else
+            {
+                StatGame.GetComponent<StatGame>().Item4 = StatGame.GetComponent<StatGame>().Item6;
+            }
+        }
+
+
         Button6Items.SetActive(false);
 
         TapBlock.SetActive(false);
@@ -1002,6 +1067,27 @@ public class GameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        //ナビゲーションバーを透明に
+        /*
+        ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
+        ApplicationChrome.statusBarState = ApplicationChrome.States.Hidden;
+        */
+        //解像度設定
+        float screenRate = (float)1280 / Screen.height;
+        if (screenRate > 1) screenRate = 1;
+        int width = (int)(Screen.width * screenRate);
+        int height = (int)(Screen.height * screenRate);
+        Screen.SetResolution(width, height, true, 60);
+
+        //回転固定
+        // 縦
+        Screen.autorotateToPortrait = false;
+        // 左
+        Screen.autorotateToLandscapeLeft = false;
+        // 右
+        Screen.autorotateToLandscapeRight = false;
+        // 上下反転
+        Screen.autorotateToPortraitUpsideDown = false;
         GoMenu();
     }
 

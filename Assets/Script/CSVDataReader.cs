@@ -3,10 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine.UI;
 
 public class CSVDataReader : MonoBehaviour
 {
     public GameObject StatGame;
+
+    public Text DebugLog;
+
 
     //敵データ格納用の配列データ(とりあえず初期値はnull値)
     private string[,] stageMapDatas = null;
@@ -22,17 +26,14 @@ public class CSVDataReader : MonoBehaviour
         //返り値の２次元配列
         string[,] readToIntData;
 
-        //ストリームリーダーsrに読み込む
-        //※Application.dataPathはプロジェクトデータのAssetフォルダまでのアクセスパスのこと,
-        StreamReader sr = new StreamReader(Application.dataPath + path);
-        //ストリームリーダーをstringに変換
-        string strStream = sr.ReadToEnd();
+        TextAsset csvFile;
+        csvFile = Resources.Load(path,typeof(TextAsset)) as TextAsset;
 
         //StringSplitOptionを設定(要はカンマとカンマに何もなかったら格納しないことにする)
         System.StringSplitOptions option = StringSplitOptions.RemoveEmptyEntries;
 
         //行に分ける
-        string[] lines = strStream.Split(new char[] { '\r', '\n' }, option);
+        string[] lines = csvFile.text.Split(new char[] { '\r', '\n' }, option);
 
         //カンマ分けの準備(区分けする文字を設定する)
         char[] spliter = new char[1] { ',' };
@@ -64,6 +65,7 @@ public class CSVDataReader : MonoBehaviour
 
         //返り値
         return readToIntData;
+ 
     }
 
     //確認表示用の関数
@@ -81,17 +83,25 @@ public class CSVDataReader : MonoBehaviour
         }
     }
 
-    void Start()
+    public void CustomerCSVRead()
     {
         //データパスを設定
-        //このデータパスは、Assetフォルダ以下の位置を書くので/で階層を区切り、CSVデータ名まで書かないと読み込んでくれない
-        string path = "/Resources/CsvData/CustomerCSV.csv";
+        string path = "CustomerCSV";
         //データを読み込む(引数：データパス)
-        string[,] CustomerAllData = stageMapDatas = readCSVData(path);
+        string[,] CustomerAllData = readCSVData(path);
 
         StatGame.GetComponent<StatGame>().CustomerAllData = CustomerAllData;
 
-//        WriteMapDatas(this.stageMapDatas, this.height, this.width);
+        DebugLog.text = CustomerAllData[0, 0];
+
+        //        WriteMapDatas(this.stageMapDatas, this.height, this.width);
+
+
+    }
+
+    void Start()
+    {
+        CustomerCSVRead();
     }
 
     void UpDate()

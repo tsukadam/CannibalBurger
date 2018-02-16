@@ -93,17 +93,13 @@ public class LvDesignController : MonoBehaviour
         string SelectedDropName;
         string SelectedDropImage;
         string SelectedDropPower;
-        int SelectedDropPowerInt;
         string SelectedDropColor;
         string SelectedDropSus;
-        int SelectedDropSusInt;
         string SelectedMeatName;
         string SelectedMeatImage;
         string SelectedMeatPower;
-        int SelectedMeatPowerInt;
         string SelectedMeatColor;
         string SelectedMeatSus;
-        int SelectedMeatSusInt;
         string SelectedSaveSus;
         int SelectedSaveSusInt;
         string SelectedRare;
