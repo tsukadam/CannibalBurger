@@ -520,6 +520,10 @@ public class StatGameController : MonoBehaviour
     public void LvUp(int Count)
     {
         StatGame.GetComponent<StatGame>().StatLv += Count;
+
+        //レベルデザイン情報の読み込み
+        GetComponent<LvDesignController>().GetLvDesignData();
+
         DrawLv();
     }
 

@@ -119,9 +119,12 @@ public class GameController : MonoBehaviour
         Button4Items3.GetComponent<Button>().interactable = true;
         Button4Items4.GetComponent<Button>().interactable = true;
 
+
+
+
         //パラメータ初期化
         StatGame.GetComponent<StatGame>().StatSus = 0;
-        StatGame.GetComponent<StatGame>().StatG = 50;
+        StatGame.GetComponent<StatGame>().StatG = 0;
         StatGame.GetComponent<StatGame>().StatLv = 1;
 
         MaxKill=0;//殺人数
@@ -129,9 +132,11 @@ public class GameController : MonoBehaviour
         MaxCustomerVictory=0;//うち魅了した客の数
         MaxGetG=0;//かせいだ売上の総和
 
+        //レベルデザイン情報の読み込み
+        GetComponent<LvDesignController>().GetLvDesignData();
 
-                       //レベル１の客データの読み込み
-    GetComponent<CustomerController>().GetCustomerData(1);
+        //レベル１の客データの読み込み
+        GetComponent<CustomerController>().GetCustomerData(1);
 
         StatGame.GetComponent<StatGame>().StatExp = 0;
         StatGame.GetComponent<StatGame>().StatDays = 1;
@@ -158,6 +163,7 @@ public class GameController : MonoBehaviour
         //初期客の生成
         GetComponent<LvDesignController>().MakeCustomerFirst();
 
+
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
@@ -167,6 +173,7 @@ public class GameController : MonoBehaviour
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
+
 
         //前周の客を破壊
         if (GameObject.FindGameObjectWithTag("Top0") != null) { Destroy(GameObject.FindGameObjectWithTag("Top0")); }
@@ -278,7 +285,12 @@ public class GameController : MonoBehaviour
         int GetG =0;
         int GetExp = 0;
         float GetSus = 0;
-        int VictoryPoint=0;
+        float VictoryPoint=0;
+        int RateColor = 0;
+
+        //Susは人数に関わらず上がる
+        GetSus = UseItemUpSus;
+
         while (Count<CustomerLength)
         {
             MaxCustomer++;//さばいた客の数
@@ -286,24 +298,12 @@ public class GameController : MonoBehaviour
             int CustomerHp = Customers[Count].GetComponent<StatCustomer>().Hp;
             int CustomerDropG = Customers[Count].GetComponent<StatCustomer>().DropG;
             string CustomerColor = Customers[Count].GetComponent<StatCustomer>().Color;
-            //Susは勝敗に関わらず上がる
-            GetSus += UseItemUpSus;
 
-            //色距離の表示、デバッグ用
-                        Color UseColor = GetComponent<ColorGetter>().ToColor(UseItemColor);
-                        Color CustomColor = GetComponent<ColorGetter>().ToColor(CustomerColor);
-                        float UseR = UseColor.r;
-                        float UseG = UseColor.g;
-                        float UseB = UseColor.b;
-                        float CusR = CustomColor.r;
-                        float CusG = CustomColor.g;
-                        float CusB = CustomColor.b;
 
-                        float DistanceR = Mathf.Abs(UseR - CusR);
-                        float DistanceG = Mathf.Abs(UseG - CusG);
-                        float DistanceB = Mathf.Abs(UseB - CusB);
-
-                        float DistancePer = Mathf.Ceil(100-((DistanceR + DistanceG + DistanceB)*100/3));
+            //色距離の取得
+            Color UseColor = GetComponent<ColorGetter>().ToColor(UseItemColor);
+            Color CustomColor = GetComponent<ColorGetter>().ToColor(CustomerColor);
+            RateColor = GetComponent<LvDesignController>().ColorCondition(UseItemColor, CustomerColor);
 
                         GameObject ColorCheck = (GameObject)Instantiate(
                                    ColorCheckPrefab,
@@ -312,13 +312,13 @@ public class GameController : MonoBehaviour
                         ColorCheck.transform.SetParent(Customers[Count].transform);
                         //位置決定
                         ColorCheck.transform.localPosition = new Vector3(0, 90, 0);
-                        string DistancePerString = (DistancePer).ToString();
+                        string DistancePerString = (RateColor).ToString();
             ColorCheck.GetComponent<Text>().text = DistancePerString+"";
 
 
             //Powerを比べる
             //こちらの勝利
-            VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, UseItemColor, CustomerColor);
+            VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, RateColor);
             if (VictoryPoint >= 0)
             {
                 MaxCustomerVictory ++;//うち魅了した客の数
@@ -337,12 +337,12 @@ public class GameController : MonoBehaviour
                 Customers[Count].tag = "Loser";
                 //勝利度合の記録
                 Customers[Count].GetComponent<StatCustomer>().PointPower =UseItemPower-CustomerHp;
-                Customers[Count].GetComponent<StatCustomer>().PointColor = DistancePer;
+                Customers[Count].GetComponent<StatCustomer>().PointColor = RateColor;
 
                 //賞金取得
                 GetG+=GetComponent<LvDesignController>().VictoryDropG(CustomerDropG,VictoryPoint);
                 //exp獲得
-                GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);
+                GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
 
             }
             //客の勝利
@@ -357,6 +357,7 @@ public class GameController : MonoBehaviour
 
         float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
 
+        //変動値を一時的にSTATに記録
         StatGame.GetComponent<StatGame>().ResultGetG =GetG;
         StatGame.GetComponent<StatGame>().ResultGetExp = GetExp;
         StatGame.GetComponent<StatGame>().ResultGetSus = ResultGetSus;
@@ -440,8 +441,10 @@ public class GameController : MonoBehaviour
             PopupLvUp.SetActive(true);
             PopupLvUpText.text = "レベルアップ！";
             //レベルアップ時のボーナス処理
-            //レベルを渡すとSus減少を発動する
             GetComponent<StatGameController>().LvUp(1);
+
+
+            //レベルを渡すとSus減少を発動する
             GetComponent<LvDesignController>().LvUpSaveSus();
 
             int NowLv = StatGame.GetComponent<StatGame>().StatLv;
@@ -614,10 +617,11 @@ public class GameController : MonoBehaviour
                 float CoreR = ItemCol.r;
                 float CoreG = ItemCol.g;
                 float CoreB = ItemCol.b;
+                //アイテムの色揺れ幅
 
-                float PlusR = Random.Range(150f / 255, -150f / 255);
-                float PlusG = Random.Range(150f / 255, -150f / 255);
-                float PlusB = Random.Range(150f / 255, -150f / 255);
+                float PlusR = Random.Range(50f / 255, -50f / 255);
+                float PlusG = Random.Range(50f / 255, -50f / 255);
+                float PlusB = Random.Range(50f / 255, -50f / 255);
                 Color UseItemCol = new Color(CoreR + PlusR, CoreG + PlusG, CoreB + PlusB, 1f);
 
 

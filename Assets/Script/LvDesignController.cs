@@ -28,15 +28,80 @@ public class LvDesignController : MonoBehaviour
     public int LowMeatPower;
     public int LowMeatSus;
 
-    //レアリティを数字に変換、高いほど強い
+    //レベルデザインデータの行情報
+    public int LowNeedExp;
+    public int LowCustomerNum;
+    public int LowRateC;
+    public int LowRateUC;
+    public int LowRateR;
+    public int LowRateSus;
+    public int LowLvUpSus;
+
+    //今のレベルでのレベルデザインデータ
+    public int NeedExp;
+    public int CustomerNum;
+    public float RateC;
+    public float RateUC;
+    public float RateR;
+    public float RateSus;
+    public int LvUpSus;
+
+    public int LvDesignDataGetCount=0;
+
+    public int LvDesignLowNumber;
+
+    //そのレベルの情報を保持する、レベルアップ時に走る
+    //初回は列番号のデータを取得
+    public void GetLvDesignData()
+    {
+        string[,] LvDesignData = StatGame.GetComponent<StatGame>().LvDesignData;
+
+        int LvLength = LvDesignData.GetLength(0);
+        int LowCount = 0;
+
+        //初回のみ、どの行に何のデータがあるか取得する
+        if (LvDesignDataGetCount == 0)
+        {
+
+            int LvDesignLowLength = LvDesignData.GetLength(1);
+            LowCount = 0;
+            while (LowCount < LvDesignLowLength)
+            {
+                if (LvDesignData[0, LowCount] == "NeedExp") { LowNeedExp = LowCount; }
+                else if (LvDesignData[0, LowCount] == "CustomerNum") { LowCustomerNum = LowCount; }
+                else if (LvDesignData[0, LowCount] == "RateC") { LowRateC = LowCount; }
+                else if (LvDesignData[0, LowCount] == "RateUC") { LowRateUC = LowCount; }
+                else if (LvDesignData[0, LowCount] == "RateR") { LowRateR = LowCount; }
+                else if (LvDesignData[0, LowCount] == "RateSus") { LowRateSus = LowCount; }
+                else if (LvDesignData[0, LowCount] == "LvUpSus") { LowLvUpSus = LowCount; }
+                else { Debug.Log("Customerデータの行の取得に失敗しました Low=" + LowCount); }
+                LowCount++;
+            }
+            LvDesignDataGetCount = 1;
+            LvDesignLowNumber = LowCount;//列の数を記録
+        }
+
+        LowCount = LvDesignLowNumber;//二回目以降は記録された数から読む
+        int NowLv = StatGame.GetComponent<StatGame>().StatLv;
+        NeedExp = int.Parse(LvDesignData[NowLv, LowNeedExp]);
+    CustomerNum = int.Parse(LvDesignData[NowLv, LowCustomerNum]);
+        RateC = float.Parse(LvDesignData[NowLv, LowRateC]);
+        RateUC = float.Parse(LvDesignData[NowLv, LowRateUC]);
+        RateR= float.Parse(LvDesignData[NowLv, LowRateR]);
+    RateSus= float.Parse(LvDesignData[NowLv, LowRateSus]);
+    LvUpSus= int.Parse(LvDesignData[NowLv, LowLvUpSus]);
+
+}
+
+    //レアリティを数字に変換
     public int GetRarerityInt(string Rarerity)
     {
         int Result=0;
         if (Rarerity == "C") { Result = 0; }
         else if (Rarerity == "UC") { Result = 1; }
         else if (Rarerity == "R") { Result = 2; }
-        else if (Rarerity == "SR") { Result = 3; }
-        else if (Rarerity == "SSR") { Result = 4; }
+        else if (Rarerity == "Sus") { Result = 3; }
+        else{ Result = 0; Debug.Log("レアリティを数字に変換できません。Cにしました"); }
 
         return Result;
     }
@@ -44,10 +109,10 @@ public class LvDesignController : MonoBehaviour
     //初回アイテムの生成
     public void MakeItemFirst()
     {
-        StatGame.GetComponent<StatGame>().Item1 = new string[] { "ネズミにく", "niku1", "10", "#ff0000", "0" };
-        StatGame.GetComponent<StatGame>().Item2 = new string[] { "どてカボチャ", "niku1", "15", "#00ff00", "0" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "かびチーズ", "niku1", "20", "#0000ff", "0" };
-        StatGame.GetComponent<StatGame>().Item4 = new string[] { "きみょうなにく", "niku1", "40", "#666666", "100" };
+        StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "1", "#dd6645", "0" };
+        StatGame.GetComponent<StatGame>().Item2 = new string[] { "レタス", "Retasu", "1", "#88cc66", "0" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "1", "#dddd77", "0" };
+        StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "0" };
     }
 
     //初回客の生成
@@ -61,18 +126,19 @@ public class LvDesignController : MonoBehaviour
     public string GetRarerity()
     {
         string ResultRarerity="";
-        int ProbableC = 50;
-        int ProbableUC = 30;
-        int ProbableR = 10;
-        int ProbableSR = 8;
-        int ProbableSSR = 2;
-        int RandomCount = Random.Range(0, ProbableC+ ProbableUC+ ProbableR+ ProbableSR+ ProbableSSR);
+        int ProbableC = (int)RateC;
+        int ProbableUC = (int)RateUC;
+        int ProbableR = (int)RateR;
+        int ProbableSus = (int)RateSus;
+
+
+        int RandomCount = Random.Range(0, ProbableC+ ProbableUC+ ProbableR+ ProbableSus);
 
         if (RandomCount >= 0 & RandomCount <= ProbableC) { ResultRarerity = "C"; }
         else if (RandomCount >= ProbableC & RandomCount <= ProbableC+ ProbableUC) { ResultRarerity = "UC"; }
         else if (RandomCount >= ProbableC+ ProbableUC & RandomCount <= ProbableC + ProbableUC+ ProbableR) { ResultRarerity = "R"; }
-        else if (RandomCount >= ProbableC + ProbableUC+ ProbableR & RandomCount <= ProbableC + ProbableUC + ProbableR+ ProbableSR) { ResultRarerity = "SR"; }
-        else { ResultRarerity = "SSR"; }
+        else if (RandomCount >= ProbableC + ProbableUC+ ProbableR & RandomCount <= ProbableC + ProbableUC + ProbableR+ ProbableSus) { ResultRarerity = "SUS"; }
+        else { ResultRarerity = "C";Debug.Log("レアリティの出現確率調整に失敗しました。Cにしました"); }
 
         return ResultRarerity;
     }
@@ -110,7 +176,10 @@ public class LvDesignController : MonoBehaviour
 
 
         int count = 0;
-        while (count < GameLv+4)
+        //そのレアリティの客がそのレベル帯にいない場合、別のレアリティのを入れる。
+        //※代替レアリティの客が存在する保証はプログラム内にはない
+        
+        while (count < CustomerNum)
         {
             string[,] UseCustomer;
             string ThisRarerity = GetRarerity();
@@ -119,6 +188,7 @@ public class LvDesignController : MonoBehaviour
                 if (StatGame.GetComponent<StatGame>().CustmerC[0, 0] == "None")
                 {
                     UseCustomer = StatGame.GetComponent<StatGame>().CustmerUC;
+        Debug.Log("CがいないのでUCにしました");
                 }
                 else {
                     UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
@@ -129,6 +199,8 @@ public class LvDesignController : MonoBehaviour
                 if (StatGame.GetComponent<StatGame>().CustmerUC[0, 0] == "None")
                 {
                     UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                    Debug.Log("UCがいないのでCにしました");
+
                 }
                 else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerUC; }
             }
@@ -136,22 +208,22 @@ public class LvDesignController : MonoBehaviour
                 if (StatGame.GetComponent<StatGame>().CustmerR[0, 0] == "None")
                 {
                     UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                    Debug.Log("RがいないのでCにしました");
                 }
                 else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerR; }
             }
-            else if (ThisRarerity == "SR") {
-                if (StatGame.GetComponent<StatGame>().CustmerSR[0, 0] == "None")
+            else if (ThisRarerity == "SUS") {
+                if (StatGame.GetComponent<StatGame>().CustmerSus[0, 0] == "None")
                 {
                     UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                    Debug.Log("SUSがいないのでCにしました");
                 }
-                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerSR; }
+                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerSus; }
             }
             else {
-                if (StatGame.GetComponent<StatGame>().CustmerSSR[0, 0] == "None")
-                {
                     UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
-                }
-                else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerSSR; } }
+                Debug.Log("レアリティが変です。Cにしました");
+            }
 
             int CustomerLength=UseCustomer.GetLength(0);
             int RandomCount = Random.Range(0,CustomerLength-1);
@@ -214,10 +286,8 @@ public class LvDesignController : MonoBehaviour
 
     }
 
-    //Feedでの勝利条件
-    //使ったアイテムのパワーと客ＨＰとの関係で定義
-    //あと色
-    public int VictoryCondition(int UseItemPower,int CustomerHp, string UseItemColor, string CustomerColor)
+    //色距離の計算
+    public int ColorCondition(string UseItemColor, string CustomerColor)
     {
         Color UseColor = GetComponent<ColorGetter>().ToColor(UseItemColor);
         Color CustomColor = GetComponent<ColorGetter>().ToColor(CustomerColor);
@@ -228,31 +298,65 @@ public class LvDesignController : MonoBehaviour
         float CusG = CustomColor.g;
         float CusB = CustomColor.b;
 
-        float DistanceR = Mathf.Abs(UseR-CusR);
-        float DistanceG = Mathf.Abs(UseG - CusG);
-        float DistanceB = Mathf.Abs(UseB - CusB);
+        //RGB差の計算
+        float DistanceR = Mathf.Abs(UseR - CusR)*255;
+        float DistanceG = Mathf.Abs(UseG - CusG) * 255;
+        float DistanceB = Mathf.Abs(UseB - CusB) * 255;
+        float DistanceRGB = DistanceR + DistanceG + DistanceB;
 
-        float DistancePer = Mathf.Ceil(100 - ((DistanceR + DistanceG + DistanceB) * 100 / 3));
-        int DistancePerInt = (int)DistancePer;
+        //HDTV差の計算
+        float Ganma = 2.2f;
+        float UseHDTV = Mathf.Pow(Mathf.Pow(UseR, Ganma) * 0.222015f + Mathf.Pow(UseG, Ganma) * 0.706655f + Mathf.Pow(UseB, Ganma) * 0.071330f, 1 / Ganma);
+        float CusHDTV = Mathf.Pow(Mathf.Pow(CusR, Ganma) * 0.222015f + Mathf.Pow(CusG, Ganma) * 0.706655f + Mathf.Pow(CusB, Ganma) * 0.071330f, 1 / Ganma);
 
-        return (UseItemPower + (UseItemPower * (2 * DistancePerInt) / 100)) - CustomerHp;//色完全一致で３００％の力になる
+        float DistanceHDTV = Mathf.Abs(UseHDTV - CusHDTV);
+        float DC = (DistanceHDTV * 2 + DistanceRGB) / 100;
+
+        float Per;
+        //0<DistancePer<1275
+        //倍率の算出
+        if (DC > 3.5) { Per = 0.5f; }
+        else {
+            Per = 1f*(1 / Mathf.Pow(7 / 4f, DC)) * 4 - DC / 80;
+        }
+        //f(x)=(1/(7/4)^x)*4-x/80
+        //色距離0で4倍、0.5で3倍、1.2で2倍、2.45で等倍、3.5以上は1/2
+        Per *= 100;
+        int PerInt = (int)Per;
+     //   Debug.Log(DC+"→"+PerInt);
+        return PerInt;
+    }
+    //客に対する勝利条件
+    //使ったアイテムのパワーと客ＨＰと色倍率で定義
+    //勝利点を返す
+    public float VictoryCondition(int UseItemPower,int CustomerHp, int RateColor)
+    {      
+
+        float Vic = (UseItemPower * RateColor / 100 - CustomerHp) / CustomerHp;
+        return Vic;
     }
 
-        //賞金基数から取得Ｇを計算して返す
-public int VictoryDropG(int GetG,int VictoryPoint)
+        //取得Ｇを計算して返す
+public int VictoryDropG(int GetG,float VictoryPoint)
     {
-        int GetGResult = GetG+ GetG * (VictoryPoint/10);
+        //勝利幅の1/10が加算される（微増、５に対して６で勝利したら幅１で5.1点となる。１０で勝利しても5.5点）
+        float GetGResult = GetG + GetG * (VictoryPoint / 10);
 
-        return GetGResult;
+        int IntGetGResult = (int)GetGResult;
+
+        return IntGetGResult;
     }
 
-    //EXP基数から取得EXPを計算して加算
-    public int VictoryDropExp(int GetExp, int VictoryPoint)
+    //取得EXPを計算して返す
+    public int VictoryDropExp(int GetExp, float VictoryPoint)
     {
         int GameLv = StatGame.GetComponent<StatGame>().StatLv;
-        float GameLvFloat = (float)GameLv;
-        float ExpLimit = 1/(GameLvFloat/2);
-        float ResultGetExp=(GetExp + GetExp * (VictoryPoint / 100))*ExpLimit;
+        //勝利幅の1/10が加算される（微増、５に対して６で勝利したら幅１で5.1点となる。１０で勝利しても5.5点）
+        float FloatGetExp = GetExp + GetExp * (VictoryPoint / 10);
+
+        //そのレベルの必要Expを100として、取得したExp画素がいくつかを計算
+        float FloatNeedExp = (float)NeedExp;
+        float ResultGetExp= FloatGetExp*100/FloatNeedExp;
         int ResultGetExpInt = (int)ResultGetExp;
         return ResultGetExpInt;
     }
@@ -278,7 +382,7 @@ public int VictoryDropG(int GetG,int VictoryPoint)
     public string[] GetPickUpItem()
     {
 
-        string[] PickUpItem= { "ネズミにく","niku1","10","#666666","0"};
+        string[] PickUpItem= { "ネズミにく", "NezunikuSyou", "1", "#d9cac7", "0"};
         return PickUpItem;
 
     }
@@ -295,7 +399,6 @@ public int VictoryDropG(int GetG,int VictoryPoint)
     // Use this for initialization
     void Start()
     {
-
     }
 
     // Update is called once per frame

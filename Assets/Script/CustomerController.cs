@@ -42,13 +42,6 @@ public class CustomerController : MonoBehaviour
     //そのレベルの客をレアリティごとの配列にして保持する
     public void GetCustomerData(int NowLv)
     {
-        /*
-        //初回はデータ読み込む→CSVリーダのスタートで動かす式にした
-        if (LowDataGetCount == 0)
-        {
-            GetComponent<CSVDataReader>().CustomerCSVRead();
-        }
-*/
 
         string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
 
@@ -88,36 +81,40 @@ public class CustomerController : MonoBehaviour
                 else { Debug.Log("Customerデータの行の取得に失敗しました Low="+ LowCount); }
                 LowCount++;
             }
+
+
+            //
+            GetComponent<LvDesignController>().LowName = LowName;
+            GetComponent<LvDesignController>().LowImage = LowImage;
+            GetComponent<LvDesignController>().LowPopLv = LowPopLv;
+            GetComponent<LvDesignController>().LowDisLv = LowDisLv;
+            GetComponent<LvDesignController>().LowRare = LowRare;
+            GetComponent<LvDesignController>().LowHp = LowHp;
+            GetComponent<LvDesignController>().LowCoreColor = LowCoreColor;
+            GetComponent<LvDesignController>().LowSaveSus = LowSaveSus;
+            GetComponent<LvDesignController>().LowDropG = LowDropG;
+            GetComponent<LvDesignController>().LowDropName = LowDropName;
+            GetComponent<LvDesignController>().LowDropImage = LowDropImage;
+            GetComponent<LvDesignController>().LowDropPower = LowDropPower;
+            GetComponent<LvDesignController>().LowDropSus = LowDropSus;
+            GetComponent<LvDesignController>().LowMeatName = LowMeatName;
+            GetComponent<LvDesignController>().LowMeatImage = LowMeatImage;
+            GetComponent<LvDesignController>().LowMeatPower = LowMeatPower;
+            GetComponent<LvDesignController>().LowMeatSus = LowMeatSus;
+
             LowDataGetCount = 1;
             LowNumber = LowCount;//列の数を記録
         }
 
         LowCount = LowNumber;//二回目以降は記録された数から読む
 
-        GetComponent<LvDesignController>().LowName = LowName;
-        GetComponent<LvDesignController>().LowImage = LowImage;
-        GetComponent<LvDesignController>().LowPopLv = LowPopLv;
-        GetComponent<LvDesignController>().LowDisLv = LowDisLv;
-        GetComponent<LvDesignController>().LowRare = LowRare;
-        GetComponent<LvDesignController>().LowHp = LowHp;
-        GetComponent<LvDesignController>().LowCoreColor = LowCoreColor;
-        GetComponent<LvDesignController>().LowSaveSus = LowSaveSus;
-        GetComponent<LvDesignController>().LowDropG = LowDropG;
-        GetComponent<LvDesignController>().LowDropName = LowDropName;
-        GetComponent<LvDesignController>().LowDropImage = LowDropImage;
-        GetComponent<LvDesignController>().LowDropPower = LowDropPower;
-        GetComponent<LvDesignController>().LowDropSus = LowDropSus;
-        GetComponent<LvDesignController>().LowMeatName = LowMeatName;
-        GetComponent<LvDesignController>().LowMeatImage = LowMeatImage;
-        GetComponent<LvDesignController>().LowMeatPower = LowMeatPower;
-        GetComponent<LvDesignController>().LowMeatSus = LowMeatSus;
 
         Count = 1;
         int CountC = 0;
         int CountUC = 0;
         int CountR = 0;
-        int CountSR = 0;
-        int CountSSR = 0;
+        int CountSus = 0;
+
         while (Count< CustomerLength){
             ThisPopLv = int.Parse(CustomerAllData[Count, LowPopLv]);
             ThisDisLv = int.Parse(CustomerAllData[Count, LowDisLv]);
@@ -127,9 +124,8 @@ public class CustomerController : MonoBehaviour
                 if (CustomerAllData[Count, LowRare] == "C") { CountC++; }
                 else if (CustomerAllData[Count, LowRare] == "UC") { CountUC++; }
                 else if (CustomerAllData[Count, LowRare] == "R") { CountR++; }
-                else if (CustomerAllData[Count, LowRare] == "SR") { CountSR++; }
-                else if (CustomerAllData[Count, LowRare] == "SSR") { CountSSR++; }
-                else { Debug.Log("レアリティの仕分けに失敗しています。SSRとして数えます。Column="+Count);
+                else if (CustomerAllData[Count, LowRare] == "SUS") { CountSus++; }
+                else { Debug.Log("レアリティの仕分けに失敗しています。Cとして数えます。Column="+Count);
                     CountUC++;
                 }
             }
@@ -139,8 +135,7 @@ public class CustomerController : MonoBehaviour
         string[,] CustmerC;
         string[,] CustmerUC;
         string[,] CustmerR;
-        string[,] CustmerSR;
-        string[,] CustmerSSR;
+        string[,] CustmerSus;
 
         if (CountC == 0) { CustmerC = new string[1, 1];CustmerC[0,0]="None"; }
         else {
@@ -154,13 +149,9 @@ public class CustomerController : MonoBehaviour
         else {
             CustmerR = new string[CountR, LowCount];
         }
-        if (CountSR == 0) { CustmerSR = new string[1, 1]; CustmerSR[0, 0] = "None"; }
+        if (CountSus == 0) { CustmerSus = new string[1, 1]; CustmerSus[0, 0] = "None"; }
         else {
-            CustmerSR = new string[CountSR, LowCount];
-        }
-        if (CountSSR == 0) { CustmerSSR = new string[1, 1]; CustmerSSR[0, 0] = "None"; }
-        else {
-            CustmerSSR = new string[CountSSR, LowCount];
+            CustmerSus = new string[CountSus, LowCount];
         }
 
 
@@ -170,8 +161,8 @@ public class CustomerController : MonoBehaviour
         CountC = 0;
         CountUC = 0;
         CountR = 0;
-        CountSR = 0;
-        CountSSR = 0;
+        CountSus = 0;
+
         while (Count < CustomerLength)
         {
             ThisPopLv = int.Parse(CustomerAllData[Count, LowPopLv]);
@@ -204,32 +195,23 @@ public class CustomerController : MonoBehaviour
                         CountSmall++;
                     }
                     CountR++; }
-                else if (CustomerAllData[Count, LowRare] == "SR") {
+                else if (CustomerAllData[Count, LowRare] == "SUS") {
                     CountSmall = 0;
                     while (CountSmall < LowCount)
                     {
-                        CustmerSR[CountSR, CountSmall] = CustomerAllData[Count, CountSmall];
+                        CustmerSus[CountSus, CountSmall] = CustomerAllData[Count, CountSmall];
                         CountSmall++;
                     }
-                    CountSR++; }
-                else if (CustomerAllData[Count, LowRare] == "SSR") {
-                    CountSmall = 0;
-                    while (CountSmall < LowCount)
-                    {
-                        CustmerSSR[CountSSR, CountSmall] = CustomerAllData[Count, CountSmall];
-                        CountSmall++;
-                    }
-                    CountSSR++;
-               }
+                    CountSus++; }
                 else {
                     CountSmall = 0;
                     while (CountSmall < LowCount)
                     {
-                        CustmerSSR[CountC, CountSmall] = CustomerAllData[Count, CountSmall];
+                        CustmerC[CountC, CountSmall] = CustomerAllData[Count, CountSmall];
                     CountSmall++;
                 }
-                CountSSR++;
-                Debug.Log("レアリティの仕分けに失敗しています。SSRとして数えます。Column=" + Count);
+                CountC++;
+                Debug.Log("レアリティの仕分けに失敗しています。Cとして数えます。Column=" + Count);
                     CountUC++;
                 }
             }
@@ -239,9 +221,7 @@ public class CustomerController : MonoBehaviour
         StatGame.GetComponent<StatGame>().CustmerC = CustmerC;
         StatGame.GetComponent<StatGame>().CustmerUC = CustmerUC;
         StatGame.GetComponent<StatGame>().CustmerR = CustmerR;
-        StatGame.GetComponent<StatGame>().CustmerSR = CustmerSR;
-        StatGame.GetComponent<StatGame>().CustmerSSR = CustmerSSR;
-
+        StatGame.GetComponent<StatGame>().CustmerSus = CustmerSus;
 
 
     }
@@ -280,11 +260,12 @@ public class CustomerController : MonoBehaviour
         float CoreG = CoreCol.g;
         float CoreB = CoreCol.b;
   
-        float PlusR = Random.Range(150f/255,-150f / 255);
-        float PlusG = Random.Range(150f / 255, -150f / 255);
-        float PlusB = Random.Range(150f / 255, -150f / 255);
-        //        Color Col = new Color(CoreR+PlusR, CoreG + PlusG, CoreB + PlusB, 1f);
-        Color Col = CoreCol;
+        //色のゆれ
+        float PlusR = Random.Range(50f/255,-50f / 255);
+        float PlusG = Random.Range(50f / 255, -50f / 255);
+        float PlusB = Random.Range(50f / 255, -50f / 255);
+                Color Col = new Color(CoreR+PlusR, CoreG + PlusG, CoreB + PlusB, 1f);
+        //Color Col = CoreCol;
         Customer.GetComponent<Image>().color = Col;
         string ColorString="#"+GetComponent<ColorGetter>().ToColorString(Col);
         //タグをつける

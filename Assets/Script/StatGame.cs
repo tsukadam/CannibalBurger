@@ -22,14 +22,15 @@ public class StatGame : MonoBehaviour
     public string[] Item5 = { "Name", "PictuePath", "Power", "Color", "Sus" };//
     public string[] Item6 = { "Name", "PictuePath", "Power", "Color", "Sus" };//
 
+    public string[,] LvDesignData;
+
     //客のCSVデータ
     public string[,] CustomerAllData;
 //レベルごとに更新されるデータ
     public string[,] CustmerC;
     public string[,] CustmerUC;
     public string[,] CustmerR;
-    public string[,] CustmerSR;
-    public string[,] CustmerSSR;
+    public string[,] CustmerSus;
 
 
     public int DisposeItemID = 0;//廃棄時に使う記憶領域

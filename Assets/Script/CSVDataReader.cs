@@ -85,6 +85,7 @@ public class CSVDataReader : MonoBehaviour
 
     public void CustomerCSVRead()
     {
+        //客データ
         //データパスを設定
         string path = "CustomerCSV";
         //データを読み込む(引数：データパス)
@@ -92,7 +93,16 @@ public class CSVDataReader : MonoBehaviour
 
         StatGame.GetComponent<StatGame>().CustomerAllData = CustomerAllData;
 
-        DebugLog.text = CustomerAllData[0, 0];
+//レベルデザインデータ
+//データパスを設定
+        path = "LvDesignCSV";
+        //データを読み込む(引数：データパス)
+        string[,] LvDesignData = readCSVData(path);
+
+        StatGame.GetComponent<StatGame>().LvDesignData = LvDesignData;
+
+
+        //        DebugLog.text = CustomerAllData[0, 0];
 
         //        WriteMapDatas(this.stageMapDatas, this.height, this.width);
 
