@@ -10,6 +10,7 @@ public class LvDesignController : MonoBehaviour
     public GameObject StatGame;
 
     //CustomerControllerから開始時に渡される、客データの行情報
+    public int LowId;
     public int LowName;
     public int LowImage;
     public int LowPopLv;
@@ -118,7 +119,8 @@ public class LvDesignController : MonoBehaviour
     //初回客の生成
     public void MakeCustomerFirst()
     {
-
+        //特に初回らしいことはしていない
+        //なんかしたければここで
         MakeCustomerNormal();
     }
 
@@ -142,12 +144,141 @@ public class LvDesignController : MonoBehaviour
 
         return ResultRarerity;
     }
+    //セーブされたidから客を生成
+    public void MakeSavedCustomer()
+    {
+        int CIDLength = StatPlayer.GetComponent<StatPlayer>().CID.Length;
+        int Count = 0;
+        while (Count < CIDLength)
+        {
+            if (StatPlayer.GetComponent<StatPlayer>().CID[Count] != 0)
+            {
+                MakeCustomerId(StatPlayer.GetComponent<StatPlayer>().CID[Count]);
+            }
+            Count++;
+        }
 
+    }
+
+    //入れたidの客を生成する
+    public void MakeCustomerId(int Id)
+    {
+        string SelectedId;
+        int SelectedIdInt;
+        string SelectedName;
+        string SelectedImage;
+        string SelectedHp;
+        int SelectedHpInt;
+        string SelectedCoreColor;
+        string SelectedColor;
+        string SelectedDropG;
+        int SelectedDropGInt;
+        string SelectedDropName;
+        string SelectedDropImage;
+        string SelectedDropPower;
+        string SelectedDropColor;
+        string SelectedDropSus;
+        string SelectedMeatName;
+        string SelectedMeatImage;
+        string SelectedMeatPower;
+        string SelectedMeatColor;
+        string SelectedMeatSus;
+        string SelectedSaveSus;
+        int SelectedSaveSusInt;
+        string SelectedRare;
+        string SelectedPopLv;
+        int SelectedPopLvInt;
+        string SelectedDisLv;
+        int SelectedDisLvInt;
+
+        string IdString = Id.ToString();
+        string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
+        int CustomerLength = CustomerAllData.GetLength(0);
+        int CustomerLowLength = CustomerAllData.GetLength(1);
+        int Count = 1;
+        int Count2 = 0;
+        string[] UseCustomer = new string[CustomerLowLength];
+        Debug.Log("id:"+Id);
+
+        while (Count < CustomerLength)
+        {
+            Debug.Log(Count);
+            if (CustomerAllData[Count,LowId] == IdString)
+            {
+                Count2 = 0;
+                while (Count2 < CustomerLowLength)
+                {
+                    UseCustomer[Count2] = CustomerAllData[Count, Count2];
+                    Count2++;
+                }
+                break;
+            }
+            else if (Count == CustomerLength-1)
+            {
+                Debug.Log("指定されたidの客は存在しません。一列目の客の情報を入れます");
+                Count2 = 0;
+                while (Count2 < CustomerLowLength)
+                {
+                    UseCustomer[Count2] = CustomerAllData[1, Count2];
+                    Count2++;
+                }
+
+            }
+            Count++;
+        }
+
+
+        SelectedId = UseCustomer[LowId];
+        SelectedIdInt = int.Parse(SelectedId);
+        SelectedName = UseCustomer[LowName];
+        SelectedImage = UseCustomer[LowImage];
+        SelectedHp = UseCustomer[LowHp];
+        SelectedHpInt = int.Parse(SelectedHp);
+        SelectedCoreColor = UseCustomer[LowCoreColor];
+        SelectedColor = "";
+        SelectedDropG = UseCustomer[LowDropG];
+        SelectedDropGInt = int.Parse(SelectedDropG);
+        SelectedDropName = UseCustomer[LowDropName];
+        SelectedDropImage = UseCustomer[LowDropImage];
+        SelectedDropPower = UseCustomer[LowDropPower];
+        SelectedDropColor = "";
+        SelectedDropSus = UseCustomer[LowDropSus];
+        SelectedMeatName = UseCustomer[LowMeatName];
+        SelectedMeatImage = UseCustomer[LowMeatImage];
+        SelectedMeatPower = UseCustomer[LowMeatPower];
+        SelectedMeatColor = "";
+        SelectedMeatSus = UseCustomer[LowMeatSus];
+        SelectedSaveSus = UseCustomer[LowSaveSus];
+        SelectedSaveSusInt = int.Parse(SelectedSaveSus);
+        SelectedRare = UseCustomer[LowRare];
+        SelectedPopLv = UseCustomer[LowPopLv];
+        SelectedPopLvInt = int.Parse(SelectedPopLv);
+        SelectedDisLv = UseCustomer[LowDisLv];
+        SelectedDisLvInt = int.Parse(SelectedDisLv);
+
+        GetComponent<CustomerController>().MakeCustomer(
+    SelectedIdInt,
+    SelectedName,
+    SelectedImage,
+    SelectedHpInt,
+    SelectedCoreColor,
+    SelectedColor,
+    SelectedDropGInt,
+    new string[] { SelectedDropName, SelectedDropImage, SelectedDropPower, SelectedDropColor, SelectedDropSus },
+    new string[] { SelectedMeatName, SelectedMeatImage, SelectedMeatPower, SelectedMeatColor, SelectedMeatSus },
+     SelectedSaveSusInt,
+     SelectedRare,
+     SelectedPopLvInt,
+     SelectedDisLvInt);
+    
+}
     //通常客の生成
     public void MakeCustomerNormal()
     {
         int GameLv = StatGame.GetComponent<StatGame>().StatLv;
 
+        string SelectedId;
+        int SelectedIdInt;
         string SelectedName;
         string SelectedImage;
         string SelectedHp;
@@ -230,8 +361,9 @@ public class LvDesignController : MonoBehaviour
 
 
 
-
-            SelectedName = UseCustomer[RandomCount,LowName];
+            SelectedId = UseCustomer[RandomCount, LowId];
+            SelectedIdInt = int.Parse(SelectedId);
+           SelectedName = UseCustomer[RandomCount,LowName];
             SelectedImage = UseCustomer[RandomCount, LowImage];
             SelectedHp = UseCustomer[RandomCount, LowHp];
             SelectedHpInt = int.Parse(SelectedHp);
@@ -258,6 +390,7 @@ public class LvDesignController : MonoBehaviour
             SelectedDisLvInt = int.Parse(SelectedDisLv);
 
             GetComponent<CustomerController>().MakeCustomer(
+                SelectedIdInt,
                 SelectedName,
                 SelectedImage, 
                 SelectedHpInt,

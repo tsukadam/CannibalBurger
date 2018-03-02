@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour
     public GameObject CustomerFieldBack;
     public GameObject CustomerFieldCollider;
 
+
+
     //ボタン類
     public GameObject Button4Items;
     public GameObject Button4Items1;
@@ -62,6 +64,9 @@ public class GameController : MonoBehaviour
     public Text PopupResultGTextSus;
     public GameObject SusLine;
 
+    public GameObject PopupSave;
+    public GameObject PopupLoad;
+
 
     public GameObject PopupDisposeItem;
     public Text PopupDisposeText;
@@ -70,6 +75,7 @@ public class GameController : MonoBehaviour
     public GameObject PopupLvUp;
     public Text PopupLvUpText;
     public GameObject PopupGameOver;
+
     //メッセージ欄
     public GameObject Message;
     public Text MessageText;
@@ -83,9 +89,10 @@ public class GameController : MonoBehaviour
     public GameObject EventSystem;
     //タップ切るための板
    public GameObject TapBlock;
+    public GameObject FieldBlock;
 
 
-//ゲームスタート
+    //ゲームスタート
     public void GameStart()
     {
         TapBlock.SetActive(true);
@@ -110,6 +117,10 @@ public class GameController : MonoBehaviour
         PopupGameOver.SetActive(false);
         ButtonGoResult.SetActive(false);
         TapButton.SetActive(false);
+        PopupSave.SetActive(false);
+        PopupLoad.SetActive(false);
+
+        FieldBlock.SetActive(false);
 
         CustomerFieldBack.SetActive(true);
         CustomerFieldCollider.SetActive(true);
@@ -120,60 +131,134 @@ public class GameController : MonoBehaviour
         Button4Items4.GetComponent<Button>().interactable = true;
 
 
+        //所持アイテムのリセット
+        StatGame.GetComponent<StatGame>().Item1 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item2 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item4 = new string[] { "None", "None", "None", "None", "None" };
+        //所持扱いにならない、取得処理時に使う枠
+        StatGame.GetComponent<StatGame>().Item5 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" };
 
+        //ロード前の描画リセット
+        GetComponent<StatGameController>().DrawSus();
+        GetComponent<StatGameController>().DrawG();
+        GetComponent<StatGameController>().DrawLv();
+        GetComponent<StatGameController>().DrawDays();
+        GetComponent<StatGameController>().DrawExp();
+        GetComponent<StatGameController>().DrawItem4();
 
-        //パラメータ初期化
-        StatGame.GetComponent<StatGame>().StatSus = 0;
-        StatGame.GetComponent<StatGame>().StatG = 0;
-        StatGame.GetComponent<StatGame>().StatLv = 1;
+        if (StatPlayer.GetComponent<StatPlayer>().ExistSave == 1)
+        {
+            //ある時はロードの選択肢を出す  
+            PopupLoad.SetActive(true);
 
-        MaxKill=0;//殺人数
-        MaxCustomer=0;//さばいた客の数
-        MaxCustomerVictory=0;//うち魅了した客の数
-        MaxGetG=0;//かせいだ売上の総和
+        }
+        else
+        {
+            //無ければ初期処理に直行
+            NoLoadStart();
+        }
 
+    
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+    }
+
+    //セーブがある時の初期処理
+    public void LoadStart()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+        PopupLoad.SetActive(false);
+
+        StatPlayer.GetComponent<StatPlayer>().Load();
+        //ロードでステータスは読み込まれる
+
+        MaxKill = StatPlayer.GetComponent<StatPlayer>().MaxKill; //殺人数
+        MaxCustomer = StatPlayer.GetComponent<StatPlayer>().MaxCustomer;//さばいた客の数
+        MaxCustomerVictory = StatPlayer.GetComponent<StatPlayer>().MaxCustomerVictory;//うち魅了した客の数
+        MaxGetG = StatPlayer.GetComponent<StatPlayer>().MaxGetG; ;//かせいだ売上の総和
+
+        //初期アイテムの生成
+        GetComponent<LvDesignController>().MakeItemFirst();
         //レベルデザイン情報の読み込み
         GetComponent<LvDesignController>().GetLvDesignData();
 
-        //レベル１の客データの読み込み
-        GetComponent<CustomerController>().GetCustomerData(1);
+        //客データの読み込み
+        GetComponent<CustomerController>().GetCustomerData(StatGame.GetComponent<StatGame>().StatLv);
 
-        StatGame.GetComponent<StatGame>().StatExp = 0;
-        StatGame.GetComponent<StatGame>().StatDays = 1;
         GetComponent<StatGameController>().DrawSus();
         GetComponent<StatGameController>().DrawG();
         GetComponent<StatGameController>().DrawLv();
         GetComponent<StatGameController>().DrawDays();
         GetComponent<StatGameController>().DrawExp();
 
-        //所持アイテム
-        StatGame.GetComponent<StatGame>().Item1 = new string[]{ "Name", "niku1", "Power", "Color", "Sus" };
-        StatGame.GetComponent<StatGame>().Item2 = new string[] { "Name", "niku1", "Power", "Color", "Sus" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "Name", "niku1", "Power", "Color", "Sus" };
-        StatGame.GetComponent<StatGame>().Item4 = new string[] { "Name", "niku1", "Power", "Color", "Sus" };
-        //所持扱いにならない、取得処理時に使う枠
-        StatGame.GetComponent<StatGame>().Item5 = new string[] { "Name", "niku1", "Power", "Color", "Sus" };
-        StatGame.GetComponent<StatGame>().Item6 = new string[] { "Name", "niku1", "Power", "Color", "Sus" };
+        CustomerStart1();
+
+        CustomerStart2();
+
+        //初期客の生成
+        GetComponent<LvDesignController>().MakeSavedCustomer();
+
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+
+    }
+
+    //セーブがない時の初期処理
+    public void NoLoadStart()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+        PopupLoad.SetActive(false);
+
+        StatPlayer.GetComponent<StatPlayer>().SaveDelete();//セーブは消す
+
+        //セーブがない場合の初期値
+        //パラメータ初期化
+        StatGame.GetComponent<StatGame>().StatSus = 0;
+        StatGame.GetComponent<StatGame>().StatG = 0;
+        StatGame.GetComponent<StatGame>().StatLv = 1;
+        StatGame.GetComponent<StatGame>().StatExp = 0;
+        StatGame.GetComponent<StatGame>().StatDays = 0;
+
+        MaxKill = 0;//殺人数
+        MaxCustomer = 0;//さばいた客の数
+        MaxCustomerVictory = 0;//うち魅了した客の数
+        MaxGetG = 0;//かせいだ売上の総和
 
         //初期アイテムの生成
         GetComponent<LvDesignController>().MakeItemFirst();
+        //レベルデザイン情報の読み込み
+        GetComponent<LvDesignController>().GetLvDesignData();
 
-        CustomerStart();
+        //客データの読み込み
+        GetComponent<CustomerController>().GetCustomerData(StatGame.GetComponent<StatGame>().StatLv);
 
-        //初期客の生成
-        GetComponent<LvDesignController>().MakeCustomerFirst();
+        GetComponent<StatGameController>().DrawSus();
+        GetComponent<StatGameController>().DrawG();
+        GetComponent<StatGameController>().DrawLv();
+        GetComponent<StatGameController>().DrawDays();
+        GetComponent<StatGameController>().DrawExp();
 
+        CustomerStart1();
+
+        CustomerStart2();
+
+            //初期客の生成
+            GetComponent<LvDesignController>().MakeCustomerFirst();
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
 
-    //来客開始
-    public void CustomerStart()
+    //今いる客をすべて破壊
+    public void CustomerDestroy()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
-
 
         //前周の客を破壊
         if (GameObject.FindGameObjectWithTag("Top0") != null) { Destroy(GameObject.FindGameObjectWithTag("Top0")); }
@@ -188,7 +273,20 @@ public class GameController : MonoBehaviour
 
         int Count;
         int CustomerLength;
-        if (GameObject.FindGameObjectsWithTag("Loser") != null)
+        if (GameObject.FindGameObjectsWithTag("Customer") != null)
+        {
+            GameObject[] NormalCustomer = GameObject.FindGameObjectsWithTag("Customer");
+            Count = 0;
+            CustomerLength = NormalCustomer.GetLength(0);
+            while (Count < CustomerLength)
+            {
+                Destroy(NormalCustomer[Count]);
+                Count++;
+                Debug.Log("Destroy");
+            }
+        }
+
+            if (GameObject.FindGameObjectsWithTag("Loser") != null)
         {
             GameObject[] LoserNotTop = GameObject.FindGameObjectsWithTag("Loser");
             Count = 0;
@@ -212,9 +310,86 @@ public class GameController : MonoBehaviour
         }
 
 
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+    }
+
+    //来客開始前
+    //この状態にしつつSaveポップアップなどが出ている
+    public void CustomerStart1()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
+        FieldBlock.SetActive(true);
+
+        //表示パネルの初期化
+        //客表示せず、操作できない状態
+        Button4Items.SetActive(false);
+        Button6Items.SetActive(false);
+        ButtonSelectItem.SetActive(false);
+        PopupResultG.SetActive(false);
+        PopupDisposeItem.SetActive(false);
+        Message.SetActive(false);
+        CustomerField.SetActive(true);
+
+        PopupGetItem.SetActive(false);
+        PopupLvUp.SetActive(false);
+        PopupGameOver.SetActive(false);
+        ButtonGoResult.SetActive(false);
+        TapButton.SetActive(false);
+        PopupSave.SetActive(false);
+        PopupLoad.SetActive(false);
+
+        CustomerFieldBack.SetActive(false);
+        CustomerFieldCollider.SetActive(false);
+
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+    }
+
+    //保存→中断画面
+    //広告出すとしたらここが候補
+    //ノルマなどを表示するのに使うのもあり
+    public void SelectSave()
+    {
+        PopupSave.SetActive(true);
+        //セーブ選択画面を表示
+
+    }
+
+    public void SaveEnd()
+    {
+
+        GetHighScore();
+        StatPlayer.GetComponent<StatPlayer>().Save();
+        CustomerDestroy();
+        GoMenu();
+        //客破壊
+    }
+
+
+    //生成した客を可視化し、アイテム等押せるようにする
+    public void CustomerStart2()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
+        //日付を経過させる
+        GetComponent<StatGameController>().DaysUp(1);
+
+        //ステ描画
+        GetComponent<StatGameController>().DrawSus();
+        GetComponent<StatGameController>().DrawG();
+        GetComponent<StatGameController>().DrawLv();
+        GetComponent<StatGameController>().DrawDays();
+        GetComponent<StatGameController>().DrawExp();
 
         //表示パネルの初期化
         //ボタン初期化
+        FieldBlock.SetActive(false);
+
         Button4Items.SetActive(true);
         Button6Items.SetActive(false);
         ButtonSelectItem.SetActive(false);
@@ -227,6 +402,8 @@ public class GameController : MonoBehaviour
         PopupGameOver.SetActive(false);
         ButtonGoResult.SetActive(false);
         TapButton.SetActive(false);
+        PopupSave.SetActive(false);
+
 
         CustomerFieldBack.SetActive(true);
         CustomerFieldCollider.SetActive(true);
@@ -247,7 +424,6 @@ public class GameController : MonoBehaviour
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
-
 
     //食材選択　→　効果判定　→　Gリザルト表示
     public void Feed(int ItemNum)
@@ -485,6 +661,7 @@ public class GameController : MonoBehaviour
         PopupGameOver.SetActive(true);
 
         GetHighScore();
+        StatPlayer.GetComponent<StatPlayer>().CheckHighScore();
         StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
 
     }
@@ -497,7 +674,7 @@ public class GameController : MonoBehaviour
         StatPlayer.GetComponent<StatPlayer>().MaxKill=MaxKill;//殺人数
         StatPlayer.GetComponent<StatPlayer>().MaxCustomer=MaxCustomer;//さばいた客の数
         StatPlayer.GetComponent<StatPlayer>().MaxCustomerVictory=MaxCustomerVictory;//うち魅了した客の数
-        StatPlayer.GetComponent<StatPlayer>().MaxGetG=MaxGetG;//かせいだ売上の総和
+        StatPlayer.GetComponent<StatPlayer>().MaxGetG= StatGame.GetComponent<StatGame>().StatG;//かせいだ売上（=所持金）の総和
 
         StatPlayer.GetComponent<StatPlayer>().MaxG =StatGame.GetComponent<StatGame>().StatG;
         StatPlayer.GetComponent<StatPlayer>().MaxLv = StatGame.GetComponent<StatGame>().StatLv;
@@ -1035,17 +1212,19 @@ public class GameController : MonoBehaviour
     }
 
 
-    //その周の終わりの処理
+    //その周の終わりの処理→一時保存画面
     public void CustomerEnd()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
-        GetComponent<StatGameController>().DaysUp(1);
-        CustomerStart();
-
+        //客破壊
+        CustomerDestroy();
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
+
+        CustomerStart1();
+        SelectSave();
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);

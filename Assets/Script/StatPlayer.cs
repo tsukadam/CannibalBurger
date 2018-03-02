@@ -5,7 +5,10 @@ using System.Collections;
 //プレイ外データ、ハイスコアなど
 //オートセーブではこの中のデータが保持される
 public class StatPlayer : MonoBehaviour {
-//全体での遊んだ数
+    //StasGame
+    public GameObject StatGame;
+    
+    //全体での遊んだ数
     public int TotalCountPlay = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
     //各画面
@@ -29,6 +32,76 @@ public class StatPlayer : MonoBehaviour {
     public Text TextMaxG5;
     public Text TextMaxLv5;
     public Text TextMaxDays5;
+
+    //セーブ中断しているかのフラグ
+    //0=なし　1=あり Start内で代入
+    //アリの場合開始時の初期設定に影響を及ぼす
+    public int ExistSave=0;
+    public string ExistSaveKey = "ExistSave";
+
+    //一時保存用の箱
+    public string SaveLvKey = " SaveLvKey";
+    public string SaveDaysKey = "SaveDaysKey";
+    public string SaveSusKey = "SaveSusKey";
+    public string SaveExpKey = "SaveExpKey";
+    public string SaveKillKey = "SaveKillKey";
+    public string SaveCustomerKey = "SaveCustomerKey";
+    public string SaveCustomerVictoryKey = "SaveCustomerVicvoryKey";
+    public string SaveGKey = "SaveGKey";
+    public string SaveGetGKey = "SaveGetGKey";
+    //所持アイテム情報
+
+    public string Item1NameKey = "Item1NameKey";
+    public string Item1ImageKey = "Item1imageKey";
+    public string Item1ColorKey = "Item1ColorKey";
+    public string Item1PowerKey = "Item1PowerKey";
+    public string Item1SusKey = "Item1SusKey";
+
+    public string Item2NameKey = "Item2NameKey";
+    public string Item2ImageKey = "Item2imageKey";
+    public string Item2ColorKey = "Item2ColorKey";
+    public string Item2PowerKey = "Item2PowerKey";
+    public string Item2SusKey = "Item2SusKey";
+
+    public string Item3NameKey = "Item3NameKey";
+    public string Item3ImageKey = "Item3imageKey";
+    public string Item3ColorKey = "Item3ColorKey";
+    public string Item3PowerKey = "Item3PowerKey";
+    public string Item3SusKey = "Item3SusKey";
+
+    public string Item4NameKey = "Item4NameKey";
+    public string Item4ImageKey = "Item4imageKey";
+    public string Item4ColorKey = "Item4ColorKey";
+    public string Item4PowerKey = "Item4PowerKey";
+    public string Item4SusKey = "Item4SusKey";
+
+
+    //一時保存用の生成した客idの箱
+    public int[] CID = new int[20];
+
+    public string [] CIDKey = {
+        "CID1Key" ,
+        "CID2Key" ,
+        "CID3Key" ,
+        "CID4Key" ,
+        "CID5Key" ,
+        "CID6Key" ,
+        "CID7Key" ,
+        "CID8Key" ,
+        "CID9Key" ,
+        "CID10Key" ,
+        "CID11Key" ,
+        "CID12Key" ,
+        "CID13Key" ,
+        "CID14Key" ,
+        "CID15Key" ,
+        "CID16Key" ,
+        "CID17Key" ,
+        "CID18Key" ,
+        "CID19Key" ,
+        "CID20Key" ,
+
+    };
 
     //今回のゲームでのスコア
     public int MaxLv=0;//到達レベル
@@ -132,6 +205,179 @@ public class StatPlayer : MonoBehaviour {
     public string MaxGetG5Key = "MaxgetG5";
     public string CountPlay5Key = "CountPlay5";
 
+    //セーブ中断のセーブ処理部分
+    public void Save()
+    {
+
+        int NowLv = StatGame.GetComponent<StatGame>().StatLv;
+        int NowDays = StatGame.GetComponent<StatGame>().StatDays;
+        float NowSus = StatGame.GetComponent<StatGame>().StatSus;
+        int NowExp = StatGame.GetComponent<StatGame>().StatExp;
+        int NowG = StatGame.GetComponent<StatGame>().StatG;
+
+        string Item1Name =StatGame.GetComponent<StatGame>().Item1[0];
+        string Item1Image = StatGame.GetComponent<StatGame>().Item1[1];
+        string Item1Power = StatGame.GetComponent<StatGame>().Item1[2];
+        string Item1Color = StatGame.GetComponent<StatGame>().Item1[3];
+        string Item1Sus = StatGame.GetComponent<StatGame>().Item1[4];
+
+        string Item2Name = StatGame.GetComponent<StatGame>().Item2[0];
+        string Item2Image = StatGame.GetComponent<StatGame>().Item2[1];
+        string Item2Power = StatGame.GetComponent<StatGame>().Item2[2];
+        string Item2Color = StatGame.GetComponent<StatGame>().Item2[3];
+        string Item2Sus = StatGame.GetComponent<StatGame>().Item2[4];
+
+        string Item3Name = StatGame.GetComponent<StatGame>().Item3[0];
+        string Item3Image = StatGame.GetComponent<StatGame>().Item3[1];
+        string Item3Power = StatGame.GetComponent<StatGame>().Item3[2];
+        string Item3Color = StatGame.GetComponent<StatGame>().Item3[3];
+        string Item3Sus = StatGame.GetComponent<StatGame>().Item3[4];
+
+        string Item4Name = StatGame.GetComponent<StatGame>().Item4[0];
+        string Item4Image = StatGame.GetComponent<StatGame>().Item4[1];
+        string Item4Power = StatGame.GetComponent<StatGame>().Item4[2];
+        string Item4Color = StatGame.GetComponent<StatGame>().Item4[3];
+        string Item4Sus = StatGame.GetComponent<StatGame>().Item4[4];
+
+
+        int Count = 0;
+        int CustomerLength = 0;
+        if (GameObject.FindGameObjectsWithTag("Customer") != null)
+        {
+            GameObject[] NormalCustomer = GameObject.FindGameObjectsWithTag("Customer");
+            CustomerLength = NormalCustomer.Length;
+            while(Count< 20)
+            {
+                if (Count < CustomerLength)
+                {
+                    CID[Count] = NormalCustomer[Count].GetComponent<StatCustomer>().Id;
+                }
+                else
+                {
+                    CID[Count] = 0;
+                }
+                PlayerPrefs.SetInt(CIDKey[Count], CID[Count]);
+
+                Count++;
+
+            }
+
+        }
+
+
+
+        //書き込み
+        WriteHighScore();
+        //遊んだ回数の記録などのためにスコア情報も書き込む
+        ExistSave = 1;
+        PlayerPrefs.SetInt(ExistSaveKey, ExistSave);//セーブ存在フラグ
+
+        PlayerPrefs.SetInt(SaveLvKey, NowLv);
+        PlayerPrefs.SetInt(SaveDaysKey, NowDays);
+        PlayerPrefs.SetFloat(SaveSusKey, NowSus);
+        PlayerPrefs.SetInt(SaveExpKey, NowExp);
+        PlayerPrefs.SetInt(SaveKillKey, MaxKill);
+        PlayerPrefs.SetInt(SaveCustomerKey, MaxCustomer);
+        PlayerPrefs.SetInt(SaveCustomerVictoryKey, MaxCustomerVictory);
+        PlayerPrefs.SetInt(SaveGKey, NowG);
+        PlayerPrefs.SetInt(SaveGetGKey, MaxGetG);
+
+        PlayerPrefs.SetString(Item1NameKey, Item1Name);
+        PlayerPrefs.SetString(Item1ImageKey, Item1Image);
+        PlayerPrefs.SetString(Item1PowerKey, Item1Power);
+        PlayerPrefs.SetString(Item1ColorKey, Item1Color);
+        PlayerPrefs.SetString(Item1SusKey, Item1Sus);
+
+        PlayerPrefs.SetString(Item2NameKey, Item2Name);
+        PlayerPrefs.SetString(Item2ImageKey, Item2Image);
+        PlayerPrefs.SetString(Item2PowerKey, Item2Power);
+        PlayerPrefs.SetString(Item2ColorKey, Item2Color);
+        PlayerPrefs.SetString(Item2SusKey, Item2Sus);
+
+        PlayerPrefs.SetString(Item3NameKey, Item3Name);
+        PlayerPrefs.SetString(Item3ImageKey, Item3Image);
+        PlayerPrefs.SetString(Item3PowerKey, Item3Power);
+        PlayerPrefs.SetString(Item3ColorKey, Item3Color);
+        PlayerPrefs.SetString(Item3SusKey, Item3Sus);
+
+        PlayerPrefs.SetString(Item4NameKey, Item4Name);
+        PlayerPrefs.SetString(Item4ImageKey, Item4Image);
+        PlayerPrefs.SetString(Item4PowerKey, Item4Power);
+        PlayerPrefs.SetString(Item4ColorKey, Item4Color);
+        PlayerPrefs.SetString(Item4SusKey, Item4Sus);
+
+
+    }
+    //セーブ情報のロード
+    //ゲーム開始時に一回だけ呼ばれる
+    public void Load()
+    {
+        if (ExistSave == 1)
+        {
+            StatGame.GetComponent<StatGame>().StatLv = PlayerPrefs.GetInt(SaveLvKey, 0);
+            StatGame.GetComponent<StatGame>().StatDays = PlayerPrefs.GetInt(SaveDaysKey, 0);
+            StatGame.GetComponent<StatGame>().StatSus = PlayerPrefs.GetFloat(SaveSusKey, 0);
+            StatGame.GetComponent<StatGame>().StatExp = PlayerPrefs.GetInt(SaveExpKey, 0);
+            StatGame.GetComponent<StatGame>().StatG = PlayerPrefs.GetInt(SaveGKey, 0);
+
+    string[] SaveItem1 = { "None", "None", "None", "None", "None" };//
+    string[] SaveItem2 = { "None", "None", "None", "None", "None" };//
+    string[] SaveItem3 = { "None", "None", "None", "None", "None" };//
+    string[] SaveItem4 = { "None", "None", "None", "None", "None" };//
+
+            int Count = 0;
+            while (Count < 20)
+            {
+                CID[Count] = PlayerPrefs.GetInt(CIDKey[Count]);
+
+                Count++;
+            }
+
+
+            SaveItem1[0]=PlayerPrefs.GetString(Item1NameKey);
+            SaveItem1[1] = PlayerPrefs.GetString(Item1ImageKey);
+            SaveItem1[2] = PlayerPrefs.GetString(Item1PowerKey);
+            SaveItem1[3] = PlayerPrefs.GetString(Item1ColorKey);
+            SaveItem1[4] = PlayerPrefs.GetString(Item1SusKey);
+            SaveItem2[0] = PlayerPrefs.GetString(Item2NameKey);
+            SaveItem2[1] = PlayerPrefs.GetString(Item2ImageKey);
+            SaveItem2[2] = PlayerPrefs.GetString(Item2PowerKey);
+            SaveItem2[3] = PlayerPrefs.GetString(Item2ColorKey);
+            SaveItem2[4] = PlayerPrefs.GetString(Item2SusKey);
+            SaveItem3[0] = PlayerPrefs.GetString(Item3NameKey);
+            SaveItem3[1] = PlayerPrefs.GetString(Item3ImageKey);
+            SaveItem3[2] = PlayerPrefs.GetString(Item3PowerKey);
+            SaveItem3[3] = PlayerPrefs.GetString(Item3ColorKey);
+            SaveItem3[4] = PlayerPrefs.GetString(Item3SusKey);
+            SaveItem4[0] = PlayerPrefs.GetString(Item4NameKey);
+            SaveItem4[1] = PlayerPrefs.GetString(Item4ImageKey);
+            SaveItem4[2] = PlayerPrefs.GetString(Item4PowerKey);
+            SaveItem4[3] = PlayerPrefs.GetString(Item4ColorKey);
+            SaveItem4[4] = PlayerPrefs.GetString(Item4SusKey);
+
+            StatGame.GetComponent<StatGame>().Item1 = SaveItem1;
+            StatGame.GetComponent<StatGame>().Item2 = SaveItem2;
+            StatGame.GetComponent<StatGame>().Item3 = SaveItem3;
+            StatGame.GetComponent<StatGame>().Item4 = SaveItem4;
+
+            MaxKill = PlayerPrefs.GetInt(SaveKillKey, 0);
+            MaxCustomer = PlayerPrefs.GetInt(SaveCustomerKey, 0);
+            MaxCustomerVictory = PlayerPrefs.GetInt(SaveCustomerVictoryKey, 0);
+            MaxKill = PlayerPrefs.GetInt(SaveKillKey, 0);
+
+            //ロードしたら情報は破棄する？
+            //いまのところ残しておく、セーブ存在フラグは降ろした状態で書き込んでおくので不正出来ないはず
+            SaveDelete();
+        }
+        else { Debug.Log("ExistSaveが1でないのに叩かれています。Loadはしません"); }
+    }
+    //セーブ存在フラグを下ろして記録する
+    public void SaveDelete()
+    {
+        ExistSave = 0;
+        PlayerPrefs.SetInt(ExistSaveKey, ExistSave);//セーブ存在フラグ
+
+    }
     //ハイスコア画面の描画
     public void GoHighScore()
     {
@@ -162,11 +408,12 @@ public class StatPlayer : MonoBehaviour {
 
     }
 
-    //ハイスコアの記録
-    public void WriteHighScore()
+    //ハイスコアの順位確認
+    public void CheckHighScore()
     {
-//過去のスコアにまさっているかどうか確認
-if(MaxG > MaxG1){
+        //過去のスコアにまさっているかどうか確認
+        if (MaxG > MaxG1)
+        {
             MaxLv5 = MaxLv4;
             MaxDays5 = MaxDays4;
             MaxKill5 = MaxKill4;
@@ -208,7 +455,7 @@ if(MaxG > MaxG1){
             MaxKill1 = MaxKill;
             MaxCustomer1 = MaxCustomer;
             MaxCustomerVictory1 = MaxCustomerVictory;
-            MaxG1= MaxG;
+            MaxG1 = MaxG;
             MaxGetG1 = MaxGetG;
             CountPlay1 = TotalCountPlay;
         }
@@ -315,6 +562,11 @@ if(MaxG > MaxG1){
         }
         else { }
 
+
+    }
+    //ハイスコアの記録
+    public void WriteHighScore()
+    {
         //書き込み
         PlayerPrefs.SetInt(TotalCountPlayKey, TotalCountPlay);
 
@@ -473,6 +725,9 @@ if(MaxG > MaxG1){
 
     // Use this for initialization
     void Start () {
+
+        ExistSave = PlayerPrefs.GetInt(ExistSaveKey, 0);
+
         TotalCountPlay = PlayerPrefs.GetInt(TotalCountPlayKey, 0);
 
         MaxLv1 = PlayerPrefs.GetInt(MaxLv1Key, 0);

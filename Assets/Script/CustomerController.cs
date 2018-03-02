@@ -19,6 +19,7 @@ public class CustomerController : MonoBehaviour
 
     public int LowDataGetCount=0;
 
+    public int LowId;
     public int LowName;
     public int LowImage;
     public int LowPopLv;
@@ -78,12 +79,13 @@ public class CustomerController : MonoBehaviour
                 else if (CustomerAllData[0, LowCount] == "MImage") { LowMeatImage = LowCount; }
                 else if (CustomerAllData[0, LowCount] == "MPower") { LowMeatPower = LowCount; }
                 else if (CustomerAllData[0, LowCount] == "MSus") { LowMeatSus = LowCount; }
+                else if (CustomerAllData[0, LowCount] == "Id") { LowId = LowCount; }
                 else { Debug.Log("Customerデータの行の取得に失敗しました Low="+ LowCount); }
                 LowCount++;
             }
 
 
-            //
+            GetComponent<LvDesignController>().LowId = LowId;
             GetComponent<LvDesignController>().LowName = LowName;
             GetComponent<LvDesignController>().LowImage = LowImage;
             GetComponent<LvDesignController>().LowPopLv = LowPopLv;
@@ -131,7 +133,7 @@ public class CustomerController : MonoBehaviour
             }
             Count++;
         }
-
+        Debug.Log("C="+CountC);
         string[,] CustmerC;
         string[,] CustmerUC;
         string[,] CustmerR;
@@ -229,7 +231,7 @@ public class CustomerController : MonoBehaviour
 
 
     //客生成
-    public void MakeCustomer(string Name,string Image, int Hp, string CoreColor,string Color, int DropG,string[] DropItem,string[]DropMeat,int SaveSus,string Rarerity,int LvAppear,int LvDisAppear)
+    public void MakeCustomer(int Id,string Name,string Image, int Hp, string CoreColor,string Color, int DropG,string[] DropItem,string[]DropMeat,int SaveSus,string Rarerity,int LvAppear,int LvDisAppear)
     {
         GameObject Customer = (GameObject)Instantiate(
             CustomerPrefab,
@@ -274,6 +276,7 @@ public class CustomerController : MonoBehaviour
         Customer.GetComponent<Button>().interactable = false;
 
         //客の情報をカスタマーＳＴＡＴに書き込み
+        Customer.GetComponent<StatCustomer>().Id = Id;
         Customer.GetComponent<StatCustomer>().Name = Name;
         Customer.GetComponent<StatCustomer>().Image = Image;
         Customer.GetComponent<StatCustomer>().Hp = Hp;

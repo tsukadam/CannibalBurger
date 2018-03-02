@@ -292,18 +292,27 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/亮/AppData/LocalLow/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="DOTweenEditor">
+      <HintPath>Assets/Demigiant/DOTween/Editor/DOTweenEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>Assets/Demigiant/DOTween/DOTween.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween43">
+      <HintPath>Assets/Demigiant/DOTween/DOTween43.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween46">
+      <HintPath>Assets/Demigiant/DOTween/DOTween46.dll</HintPath>
+    </Reference>
+    <Reference Include="DOTween50">
+      <HintPath>Assets/Demigiant/DOTween/DOTween50.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
       <HintPath>D:/Unity/Editor/Data/PlaybackEngines/iOSSupport\UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>D:/Unity/Editor/Data/PlaybackEngines/iOSSupport\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="CannibalBurger.Plugins.csproj">
-      <Project>{A5D7AE33-B2E0-2D6E-38FE-0ADD13288600}</Project>
-      <Name>CannibalBurger.Plugins</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Font\BitmapFontGenerator.cs" />
@@ -324,6 +333,14 @@
     <Compile Include="Assets\Script\StatGameController.cs" />
     <Compile Include="Assets\Script\StatItem.cs" />
     <Compile Include="Assets\Script\StatPlayer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Demigiant\DOTween\DOTween.XML" />
+    <None Include="Assets\Demigiant\DOTween\DOTween43.xml" />
+    <None Include="Assets\Demigiant\DOTween\DOTween46.xml" />
+    <None Include="Assets\Demigiant\DOTween\DOTween50.xml" />
+    <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
+    <None Include="Assets\Demigiant\DOTween\readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

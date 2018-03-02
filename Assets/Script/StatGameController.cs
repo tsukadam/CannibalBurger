@@ -557,7 +557,7 @@ public class StatGameController : MonoBehaviour
     //Exp描画（アニメーション用）
     public void DrawExp2(float AnimeExp)
     {
-        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 100);
+        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 99);
     }
 
 
@@ -565,7 +565,7 @@ public class StatGameController : MonoBehaviour
     public void DrawExp()
     {
         int StatExp = StatGame.GetComponent<StatGame>().StatExp;
-        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 100);
+        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 99);
     }
 
     //レベル描画

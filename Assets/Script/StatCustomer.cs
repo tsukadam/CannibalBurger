@@ -7,6 +7,7 @@ public class StatCustomer : MonoBehaviour
 {
 
     //ステータスの定義
+    public int Id = 0;//名前
     public string Name = "name";//名前
     public string Image = "image";//イメージのファイル名（.png抜き）
     public int Hp = 0;//舌の肥え具合
