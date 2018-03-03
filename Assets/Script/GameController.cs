@@ -206,6 +206,7 @@ public class GameController : MonoBehaviour
 
         //初期客の生成
         GetComponent<LvDesignController>().MakeSavedCustomer();
+        GlowCustomer();
 
 
         TapBlock.SetActive(false);
@@ -258,15 +259,24 @@ public class GameController : MonoBehaviour
 
         //初期客の生成
         GetComponent<LvDesignController>().MakeCustomerFirst();
-
-
+        GlowCustomer();
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
 
-    //今いる客をすべて破壊
-    public void CustomerDestroy()
+
+    //トップ客を光らせる
+    public void GlowCustomer() { 
+        if (GameObject.FindGameObjectsWithTag("Customer") != null)
+        {
+            GameObject[] NormalCustomer = GameObject.FindGameObjectsWithTag("Customer");
+    GetComponent<Sorter>().GlowSort(NormalCustomer);
+    }
+}
+
+//今いる客をすべて破壊
+public void CustomerDestroy()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -1324,6 +1334,7 @@ public class GameController : MonoBehaviour
         CustomerDestroy();
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
+        GlowCustomer();
 
         CustomerStart1();
         SelectSave();

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening;
 //客のステータスを保持する
 //cloneして使う
 public class StatCustomer : MonoBehaviour
@@ -21,6 +22,7 @@ public class StatCustomer : MonoBehaviour
     public int LvAppear = 0;//出現レベル
     public int LvDisAppear = 999;//いなくなるレベル
 
+
     //計算用の記録領域
     public int PointPower = 0;//点数での勝利度合
     public float PointColor = 0;//色での勝利度合
@@ -29,15 +31,28 @@ public class StatCustomer : MonoBehaviour
     public GameObject Customer;//自分自身
 
 
+    public void Glow()
+    {
+
+        DOTween.To(
+                    () => Customer.GetComponent<GlowImage>().glowSize,
+        (x) => Customer.GetComponent<GlowImage>().glowSize = (-4 * x * (x - 1) )+ 0.5f,
+                    1,
+                    3.0f
+                    ).SetLoops(-1);
+
+    }
     // Use this for initialization
     void Start()
     {
+
+
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
 }

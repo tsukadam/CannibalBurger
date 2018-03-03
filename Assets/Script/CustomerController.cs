@@ -269,7 +269,9 @@ public class CustomerController : MonoBehaviour
                 Color Col = new Color(CoreR+PlusR, CoreG + PlusG, CoreB + PlusB, 1f);
         //Color Col = CoreCol;
         Customer.GetComponent<Image>().color = Col;
-        string ColorString="#"+GetComponent<ColorGetter>().ToColorString(Col);
+        Customer.GetComponent<GlowImage>().glowColor = Col;
+
+        string ColorString ="#"+GetComponent<ColorGetter>().ToColorString(Col);
         //タグをつける
         Customer.tag = "Customer";
 //アイテム選択時用のボタンを不活性にする

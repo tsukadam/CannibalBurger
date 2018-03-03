@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannibalBurger", "CannibalBurger.csproj", "{00EB2CAF-CE30-A5A7-1163-CA9F84D8BB32}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannibalBurger.Editor", "CannibalBurger.Editor.csproj", "{53E62F51-EC48-B41C-CC9A-C632AE37E998}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{00EB2CAF-CE30-A5A7-1163-CA9F84D8BB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00EB2CAF-CE30-A5A7-1163-CA9F84D8BB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00EB2CAF-CE30-A5A7-1163-CA9F84D8BB32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E62F51-EC48-B41C-CC9A-C632AE37E998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E62F51-EC48-B41C-CC9A-C632AE37E998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E62F51-EC48-B41C-CC9A-C632AE37E998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E62F51-EC48-B41C-CC9A-C632AE37E998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -323,6 +323,7 @@
     <Compile Include="Assets\Script\CustomerController.cs" />
     <Compile Include="Assets\Script\DebugController.cs" />
     <Compile Include="Assets\Script\GameController.cs" />
+    <Compile Include="Assets\Script\GlowImage.cs" />
     <Compile Include="Assets\Script\ItemController.cs" />
     <Compile Include="Assets\Script\LetterSpacing.cs" />
     <Compile Include="Assets\Script\LvDesignController.cs" />
@@ -342,6 +343,7 @@
     <None Include="Assets\Demigiant\DOTween\DOTween50.xml" />
     <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Demigiant\DOTween\readme.txt" />
+    <None Include="Assets\Shader\UI-Unlit-Glow.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
