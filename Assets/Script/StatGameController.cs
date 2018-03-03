@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening;
 //プレイ中のプレイヤーのステータス周りの変化と描写を行う
 public class StatGameController : MonoBehaviour
 {

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using DG.Tweening;
 
 //ゲームの進行を制御する
 
@@ -98,6 +99,9 @@ public class GameController : MonoBehaviour
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
+        //BGM
+        GetComponent<SoundController>().PlayStoreBgm("StoreBgm1");
+
         //ゲーム画面への遷移
         Menu.SetActive(false);
         HighScore.SetActive(false);
@@ -132,10 +136,10 @@ public class GameController : MonoBehaviour
 
 
         //所持アイテムのリセット
-        StatGame.GetComponent<StatGame>().Item1 = new string[] { "None", "None", "None", "None", "None" };
-        StatGame.GetComponent<StatGame>().Item2 = new string[] { "None", "None", "None", "None", "None" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "None", "None", "None", "None", "None" };
-        StatGame.GetComponent<StatGame>().Item4 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item1 = new string[] { "", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item2 = new string[] { "", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item4 = new string[] { "", "None", "None", "None", "None" };
         //所持扱いにならない、取得処理時に使う枠
         StatGame.GetComponent<StatGame>().Item5 = new string[] { "None", "None", "None", "None", "None" };
         StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" };
@@ -173,6 +177,8 @@ public class GameController : MonoBehaviour
         PopupLoad.SetActive(false);
 
         StatPlayer.GetComponent<StatPlayer>().Load();
+
+        
         //ロードでステータスは読み込まれる
 
         MaxKill = StatPlayer.GetComponent<StatPlayer>().MaxKill; //殺人数
@@ -216,6 +222,9 @@ public class GameController : MonoBehaviour
 
         StatPlayer.GetComponent<StatPlayer>().SaveDelete();//セーブは消す
 
+
+
+
         //セーブがない場合の初期値
         //パラメータ初期化
         StatGame.GetComponent<StatGame>().StatSus = 0;
@@ -247,8 +256,10 @@ public class GameController : MonoBehaviour
 
         CustomerStart2();
 
-            //初期客の生成
-            GetComponent<LvDesignController>().MakeCustomerFirst();
+        //初期客の生成
+        GetComponent<LvDesignController>().MakeCustomerFirst();
+
+
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -323,6 +334,8 @@ public class GameController : MonoBehaviour
 
         FieldBlock.SetActive(true);
 
+
+
         //表示パネルの初期化
         //客表示せず、操作できない状態
         Button4Items.SetActive(false);
@@ -361,6 +374,8 @@ public class GameController : MonoBehaviour
 
     public void SaveEnd()
     {
+        //BGM止める
+        GetComponent<SoundController>().StopStoreBgm();
 
         GetHighScore();
         StatPlayer.GetComponent<StatPlayer>().Save();
@@ -375,6 +390,20 @@ public class GameController : MonoBehaviour
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
+
+
+
+        //ゲーム開始演出
+        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(300, 1.0f);
+        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-28, 1.0f);
+
+        //SE
+        GetComponent<SoundController>().PlaySE("DoorOpen");
+/*
+        DOVirtual.DelayedCall(0.5f, () => {
+            GetComponent<SoundController>().FadeInOutSE("CustomerVoice",1.0f, 3.0f, 3.0f,0.7f);
+        });
+*/
 
         //日付を経過させる
         GetComponent<StatGameController>().DaysUp(1);
@@ -432,24 +461,49 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(false);
 
         MessageDraw("");
-        Button4Items.SetActive(false);
+        //Item4ボタン押せなくする
+        Button4Items1.GetComponent<Button>().interactable = false;
+        Button4Items2.GetComponent<Button>().interactable = false;
+        Button4Items3.GetComponent<Button>().interactable = false;
+        Button4Items4.GetComponent<Button>().interactable = false;
 
         //どの所持アイテムが押されたか判定、そのアイテムは所持アイテムから消す
+        //押されたアイテム以外の欄を消す
         string[] UseItem= new string[4];
         string[] NoItem = { "None", "None", "None", "None", "None" };
         if (ItemNum == 1) { UseItem = StatGame.GetComponent<StatGame>().Item1;
             StatGame.GetComponent<StatGame>().Item1 = NoItem;
+
+            Button4Items1.SetActive(true);
+            Button4Items2.SetActive(false);
+            Button4Items3.SetActive(false);
+            Button4Items4.SetActive(false);
         }
         else if (ItemNum == 2) { UseItem = StatGame.GetComponent<StatGame>().Item2;
             StatGame.GetComponent<StatGame>().Item2 = NoItem;
+            Button4Items1.SetActive(false);
+            Button4Items2.SetActive(true);
+            Button4Items3.SetActive(false);
+            Button4Items4.SetActive(false);
         }
         else if (ItemNum == 3) { UseItem = StatGame.GetComponent<StatGame>().Item3;
             StatGame.GetComponent<StatGame>().Item3 = NoItem;
+            Button4Items1.SetActive(false);
+            Button4Items2.SetActive(false);
+            Button4Items3.SetActive(true);
+            Button4Items4.SetActive(false);
         }
         else if (ItemNum == 4) { UseItem = StatGame.GetComponent<StatGame>().Item4;
             StatGame.GetComponent<StatGame>().Item4 = NoItem;
+            Button4Items1.SetActive(false);
+            Button4Items2.SetActive(false);
+            Button4Items3.SetActive(false);
+            Button4Items4.SetActive(true);
         }
         else { Debug.Log("１～４以外のアイテム番号が送られています"); }
+
+
+
 //客をすべて取得し、一体ずつ処理
         GameObject[] Customers=GameObject.FindGameObjectsWithTag("Customer");
         int Count = 0;
@@ -481,6 +535,7 @@ public class GameController : MonoBehaviour
             Color CustomColor = GetComponent<ColorGetter>().ToColor(CustomerColor);
             RateColor = GetComponent<LvDesignController>().ColorCondition(UseItemColor, CustomerColor);
 
+            /*デバッグ用、色類似度の表示
                         GameObject ColorCheck = (GameObject)Instantiate(
                                    ColorCheckPrefab,
                                    transform.position,
@@ -490,7 +545,7 @@ public class GameController : MonoBehaviour
                         ColorCheck.transform.localPosition = new Vector3(0, 90, 0);
                         string DistancePerString = (RateColor).ToString();
             ColorCheck.GetComponent<Text>().text = DistancePerString+"";
-
+            */
 
             //Powerを比べる
             //こちらの勝利
@@ -507,7 +562,9 @@ public class GameController : MonoBehaviour
                            Quaternion.identity);
                 Heart.transform.SetParent(Customers[Count].transform);
                 //位置決定
-                Heart.transform.localPosition = new Vector3(0, 70, 0);
+                Heart.transform.localPosition = new Vector3(0, 70, 1);
+                //大きさ変更
+                Heart.GetComponent<RectTransform>().DOScale(new Vector3(1+(VictoryPoint/( VictoryPoint+ CustomerHp)), 1+(VictoryPoint /( VictoryPoint+ CustomerHp)), 1), 0.3f);
 
                 //タグをつける
                 Customers[Count].tag = "Loser";
@@ -538,12 +595,15 @@ public class GameController : MonoBehaviour
         StatGame.GetComponent<StatGame>().ResultGetExp = GetExp;
         StatGame.GetComponent<StatGame>().ResultGetSus = ResultGetSus;
 
+        //SE
+        GetComponent<SoundController>().PlaySE("GGetOne");
+
         //OKボタン表示
-        ButtonGoResult.SetActive(true);
+//        ButtonGoResult.SetActive(true);
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
-
+        PopupResultGPop();
     }
 
     public void PopupResultGPop()
@@ -552,6 +612,8 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(false);
 
         ButtonGoResult.SetActive(false);
+
+
 
         int GetG = StatGame.GetComponent<StatGame>().ResultGetG;
         int GetExp = StatGame.GetComponent<StatGame>().ResultGetExp;
@@ -580,12 +642,26 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(false);
         TapButton.SetActive(false);
 
+        //SE
+        GetComponent<SoundController>().PlaySE("GGet");
+
+
         int GetG = StatGame.GetComponent<StatGame>().ResultGetG;
         int GetExp = StatGame.GetComponent<StatGame>().ResultGetExp;
         float GetSus = StatGame.GetComponent<StatGame>().ResultGetSus;
 
         //ポップアップ表示
+
         PopupResultG.SetActive(true);
+
+//アイテム４は消す
+        Button4Items.SetActive(false);
+        //消した個々のボタンは戻しておく
+        Button4Items1.SetActive(true);
+        Button4Items2.SetActive(true);
+        Button4Items3.SetActive(true);
+        Button4Items4.SetActive(true);
+
 
         GetG = Mathf.Abs(GetG);
         string TextGetG = (GetG).ToString();
@@ -613,6 +689,9 @@ public class GameController : MonoBehaviour
         if (GetComponent<LvDesignController>().LvUpCondition())
         {
             StatGame.GetComponent<StatGame>().StatExp = 0;
+
+            //SE
+            GetComponent<SoundController>().PlaySE("LvUp");
 
             PopupLvUp.SetActive(true);
             PopupLvUpText.text = "レベルアップ！";
@@ -659,6 +738,8 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         PopupGameOver.SetActive(true);
+
+        GetComponent<SoundController>().StopStoreBgm();
 
         GetHighScore();
         StatPlayer.GetComponent<StatPlayer>().CheckHighScore();
@@ -714,6 +795,10 @@ public class GameController : MonoBehaviour
         //レベルアップから来た場合のレベルアップポップアップを消す
         PopupLvUp.SetActive(false);
 
+        //演出
+        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0f);
+
+
         int Count = 0;
         int CustomerLength;
         //Winnerタグの客を破壊
@@ -742,8 +827,8 @@ public class GameController : MonoBehaviour
             Button4Items3.GetComponent<Button>().interactable = false;
             Button4Items4.GetComponent<Button>().interactable = false;
 
-            CustomerFieldBack.SetActive(false);
             CustomerFieldCollider.SetActive(false);
+            CustomerFieldBack.SetActive(false);
 
             GetComponent<StatGameController>().DrawItem4();
             GetComponent<StatGameController>().DrawItemSelectItem4();
@@ -862,6 +947,9 @@ public class GameController : MonoBehaviour
             //枠が両方とも使われている場合は何も起こらない
         }
         else {
+
+            //SE
+            GetComponent<SoundController>().PlaySE("Victory");
             GameObject SelectedItem = GameObject.FindGameObjectWithTag(TagName);
 
             string Name;
@@ -903,7 +991,7 @@ public class GameController : MonoBehaviour
                     SelectItemName1.text = Name;
                     SelectItemPower1.text = PowerString;
                     SelectBox.tag = "Box1";
-                }
+                    SelectItemImage1.tag = "Item";                }
                 else
                 {
                     UseBox = SelectItemImage2;
@@ -912,6 +1000,7 @@ public class GameController : MonoBehaviour
                     SelectItemName2.text = Name;
                     SelectItemPower2.text = PowerString;
                     SelectBox.tag = "Box2";
+                    SelectItemImage2.tag = "Item";
                 }
                 //アイテムの情報をＳＴＡＴに書き込み
                 UseBox.GetComponent<StatItem>().Name = Name;
@@ -952,6 +1041,7 @@ public class GameController : MonoBehaviour
                     SelectItemName1.text = SelectedItem.GetComponent<StatCustomer>().Name;
                     SelectItemPower1.text = "？";
                     SelectBox.tag = "Box1";
+                    SelectItemImage1.tag = "Human";
                 }
                 else
                 {
@@ -961,6 +1051,7 @@ public class GameController : MonoBehaviour
                     SelectItemName2.text = SelectedItem.GetComponent<StatCustomer>().Name;
                     SelectItemPower2.text = "？";
                     SelectBox.tag = "Box2";
+                    SelectItemImage2.tag = "Human";
                 }
 
                 //アイテムの情報をＳＴＡＴに書き込み
@@ -995,6 +1086,9 @@ public class GameController : MonoBehaviour
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
+        //SE
+        GetComponent<SoundController>().PlaySE("TapButton");
+
         //OKボタンを切る
         SelectButtonOK.GetComponent<Button>().interactable = false;
         GameObject UseBox = SelectItemImage1;
@@ -1007,6 +1101,7 @@ public class GameController : MonoBehaviour
             SelectItemImage1.GetComponent<Image>().color = new Color(0, 0, 0, 1f); ;
             SelectItemName1.text = " ";
             SelectItemPower1.text = " ";
+            SelectItemImage1.tag = "Untagged";
 
         }
         else
@@ -1017,6 +1112,7 @@ public class GameController : MonoBehaviour
             SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
             SelectItemName2.text = " ";
             SelectItemPower2.text = " ";
+            SelectItemImage2.tag = "Untagged";
         }
         UseBox.GetComponent<StatItem>().Name = null;
         UseBox.GetComponent<StatItem>().Image = null;
@@ -1035,13 +1131,19 @@ public class GameController : MonoBehaviour
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
-
-        if(SelectItemImage1.tag=="Top0"| SelectItemImage1.tag == "Top1"|SelectItemImage1.tag=="Top2"|SelectItemImage1.tag=="Top3"){
-        MaxKill++;//殺人数    
-    }
-        if (SelectItemImage2.tag == "Top0" | SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3")
+        //SE　とりあえず、一人でも人間がいたら鳴らす　あとで演出付けるべき
+        if (SelectItemImage1.tag == "Human"|SelectItemImage2.tag == "Human")
         {
+            GetComponent<SoundController>().PlaySE("Kill");
+            Debug.Log("Kill");
+        }
+
+        if (SelectItemImage1.tag == "Human") { 
             MaxKill++;//殺人数    
+        }
+        if (SelectItemImage2.tag == "Human")
+            {
+                MaxKill++;//殺人数    
         }
 
 
@@ -1239,6 +1341,7 @@ public class GameController : MonoBehaviour
         HighScore.SetActive(false);
         AdsDelete.SetActive(false);
         Game.SetActive(false);
+        BeforeStartAnim();
     }
 
     //メッセージ表示
@@ -1247,9 +1350,20 @@ public class GameController : MonoBehaviour
         MessageText.text = Text;
     }
 
+    
+    public void BeforeStartAnim()
+    {
+        //スタート演出で動くものを上によせておく
+        //開始時とメニューに戻った時に呼ぶ
+        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0);
+        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-560, 0);
+    }
     // Use this for initialization
     void Start()
     {
+        BeforeStartAnim();
+
+
         //ナビゲーションバーを透明に
         /*
         ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;

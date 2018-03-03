@@ -450,9 +450,9 @@ public class LvDesignController : MonoBehaviour
         //倍率の算出
         if (DC > 3.5) { Per = 0.5f; }
         else {
-            Per = 1f*(1 / Mathf.Pow(7 / 4f, DC)) * 4 - DC / 80;
+            Per = (1f*(1 / Mathf.Pow(13 / 4f, DC)) * 4 + DC / 30)+1f/4;
         }
-        //f(x)=(1/(7/4)^x)*4-x/80
+        //f(x)=((1/(13/4)^x)*4-x/30)+1/4
         //色距離0で4倍、0.5で3倍、1.2で2倍、2.45で等倍、3.5以上は1/2
         Per *= 100;
         int PerInt = (int)Per;
@@ -463,9 +463,12 @@ public class LvDesignController : MonoBehaviour
     //使ったアイテムのパワーと客ＨＰと色倍率で定義
     //勝利点を返す
     public float VictoryCondition(int UseItemPower,int CustomerHp, int RateColor)
-    {      
-
-        float Vic = (UseItemPower * RateColor / 100 - CustomerHp) / CustomerHp;
+    {
+        float FloatItem = (float)UseItemPower;
+        float FloatHp = (float)CustomerHp;
+        float FloatColor = (float)RateColor;
+        float Vic = (FloatItem * FloatColor / 100 - FloatHp) / FloatHp;
+        Debug.Log(UseItemPower+":"+CustomerHp+":"+RateColor+"="+Vic);
         return Vic;
     }
 
