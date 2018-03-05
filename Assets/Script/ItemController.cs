@@ -14,7 +14,7 @@ public class ItemController : MonoBehaviour
     public GameObject EventSystem;
 
     //アイテム生成
-    public void MakeItem(string Name, string Image, int Power, Color Col, float UpSus,int PositionX,int PositionY,string TagName)
+    public void MakeItem(string Name, string Image, int Power, Color Col, float UpSus,int PositionX,int PositionY,string TagName,int Human)
     {
         GameObject Item = (GameObject)Instantiate(
             ItemDrawPrefab,
@@ -48,6 +48,7 @@ public class ItemController : MonoBehaviour
         Item.GetComponent<StatItem>().Power = Power;
         Item.GetComponent<StatItem>().Col = Col;
         Item.GetComponent<StatItem>().UpSus = UpSus;
+        Item.GetComponent<StatItem>().Human = Human;
         Item.tag = TagName;
     }
 

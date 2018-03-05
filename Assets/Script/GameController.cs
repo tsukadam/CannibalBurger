@@ -46,7 +46,18 @@ public class GameController : MonoBehaviour
     public GameObject Button6Items5;
     public GameObject Button6Items6;
 
+    public GameObject Buns1;
+    public GameObject Buns2;
+    public GameObject ParticleFeed;
+
+    public GameObject Hand;
+
     public GameObject ButtonSelectItem;
+
+
+    public GameObject SelectItem1;
+    public GameObject SelectItem2;
+
     public GameObject SelectItemImage1;
     public Text SelectItemName1;
     public Text SelectItemPower1;
@@ -83,6 +94,7 @@ public class GameController : MonoBehaviour
 
     //プレハブ
     public GameObject HeartPrefab;
+    public GameObject GPrefab;
     public GameObject ColorCheckPrefab;
     public GameObject SelectBoxPrefab;
 
@@ -123,6 +135,12 @@ public class GameController : MonoBehaviour
         TapButton.SetActive(false);
         PopupSave.SetActive(false);
         PopupLoad.SetActive(false);
+
+        Buns1.SetActive(false);
+        Buns2.SetActive(false);
+
+        Button6Items5.SetActive(false);
+        Button6Items6.SetActive(false);
 
         FieldBlock.SetActive(false);
 
@@ -356,6 +374,9 @@ public void CustomerDestroy()
         Message.SetActive(false);
         CustomerField.SetActive(true);
 
+        Buns1.SetActive(false);
+        Buns2.SetActive(false);
+
         PopupGetItem.SetActive(false);
         PopupLvUp.SetActive(false);
         PopupGameOver.SetActive(false);
@@ -364,9 +385,14 @@ public void CustomerDestroy()
         PopupSave.SetActive(false);
         PopupLoad.SetActive(false);
 
+        Button6Items5.SetActive(false);
+        Button6Items6.SetActive(false);
+
         CustomerFieldBack.SetActive(false);
         CustomerFieldCollider.SetActive(false);
 
+        //アニメで動いたものを元に戻す
+        BeforeStartAnim();
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -400,16 +426,17 @@ public void CustomerDestroy()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
-
+        PopupSave.SetActive(false);
 
 
         //ゲーム開始演出
         CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(300, 1.0f);
-        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-28, 1.0f);
+        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(0, 0);
 
         //SE
         GetComponent<SoundController>().PlaySE("DoorOpen");
 /*
+//遅延処理
         DOVirtual.DelayedCall(0.5f, () => {
             GetComponent<SoundController>().FadeInOutSE("CustomerVoice",1.0f, 3.0f, 3.0f,0.7f);
         });
@@ -428,21 +455,9 @@ public void CustomerDestroy()
         //表示パネルの初期化
         //ボタン初期化
         FieldBlock.SetActive(false);
-
         Button4Items.SetActive(true);
-        Button6Items.SetActive(false);
-        ButtonSelectItem.SetActive(false);
-        PopupResultG.SetActive(false);
-        PopupDisposeItem.SetActive(false);
         Message.SetActive(true);
         CustomerField.SetActive(true);
-        PopupGetItem.SetActive(false);
-        PopupLvUp.SetActive(false);
-        PopupGameOver.SetActive(false);
-        ButtonGoResult.SetActive(false);
-        TapButton.SetActive(false);
-        PopupSave.SetActive(false);
-
 
         CustomerFieldBack.SetActive(true);
         CustomerFieldCollider.SetActive(true);
@@ -464,6 +479,8 @@ public void CustomerDestroy()
         EventSystem.SetActive(true);
     }
 
+
+
     //食材選択　→　効果判定　→　Gリザルト表示
     public void Feed(int ItemNum)
     {
@@ -472,10 +489,12 @@ public void CustomerDestroy()
 
         MessageDraw("");
         //Item4ボタン押せなくする
+        /*
         Button4Items1.GetComponent<Button>().interactable = false;
         Button4Items2.GetComponent<Button>().interactable = false;
         Button4Items3.GetComponent<Button>().interactable = false;
         Button4Items4.GetComponent<Button>().interactable = false;
+        */
 
         //どの所持アイテムが押されたか判定、そのアイテムは所持アイテムから消す
         //押されたアイテム以外の欄を消す
@@ -511,27 +530,133 @@ public void CustomerDestroy()
             Button4Items4.SetActive(true);
         }
         else { Debug.Log("１～４以外のアイテム番号が送られています"); }
+        GoAttack(ItemNum,UseItem);
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+    }
+    //Feed演出
+    public void GoAttack(int ItemNum, string[] UseItem)
+    {
+        float Time1 = 0.6f;//ワクが動く時間
+        float Time4 = 0.2f;//間の時間
+        float Time5 = 0.8f;//バンズが挟む時間
+        float Time6 = 1.5f;//間の時間
+        float Time7 = 0;//効果が広がっていく時間
+
+        string UseItemColor = UseItem[3];
+        Color UseColor = GetComponent<ColorGetter>().ToColor(UseItemColor);
+        Buns1.SetActive(true);
+        Buns2.SetActive(true);
+
+        //押された枠以外をよせる
+        GameObject UseWaku = Button4Items1;
+        if (ItemNum == 1)
+        {
+            UseWaku = Button4Items1;
+            Button4Items2.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items3.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items4.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+        }
+        else if (ItemNum == 2)
+        {
+            UseWaku = Button4Items2;
+            Button4Items1.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items3.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items4.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+        }
+        else if (ItemNum == 3)
+        {
+            UseWaku = Button4Items3;
+            Button4Items1.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items2.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items4.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+        }
+        else if (ItemNum == 4)
+        {
+            UseWaku = Button4Items4;
+            Button4Items1.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items2.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            Button4Items3.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+        }
+        else { Debug.Log("１～４以外のアイテム番号が送られています");//ワク１が動いちゃう
+        }
+
+        //ワクが挟まれる位置へ
+        UseWaku.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, -405),Time1);
+
+            //バンズ現れる
+            Buns1.GetComponent<RectTransform>().DOMoveX(0, Time1);
+            Buns2.GetComponent<RectTransform>().DOMoveX(0, Time1);
+
+        DOVirtual.DelayedCall(Time1 + Time4, () => {
+            //ワク縮む
+            UseWaku.GetComponent<RectTransform>().DOSizeDelta(new Vector2(35*5, 35), Time5/2);
+            UseWaku.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(35 * 5, 35), Time5 / 2);
+            UseWaku.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(35 * 5, 40), Time5 / 2);
+            UseWaku.GetComponent<Image>().DOColor(UseColor, Time5 / 2);
+            UseWaku.transform.Find("Mask/AllColor").GetComponent<Image>().DOColor(UseColor, Time5 / 2);
+            UseWaku.transform.Find("Mask/Power").GetComponent<Text>().DOColor(UseColor, Time5 / 2);
+            UseWaku.transform.Find("Mask/Text").GetComponent<Text>().DOColor(UseColor, Time5 / 2);
+
+            //バンズはさむ
+            Buns1.GetComponent<RectTransform>().DOMoveY(-360f, Time5);
+            Buns2.GetComponent<RectTransform>().DOMoveY(-450f, Time5);
+
+        });
+
+        DOVirtual.DelayedCall(Time1 +  Time4 + Time5, () => {
+            ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
+            color.mode = ParticleSystemGradientMode.Color;
+            color.color = UseColor;
+            ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
+            main.startColor = color;
+
+            ParticleFeed.GetComponent<ParticleSystem>().Play();
+            DOVirtual.DelayedCall(Time6/4, () => {
+                ParticleFeed.GetComponent<ParticleSystem>().Play();
+            });
+
+        });
 
 
+        DOVirtual.DelayedCall(Time1+Time4+Time5+Time6+Time7, () => {
 
-//客をすべて取得し、一体ずつ処理
-        GameObject[] Customers=GameObject.FindGameObjectsWithTag("Customer");
+            Attack(ItemNum, UseItem);
+        });
+
+
+    }
+    //勝敗処理
+    public void Attack(int ItemNum, string[] UseItem)
+    {
+
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+        //客をすべて取得し、一体ずつ処理
+        GameObject[] Customers = GameObject.FindGameObjectsWithTag("Customer");
         int Count = 0;
         int CustomerLength = Customers.GetLength(0);
         int UseItemPower = int.Parse(UseItem[2]);
         string UseItemColor = UseItem[3];
         float UseItemUpSus = float.Parse(UseItem[4]);
 
-        int GetG =0;
+        int GetG = 0;
+        int NowGetG = 0;
+        float GCount = 0;
+        float FloatNowGetG = 0;
         int GetExp = 0;
         float GetSus = 0;
-        float VictoryPoint=0;
+        float VictoryPoint = 0;
         int RateColor = 0;
-
+        float FloatCount = 0;
         //Susは人数に関わらず上がる
         GetSus = UseItemUpSus;
 
-        while (Count<CustomerLength)
+        float BlinkTime = 1.0f;
+        float HeartTime = 0.5f;
+        float MaTime = 0.5f;
+
+        while (Count < CustomerLength)
         {
             MaxCustomer++;//さばいた客の数
 
@@ -560,32 +685,67 @@ public void CustomerDestroy()
             //Powerを比べる
             //こちらの勝利
             VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, RateColor);
+            //点滅演出
+            FloatCount = (float)Count*1.0f;
+            Customers[Count].GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(FloatCount / 16);
+            Customers[Count].GetComponent<Image>().DOColor(CustomColor, 0).SetDelay(BlinkTime * 1 / 8+ FloatCount/16);
+            Customers[Count].GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(BlinkTime * 2 / 8 + FloatCount / 16);
+            Customers[Count].GetComponent<Image>().DOColor(CustomColor, 0).SetDelay(BlinkTime * 3 / 8 + FloatCount / 16);
+            Customers[Count].GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(BlinkTime * 4 / 8 + FloatCount / 16);
+            Customers[Count].GetComponent<Image>().DOColor(CustomColor, 0).SetDelay(BlinkTime * 5 / 8 + FloatCount / 16);
+
+
+
             if (VictoryPoint >= 0)
             {
-                MaxCustomerVictory ++;//うち魅了した客の数
+                MaxCustomerVictory++;//うち魅了した客の数
 
 
                 //ハートの生成
                 GameObject Heart = (GameObject)Instantiate(
-                           HeartPrefab,
-                           transform.position,
-                           Quaternion.identity);
+                       HeartPrefab,
+                       transform.position,
+                       Quaternion.identity);
                 Heart.transform.SetParent(Customers[Count].transform);
                 //位置決定
-                Heart.transform.localPosition = new Vector3(0, 70, 1);
+                Heart.transform.localPosition = new Vector3(0, 0, 1);
+                Heart.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
                 //大きさ変更
-                Heart.GetComponent<RectTransform>().DOScale(new Vector3(1+(VictoryPoint/( VictoryPoint+ CustomerHp)), 1+(VictoryPoint /( VictoryPoint+ CustomerHp)), 1), 0.3f);
+                Heart.GetComponent<RectTransform>().DOScale(new Vector3(1 + (VictoryPoint / (VictoryPoint + CustomerHp)), 1 + (VictoryPoint / (VictoryPoint + CustomerHp)), 1), HeartTime).SetDelay(BlinkTime);
+                Heart.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0,70),HeartTime).SetDelay(BlinkTime);
+
 
                 //タグをつける
                 Customers[Count].tag = "Loser";
                 //勝利度合の記録
-                Customers[Count].GetComponent<StatCustomer>().PointPower =UseItemPower-CustomerHp;
+                Customers[Count].GetComponent<StatCustomer>().PointPower = UseItemPower - CustomerHp;
                 Customers[Count].GetComponent<StatCustomer>().PointColor = RateColor;
 
                 //賞金取得
-                GetG+=GetComponent<LvDesignController>().VictoryDropG(CustomerDropG,VictoryPoint);
+                NowGetG = GetComponent<LvDesignController>().VictoryDropG(CustomerDropG, VictoryPoint);
+                GetG += NowGetG;
+                FloatNowGetG = (float)NowGetG;
                 //exp獲得
                 GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
+
+                GCount = 0;
+                while (GCount < FloatNowGetG / 10) {
+                    //G生成
+                    Debug.Log("G!");
+                    GameObject G = (GameObject)Instantiate(
+                           GPrefab,
+                           transform.position,
+                           Quaternion.identity);
+                    G.transform.SetParent(Customers[Count].transform);
+                    //位置決定
+                    G.transform.localPosition = new Vector3(0, 30, 1);
+                    G.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
+                    //移動
+                    G.GetComponent<RectTransform>().DOScale(new Vector3(1,1,1),0).SetDelay(BlinkTime + HeartTime + MaTime+(GCount / 8 * 1.0f));
+                    G.GetComponent<RectTransform>().DOMove(new Vector2(-205f, 507f), 0.3f).SetDelay(BlinkTime + HeartTime + MaTime+(GCount / 8 * 1.0f));
+                    G.GetComponent<Image>().DOColor(new Color(0,0,0,0), 0).SetDelay(BlinkTime + HeartTime + MaTime + (GCount / 8 * 1.0f)+0.6f);
+                    GCount++;
+                }
 
             }
             //客の勝利
@@ -601,7 +761,7 @@ public void CustomerDestroy()
         float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
 
         //変動値を一時的にSTATに記録
-        StatGame.GetComponent<StatGame>().ResultGetG =GetG;
+        StatGame.GetComponent<StatGame>().ResultGetG = GetG;
         StatGame.GetComponent<StatGame>().ResultGetExp = GetExp;
         StatGame.GetComponent<StatGame>().ResultGetSus = ResultGetSus;
 
@@ -609,19 +769,24 @@ public void CustomerDestroy()
         GetComponent<SoundController>().PlaySE("GGetOne");
 
         //OKボタン表示
-//        ButtonGoResult.SetActive(true);
+        //        ButtonGoResult.SetActive(true);
+
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
-        PopupResultGPop();
-    }
+
+        DOVirtual.DelayedCall(1.0f, () =>
+        {
+            PopupResultGPop();
+        });
+}
 
     public void PopupResultGPop()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
-        ButtonGoResult.SetActive(false);
+//        ButtonGoResult.SetActive(false);
 
 
 
@@ -806,7 +971,7 @@ public void CustomerDestroy()
         PopupLvUp.SetActive(false);
 
         //演出
-        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0f);
+        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0);
 
 
         int Count = 0;
@@ -831,7 +996,7 @@ public void CustomerDestroy()
         else {
             //選択アイテム欄出す
             ButtonSelectItem.SetActive(true);
-            Button4Items.SetActive(false);
+
             Button4Items1.GetComponent<Button>().interactable = false;
             Button4Items2.GetComponent<Button>().interactable = false;
             Button4Items3.GetComponent<Button>().interactable = false;
@@ -842,6 +1007,11 @@ public void CustomerDestroy()
 
             GetComponent<StatGameController>().DrawItem4();
             GetComponent<StatGameController>().DrawItemSelectItem4();
+
+            //演出
+//            Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-454, 1.0f);
+//            Hand.GetComponent<RectTransform>().DOLocalMoveY(345, 1.0f).SetDelay(1.0f);
+
             //TOPを取得
             GameObject[] LoserTop = GetComponent<Sorter>().LoserSort(Loser);
             //Top以外は破壊
@@ -872,7 +1042,7 @@ public void CustomerDestroy()
             {
                 PositionY = 125;
                 PositionX = (150*Count)-220;
-                LoserTop[Count].transform.position = new Vector3(PositionX, PositionY, 0);
+                LoserTop[Count].transform.position=new Vector3(PositionX, PositionY, 0);
                 LoserTop[Count].GetComponent<Rigidbody2D>().constraints=RigidbodyConstraints2D.FreezePosition;
                 LoserTop[Count].GetComponent<Button>().interactable = true;
 
@@ -897,7 +1067,7 @@ public void CustomerDestroy()
                 Color UseItemCol = new Color(CoreR + PlusR, CoreG + PlusG, CoreB + PlusB, 1f);
 
 
-                GetComponent<ItemController>().MakeItem(ItemName, ItemImage,ItemPower,UseItemCol,ItemUpSus,PositionX,-90,ItemTag);
+                GetComponent<ItemController>().MakeItem(ItemName, ItemImage,ItemPower,UseItemCol,ItemUpSus,PositionX,-90,ItemTag,0);
 
                 Count++;
             }
@@ -1001,7 +1171,7 @@ public void CustomerDestroy()
                     SelectItemName1.text = Name;
                     SelectItemPower1.text = PowerString;
                     SelectBox.tag = "Box1";
-                    SelectItemImage1.tag = "Item";                }
+                    SelectItemImage1.tag = TagName;                }
                 else
                 {
                     UseBox = SelectItemImage2;
@@ -1010,7 +1180,7 @@ public void CustomerDestroy()
                     SelectItemName2.text = Name;
                     SelectItemPower2.text = PowerString;
                     SelectBox.tag = "Box2";
-                    SelectItemImage2.tag = "Item";
+                    SelectItemImage2.tag = TagName;
                 }
                 //アイテムの情報をＳＴＡＴに書き込み
                 UseBox.GetComponent<StatItem>().Name = Name;
@@ -1018,6 +1188,7 @@ public void CustomerDestroy()
                 UseBox.GetComponent<StatItem>().Power = Power;
                 UseBox.GetComponent<StatItem>().Col = Col;
                 UseBox.GetComponent<StatItem>().UpSus = UpSus;
+                UseBox.GetComponent<StatItem>().Human = 0;
 
                 //ワクの位置と大きさ
                 SelectBox.transform.localPosition = new Vector3(0, 15, 0);
@@ -1025,6 +1196,7 @@ public void CustomerDestroy()
                 SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(140, 160);
 
                 UseBox.GetComponent<RectTransform>().sizeDelta = new Vector2(130, 65);
+                UseBox.GetComponent<RectTransform>().localPosition = new Vector3(-8, 25, 0);
 
             }
             //人の場合
@@ -1051,7 +1223,7 @@ public void CustomerDestroy()
                     SelectItemName1.text = SelectedItem.GetComponent<StatCustomer>().Name;
                     SelectItemPower1.text = "？";
                     SelectBox.tag = "Box1";
-                    SelectItemImage1.tag = "Human";
+                    SelectItemImage1.tag = TagName;
                 }
                 else
                 {
@@ -1061,7 +1233,7 @@ public void CustomerDestroy()
                     SelectItemName2.text = SelectedItem.GetComponent<StatCustomer>().Name;
                     SelectItemPower2.text = "？";
                     SelectBox.tag = "Box2";
-                    SelectItemImage2.tag = "Human";
+                    SelectItemImage2.tag = TagName;
                 }
 
                 //アイテムの情報をＳＴＡＴに書き込み
@@ -1070,12 +1242,15 @@ public void CustomerDestroy()
                 UseBox.GetComponent<StatItem>().Power = Power;
                 UseBox.GetComponent<StatItem>().Col = Col;
                 UseBox.GetComponent<StatItem>().UpSus = UpSus;
+                UseBox.GetComponent<StatItem>().Human = 1;
+
 
                 //ワクの位置と大きさ
                 SelectBox.transform.localPosition = new Vector3(0, 0, 0);
                 SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(140, 200);
                 SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(140, 200);
                 UseBox.GetComponent<RectTransform>().sizeDelta = new Vector2(125, 175);
+                UseBox.GetComponent<RectTransform>().localPosition = new Vector3(-8, 25, 0);
 
             }
             else { Debug.Log("アイテムでも人でもないものが選択されている"); }
@@ -1135,25 +1310,198 @@ public void CustomerDestroy()
         EventSystem.SetActive(true);
 
     }
+
     //選択確定→捨てる画面に遷移
-    public void SelectOK()
+    //演出
+    public void GoSelectOK()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
+        float Time1 = 0.5f;//客を上に寄せる時間
+        float Time2 = 0.4f;//客が赤くなる時間
+        float Time3 = 0.4f;//客が消えていく時間
+        float Time4 = 0.5f;//アイテムが現われる時間
+        float Time5 = 0.3f;//間の時間
+        float Time6 = 0.6f;//ワクが動く時間
+        float Time7 = 0.1f;//間の時間
 
-        //SE　とりあえず、一人でも人間がいたら鳴らす　あとで演出付けるべき
-        if (SelectItemImage1.tag == "Human"|SelectItemImage2.tag == "Human")
+        SelectButtonOK.SetActive(false);
+
+        //Dispose画面を準備しておく
+        BeforeDispose();
+
+        //客は上に寄せる
+        if (GameObject.FindGameObjectWithTag("Top0") != null) { GameObject.FindGameObjectWithTag("Top0").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Top1") != null) { GameObject.FindGameObjectWithTag("Top1").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Top2") != null) { GameObject.FindGameObjectWithTag("Top2").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Top3") != null) { GameObject.FindGameObjectWithTag("Top3").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Item0") != null) { GameObject.FindGameObjectWithTag("Item0").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Item1") != null) { GameObject.FindGameObjectWithTag("Item1").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Item2") != null) { GameObject.FindGameObjectWithTag("Item2").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Item3") != null) { GameObject.FindGameObjectWithTag("Item3").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+
+        //ボックスを上に上げる
+        SelectItem1.GetComponent<RectTransform>().DOLocalMoveY(30, Time1);
+        SelectItem2.GetComponent<RectTransform>().DOLocalMoveY(30, Time1);
+        Hand.GetComponent<RectTransform>().DOLocalMoveY(800, Time1);
+
+
+        if (SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0" |
+            SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
         {
-            GetComponent<SoundController>().PlaySE("Kill");
-            Debug.Log("Kill");
+            //遅延処理
+            DOVirtual.DelayedCall(Time1, () =>
+            {
+                //SE　とりあえず、一人でも人間がいたら鳴らす　あとで演出付けるべき
+                GetComponent<SoundController>().PlaySE("Kill");
+                Debug.Log("Kill");
+
+                //血しぶき
+                //赤色変化してフェードアウトし、アイテム画像に変わる
+                if (SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0")
+                {
+                    CustomerKill(SelectItemImage1, SelectItemName1, SelectItemPower1, Time2, Time3, Time4);
+                }
+
+                if (SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
+                {
+                    CustomerKill(SelectItemImage2, SelectItemName2, SelectItemPower2, Time2, Time3, Time4);
+                }
+            });
+        }
+        else {
+            Time1 = 0;
+            Time2 = 0;
+            Time3 = 0;
+            Time4 = 0;
+              //キルがない時は血しぶき処理をスキップ
+
         }
 
-        if (SelectItemImage1.tag == "Human") { 
+            DOVirtual.DelayedCall(Time1+Time2+Time3+Time4+Time5, () => {
+                //ボックスを下に下げる
+                Button6Items.SetActive(true);
+                SelectItem1.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), Time6);
+                SelectItem2.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), Time6);
+                SelectItemImage1.GetComponent<RectTransform>().DOLocalMoveY(19, Time6);
+                SelectItemImage2.GetComponent<RectTransform>().DOLocalMoveY(19, Time6);
+                SelectItem1.GetComponent<RectTransform>().DOLocalMoveY(-207, Time6);
+                SelectItem2.GetComponent<RectTransform>().DOLocalMoveY(-207, Time6);
+
+                Button6Items.GetComponent<RectTransform>().DOLocalMoveY(0, Time6);
+
+            });
+
+        DOVirtual.DelayedCall(Time1 + Time2 + Time3 + Time4+Time5+Time6+Time7, () => {
+            Button6Items6.SetActive(true);
+            Button6Items5.SetActive(true);
+            ButtonSelectItem.SetActive(false);
+            TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+        SelectOK();
+
+        });
+
+    }
+    //キル演出の共有部分
+    public void CustomerKill(GameObject Image,Text Name,Text Power,float Time2,float Time3,float Time4)
+    {
+
+        string ImagePath;
+        Sprite SpriteImage;
+        Color Col;
+        string PowerString;
+
+        //客を赤くしてその後透明にする
+        DOTween.To(
+            () => Image.GetComponent<Image>().color,
+            x => Image.GetComponent<Image>().color = x,
+            new Color(1.0f, 0, 0, 1.0f),
+            Time2
+            );
+        DOTween.To(
+            () => Name.color,
+            x => Name.color = x,
+            new Color(1.0f, 0, 0, 1.0f),
+            Time2
+            );
+        DOTween.To(
+            () => Power.color,
+            x => Power.color = x,
+            new Color(1.0f, 0, 0, 1.0f),
+            Time2
+            );
+        DOTween.To(
+            () => Image.GetComponent<Image>().color,
+            x => Image.GetComponent<Image>().color = x,
+            new Color(1.0f, 0, 0, 0),
+            Time3
+            ).SetDelay(Time2);
+        DOTween.To(
+            () => Name.color,
+            x => Name.color = x,
+            new Color(1.0f, 0, 0, 0),
+            Time3
+            ).SetDelay(Time2);
+        DOTween.To(
+            () => Power.color,
+            x => Power.color = x,
+            new Color(1.0f, 0, 0, 0),
+            Time3
+            ).SetDelay(Time2);
+        GameObject Blood1 = Image.transform.Find("ParticleBlood").gameObject;
+       GameObject Blood2 = Image.transform.Find("ParticleBloodBack").gameObject;
+        Blood1.GetComponent<ParticleSystem>().Play();
+        Blood2.GetComponent<ParticleSystem>().Play();
+        float MaTime = 0.2f;//消えている一瞬の間
+        DOVirtual.DelayedCall(Time2 + Time3+ MaTime, () =>
+        {
+            //客のスプライトをアイテムに差し替える
+            ImagePath = "Item/" + Image.GetComponent<StatItem>().Image;
+            SpriteImage = Resources.Load<Sprite>(ImagePath);
+            Image.GetComponent<Image>().sprite = SpriteImage;
+            Col = Image.GetComponent<StatItem>().Col;
+            Image.GetComponent<Image>().color = new Color(0, 0, 0, 1.0f);
+            Image.GetComponent<RectTransform>().sizeDelta = new Vector2(130, 65);
+            Name.color = new Color(0, 0, 0, 1.0f);
+            Power.color = new Color(0, 0, 0, 1.0f);
+            Name.text = Image.GetComponent<StatItem>().Name;
+            PowerString= (Image.GetComponent<StatItem>().Power).ToString();
+            Power.text = PowerString;
+
+            //情報も差し替える
+
+            //アイテム画像を黒から本来の色に変える
+            DOTween.To(
+                () => Image.GetComponent<Image>().color,
+                x => Image.GetComponent<Image>().color = x,
+                Col,
+                Time4- MaTime
+                );
+            DOTween.To(
+                () => Name.color,
+                x => Name.color = x,
+                new Color(1.0f,1.0f,1.0f,1.0f),
+                Time4- MaTime
+                );
+            DOTween.To(
+               () => Power.color,
+               x => Power.color = x,
+               new Color(1.0f, 1.0f, 1.0f, 1.0f),
+               Time4- MaTime
+               );
+        });
+    }
+    //捨てる画面の準備
+    public void BeforeDispose()
+    {
+        if( SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0")
+        {
             MaxKill++;//殺人数    
         }
-        if (SelectItemImage2.tag == "Human")
-            {
-                MaxKill++;//殺人数    
+        if (SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
+        {
+            MaxKill++;//殺人数    
         }
 
 
@@ -1165,9 +1513,9 @@ public void CustomerDestroy()
         string[] GetItem2 = new string[5];
         Color Col;
 
-        GetItem1[0]=SelectItemImage1.GetComponent<StatItem>().Name;
+        GetItem1[0] = SelectItemImage1.GetComponent<StatItem>().Name;
         GetItem1[1] = SelectItemImage1.GetComponent<StatItem>().Image;
-        PowerString=(SelectItemImage1.GetComponent<StatItem>().Power).ToString();
+        PowerString = (SelectItemImage1.GetComponent<StatItem>().Power).ToString();
         GetItem1[2] = PowerString;
         UpSusString = (SelectItemImage1.GetComponent<StatItem>().UpSus).ToString();
         GetItem1[4] = UpSusString;
@@ -1183,27 +1531,10 @@ public void CustomerDestroy()
         GetItem2[4] = UpSusString;
         Col = SelectItemImage2.GetComponent<StatItem>().Col;
         ColorString = GetComponent<ColorGetter>().ToColorString(Col);
-        GetItem2[3] = "#"+ColorString;
+        GetItem2[3] = "#" + ColorString;
 
         StatGame.GetComponent<StatGame>().Item5 = GetItem1;
         StatGame.GetComponent<StatGame>().Item6 = GetItem2;
-        SelectStart();//選択ワクの初期化
-        Destroy(GameObject.FindGameObjectWithTag("Top0"));
-        Destroy(GameObject.FindGameObjectWithTag("Top1"));
-        Destroy(GameObject.FindGameObjectWithTag("Top2"));
-        Destroy(GameObject.FindGameObjectWithTag("Top3"));
-        Destroy(GameObject.FindGameObjectWithTag("Item0"));
-        Destroy(GameObject.FindGameObjectWithTag("Item1"));
-        Destroy(GameObject.FindGameObjectWithTag("Item2"));
-        Destroy(GameObject.FindGameObjectWithTag("Item3"));
-
-
-        //表示パーツ整理
-        SelectButtonOK.GetComponent<Button>().interactable = false;
-        ButtonSelectItem.SetActive(false);
-        Button6Items.SetActive(true);
-        Button4Items.SetActive(false);
-
 
         if (StatGame.GetComponent<StatGame>().Item1[0] == "None") { Button6Items1.GetComponent<Button>().interactable = false; }
         else { Button6Items1.GetComponent<Button>().interactable = true; }
@@ -1219,8 +1550,29 @@ public void CustomerDestroy()
         else { Button6Items6.GetComponent<Button>().interactable = true; }
 
 
-        MessageDraw("どれ を すてますか？");
         GetComponent<StatGameController>().DrawItem6();
+
+
+    }
+    //捨てる画面
+    public void SelectOK()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
+        SelectStart();//選択ワクの初期化
+        Destroy(GameObject.FindGameObjectWithTag("Top0"));
+        Destroy(GameObject.FindGameObjectWithTag("Top1"));
+        Destroy(GameObject.FindGameObjectWithTag("Top2"));
+        Destroy(GameObject.FindGameObjectWithTag("Top3"));
+        Destroy(GameObject.FindGameObjectWithTag("Item0"));
+        Destroy(GameObject.FindGameObjectWithTag("Item1"));
+        Destroy(GameObject.FindGameObjectWithTag("Item2"));
+        Destroy(GameObject.FindGameObjectWithTag("Item3"));
+        SelectItemImage1.tag = "Untagged";
+        SelectItemImage2.tag = "Untagged";
+
+        MessageDraw("どれ を すてますか？");
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -1367,7 +1719,53 @@ public void CustomerDestroy()
         //スタート演出で動くものを上によせておく
         //開始時とメニューに戻った時に呼ぶ
         CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0);
-        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-560, 0);
+
+        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-454, 0);
+        Button6Items.GetComponent<RectTransform>().DOLocalMoveY(800, 1.0f);
+        Hand.GetComponent<RectTransform>().DOLocalMoveY(345, 0);
+
+        SelectButtonOK.SetActive(true);
+
+        Button4Items1.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-177f, -295.5f), 0);
+        Button4Items2.GetComponent<RectTransform>().DOAnchorPos(new Vector2(177f, -295.5f), 0);
+        Button4Items3.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-177f, -464f), 0);
+        Button4Items4.GetComponent<RectTransform>().DOAnchorPos(new Vector2(177f, -464f), 0);
+
+        Button4Items1.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Button4Items2.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Button4Items3.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Button4Items4.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+
+        Button4Items1.GetComponent<Image>().color=new Color(1.0f,1.0f,1.0f,1.0f);
+        Button4Items2.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Button4Items3.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Button4Items4.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+        Button4Items1.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Button4Items2.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Button4Items3.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Button4Items4.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+
+        Button4Items1.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
+        Button4Items2.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
+        Button4Items3.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
+        Button4Items4.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
+
+        Buns1.GetComponent<RectTransform>().DOLocalMoveX(-600, 0);
+        Buns2.GetComponent<RectTransform>().DOLocalMoveX(600, 0);
+        Buns1.GetComponent<RectTransform>().DOLocalMoveY(-304, 0);
+        Buns2.GetComponent<RectTransform>().DOLocalMoveY(-509, 0);
+
+        SelectItem1.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 254.4f), 0);
+        SelectItem2.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 254.4f), 0);
+        SelectItem1.GetComponent<RectTransform>().DOLocalMoveY(-307, 0).SetDelay(0);
+        SelectItem2.GetComponent<RectTransform>().DOLocalMoveY(-307, 0).SetDelay(0);
+        SelectItemImage1.GetComponent<RectTransform>().DOLocalMoveY(5, 0);
+        SelectItemImage2.GetComponent<RectTransform>().DOLocalMoveY(5, 0);
+
+        //アイテム選択のＯＫボタンを切る
+        SelectButtonOK.GetComponent<Button>().interactable = false;
+
     }
     // Use this for initialization
     void Start()

@@ -12,6 +12,7 @@ public class StatItem : MonoBehaviour
     public int Power = 0;//うまさ
     public Color Col;//色
     public float UpSus = 0;//Sus上昇値
+    public float Human = 0;//人由来かどうか
 
     //ステータス表示オブジェクトの取得
     public GameObject Item;//自分自身

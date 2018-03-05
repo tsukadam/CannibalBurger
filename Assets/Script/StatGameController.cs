@@ -306,6 +306,16 @@ public class StatGameController : MonoBehaviour
         Color ColorColor;
         Sprite SpriteImage;
 
+        Item4_1Text.color=new Color(1.0f,1.0f,1.0f,1.0f);
+        Item4_1Power.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Item4_2Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Item4_2Power.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Item4_3Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Item4_3Power.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Item4_4Text.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Item4_4Power.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
+
         ImagePath = "Item/" + StatGame.GetComponent<StatGame>().Item1[1];
         SpriteImage = Resources.Load<Sprite>(ImagePath);
         ColorText = StatGame.GetComponent<StatGame>().Item1[3];
