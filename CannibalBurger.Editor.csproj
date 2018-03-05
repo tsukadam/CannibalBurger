@@ -315,6 +315,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="CannibalBurger.Plugins.csproj">
+      <Project>{A5D7AE33-B2E0-2D6E-38FE-0ADD13288600}</Project>
+      <Name>CannibalBurger.Plugins</Name>
+    </ProjectReference>
     <ProjectReference Include="CannibalBurger.csproj">
       <Project>{00EB2CAF-CE30-A5A7-1163-CA9F84D8BB32}</Project>
       <Name>CannibalBurger</Name>
@@ -330,6 +334,7 @@
     <None Include="Assets\Demigiant\DOTween\DOTween50.xml" />
     <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Demigiant\DOTween\readme.txt" />
+    <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\Shader\UI-Unlit-Glow.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

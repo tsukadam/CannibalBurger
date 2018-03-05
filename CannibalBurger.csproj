@@ -315,27 +315,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="CannibalBurger.Plugins.csproj">
+      <Project>{A5D7AE33-B2E0-2D6E-38FE-0ADD13288600}</Project>
+      <Name>CannibalBurger.Plugins</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Assets\Font\BitmapFontGenerator.cs" />
     <Compile Include="Assets\Font\BitmapFontScaling.cs" />
-    <Compile Include="Assets\Script\ApplicationChrome.cs" />
-    <Compile Include="Assets\Script\ColorGetter.cs" />
-    <Compile Include="Assets\Script\CSVDataReader.cs" />
-    <Compile Include="Assets\Script\CustomerController.cs" />
-    <Compile Include="Assets\Script\DebugController.cs" />
-    <Compile Include="Assets\Script\GameController.cs" />
-    <Compile Include="Assets\Script\Glower.cs" />
-    <Compile Include="Assets\Script\GlowImage.cs" />
-    <Compile Include="Assets\Script\ItemController.cs" />
-    <Compile Include="Assets\Script\LetterSpacing.cs" />
-    <Compile Include="Assets\Script\LvDesignController.cs" />
-    <Compile Include="Assets\Script\SelectButton.cs" />
-    <Compile Include="Assets\Script\Sorter.cs" />
-    <Compile Include="Assets\Script\SoundController.cs" />
-    <Compile Include="Assets\Script\StatCustomer.cs" />
-    <Compile Include="Assets\Script\StatGame.cs" />
-    <Compile Include="Assets\Script\StatGameController.cs" />
-    <Compile Include="Assets\Script\StatItem.cs" />
-    <Compile Include="Assets\Script\StatPlayer.cs" />
+    <Compile Include="Assets\Resources\Script\ApplicationChrome.cs" />
+    <Compile Include="Assets\Resources\Script\ColorGetter.cs" />
+    <Compile Include="Assets\Resources\Script\CSVDataReader.cs" />
+    <Compile Include="Assets\Resources\Script\CustomerController.cs" />
+    <Compile Include="Assets\Resources\Script\DebugController.cs" />
+    <Compile Include="Assets\Resources\Script\GameController.cs" />
+    <Compile Include="Assets\Resources\Script\Glower.cs" />
+    <Compile Include="Assets\Resources\Script\GlowImage.cs" />
+    <Compile Include="Assets\Resources\Script\ItemController.cs" />
+    <Compile Include="Assets\Resources\Script\LetterSpacing.cs" />
+    <Compile Include="Assets\Resources\Script\LvDesignController.cs" />
+    <Compile Include="Assets\Resources\Script\SelectButton.cs" />
+    <Compile Include="Assets\Resources\Script\Sorter.cs" />
+    <Compile Include="Assets\Resources\Script\SoundController.cs" />
+    <Compile Include="Assets\Resources\Script\StatCustomer.cs" />
+    <Compile Include="Assets\Resources\Script\StatGame.cs" />
+    <Compile Include="Assets\Resources\Script\StatGameController.cs" />
+    <Compile Include="Assets\Resources\Script\StatItem.cs" />
+    <Compile Include="Assets\Resources\Script\StatPlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Demigiant\DOTween\DOTween.XML" />
@@ -344,6 +350,7 @@
     <None Include="Assets\Demigiant\DOTween\DOTween50.xml" />
     <None Include="Assets\Demigiant\DOTween\Editor\DOTweenEditor.XML" />
     <None Include="Assets\Demigiant\DOTween\readme.txt" />
+    <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />
     <None Include="Assets\Shader\UI-Unlit-Glow.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
