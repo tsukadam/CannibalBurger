@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using DG.Tweening;
+//using DG.Tweening;
 
 //ゲームの進行を制御する
 
 public class GameController : MonoBehaviour
 {
+    public int FPS=60;//FPS設定
+ 
     //プレイヤーstat
     public GameObject StatPlayer;
     //ゲームstat
@@ -61,13 +63,13 @@ public class GameController : MonoBehaviour
     public GameObject SelectItem2;
 
     public GameObject SelectItemImage1;
-    public Text SelectItemName1;
-    public Text SelectItemPower1;
-    public Text SelectItemSus1;
+    public GameObject SelectItemName1;
+    public GameObject SelectItemPower1;
+    public GameObject SelectItemSus1;
     public GameObject SelectItemImage2;
-    public Text SelectItemName2;
-    public Text SelectItemPower2;
-    public Text SelectItemSus2;
+    public GameObject SelectItemName2;
+    public GameObject SelectItemPower2;
+    public GameObject SelectItemSus2;
     public GameObject SelectButtonOK;
     public GameObject ButtonGoResult;
 
@@ -180,6 +182,10 @@ public class GameController : MonoBehaviour
         StatGame.GetComponent<StatGame>().Item5 = new string[] { "None", "None", "None", "None", "None" };
         StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" };
 
+        //Feed記憶領域の初期化
+        StatGame.GetComponent<StatGame>().UseItemNum = 0;
+        StatGame.GetComponent<StatGame>().UseItemData = new string[] { "None", "None", "None", "None", "None" };
+
         //ロード前の描画リセット
         GetComponent<StatGameController>().DrawSus();
         GetComponent<StatGameController>().DrawG();
@@ -222,8 +228,7 @@ public class GameController : MonoBehaviour
         MaxCustomerVictory = StatPlayer.GetComponent<StatPlayer>().MaxCustomerVictory;//うち魅了した客の数
         MaxGetG = StatPlayer.GetComponent<StatPlayer>().MaxGetG; ;//かせいだ売上の総和
 
-        //初期アイテムの生成
-        GetComponent<LvDesignController>().MakeItemFirst();
+
         //レベルデザイン情報の読み込み
         GetComponent<LvDesignController>().GetLvDesignData();
 
@@ -237,12 +242,11 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawExp();
 
         CustomerStart1();
-
         CustomerStart2();
 
         //初期客の生成
         GetComponent<LvDesignController>().MakeSavedCustomer();
-        GlowCustomer();
+        //GlowCustomer();
 
 
         TapBlock.SetActive(false);
@@ -290,12 +294,11 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawExp();
 
         CustomerStart1();
-
         CustomerStart2();
 
         //初期客の生成
         GetComponent<LvDesignController>().MakeCustomerFirst();
-        GlowCustomer();
+        //       GlowCustomer();
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -303,6 +306,7 @@ public class GameController : MonoBehaviour
 
 
     //トップ客を光らせる
+    /*
     public void GlowCustomer() {
         if (GameObject.FindGameObjectsWithTag("Customer") != null)
         {
@@ -310,6 +314,7 @@ public class GameController : MonoBehaviour
             GetComponent<Sorter>().GlowSort(NormalCustomer);
         }
     }
+    */
 
     //今いる客をすべて破壊
     public void CustomerDestroy()
@@ -458,8 +463,9 @@ public class GameController : MonoBehaviour
 
 
         //ゲーム開始演出
-        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(300, 1.0f);
-        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(0, 0);
+        //        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(300, 1.0f);
+        //      Button4Items.GetComponent<RectTransform>().DOLocalMoveY(0, 0);
+        iTween.MoveTo(CustomerFieldBack, iTween.Hash("position", new Vector3(0f, 300f, 0f), "time", 1.0f));
 
         //SE
         GetComponent<SoundController>().PlaySE("DoorOpen");
@@ -524,6 +530,7 @@ public class GameController : MonoBehaviour
         Button4Items4.GetComponent<Button>().interactable = false;
         */
 
+
         //どの所持アイテムが押されたか判定、そのアイテムは所持アイテムから消す
         //押されたアイテム以外の欄を消す
         string[] UseItem = new string[4];
@@ -531,48 +538,159 @@ public class GameController : MonoBehaviour
         if (ItemNum == 1) { UseItem = StatGame.GetComponent<StatGame>().Item1;
             StatGame.GetComponent<StatGame>().Item1 = NoItem;
 
-            Button4Items1.SetActive(true);
-            Button4Items2.SetActive(false);
-            Button4Items3.SetActive(false);
-            Button4Items4.SetActive(false);
         }
         else if (ItemNum == 2) { UseItem = StatGame.GetComponent<StatGame>().Item2;
             StatGame.GetComponent<StatGame>().Item2 = NoItem;
-            Button4Items1.SetActive(false);
-            Button4Items2.SetActive(true);
-            Button4Items3.SetActive(false);
-            Button4Items4.SetActive(false);
+
         }
         else if (ItemNum == 3) { UseItem = StatGame.GetComponent<StatGame>().Item3;
             StatGame.GetComponent<StatGame>().Item3 = NoItem;
-            Button4Items1.SetActive(false);
-            Button4Items2.SetActive(false);
-            Button4Items3.SetActive(true);
-            Button4Items4.SetActive(false);
+
         }
         else if (ItemNum == 4) { UseItem = StatGame.GetComponent<StatGame>().Item4;
             StatGame.GetComponent<StatGame>().Item4 = NoItem;
-            Button4Items1.SetActive(false);
-            Button4Items2.SetActive(false);
-            Button4Items3.SetActive(false);
-            Button4Items4.SetActive(true);
+
         }
         else { Debug.Log("１～４以外のアイテム番号が送られています"); }
-        GoAttack(ItemNum, UseItem);
+
+        //記憶領域に記録
+        StatGame.GetComponent<StatGame>().UseItemNum = ItemNum;
+        StatGame.GetComponent<StatGame>().UseItemData = UseItem;
+
+        GoAttack();
+
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
-    //Feed演出
-    public void GoAttack(int ItemNum, string[] UseItem)
+
+    //フェードアウトアニメーションテキスト
+    private IEnumerator TextFadeOutCoroutine(GameObject ChangeObject, float Time)
+    {
+        int Count = 0;
+        Color NowColor;
+        while (Count <= FPS * Time)
+        {
+            NowColor = ChangeObject.GetComponent<Text>().color;
+            NowColor.a -= 1.0f / (FPS * Time);
+            ChangeObject.GetComponent<Text>().color = NowColor;
+            yield return new WaitForSeconds(Time / FPS);//遅延
+
+            Count++;
+        }
+        ChangeObject.GetComponent<Text>().color = new Color(0, 0, 0, 0);
+
+        yield return null;
+    }
+
+
+    //フェードアウトアニメーション画像
+    private IEnumerator FadeOutCoroutine(GameObject ChangeObject,float Time)
+    {
+        int Count = 0;
+        Color NowColor;
+        while (Count <= FPS * Time)
+        {
+            NowColor = ChangeObject.GetComponent<Image>().color;
+            NowColor.a -= 1.0f / (FPS * Time);
+            ChangeObject.GetComponent<Image>().color = NowColor;
+
+            yield return new WaitForSeconds(Time / FPS);//遅延
+            Count++;
+        }
+        ChangeObject.GetComponent<Image>().color = new Color(0,0,0,0);
+        yield return null;
+    }
+    //色を変えるアニメーションテキスト
+    private IEnumerator TextColorChangeCoroutine(GameObject ChangeObject, Color GoColor, float Time)
+    {
+        int Count = 0;
+        Color MotoColor = ChangeObject.GetComponent<Text>().color;
+        Color NowColor;
+        while (Count <= FPS * Time)
+        {
+            NowColor = ChangeObject.GetComponent<Text>().color;
+            NowColor.r += (GoColor.r - MotoColor.r) / (FPS * Time);
+            NowColor.g += (GoColor.g - MotoColor.g) / (FPS * Time);
+            NowColor.b += (GoColor.b - MotoColor.b) / (FPS * Time);
+            NowColor.a += (GoColor.a - MotoColor.a) / (FPS * Time);
+            ChangeObject.GetComponent<Text>().color = NowColor;
+
+
+            yield return new WaitForSeconds(Time / FPS);//遅延
+            Count++;
+        }
+        ChangeObject.GetComponent<Text>().color = GoColor;
+        yield return null;
+    }
+    //色を変えるアニメーション
+    private IEnumerator ColorChangeCoroutine(GameObject ChangeObject, Color GoColor, float Time)
+    {
+        int Count = 0;
+        Color MotoColor = ChangeObject.GetComponent<Image>().color;
+        Color NowColor;
+        while (Count <= FPS * Time)
+        {
+            NowColor = ChangeObject.GetComponent<Image>().color;
+            NowColor.r += (GoColor.r-MotoColor.r) / (FPS * Time);
+            NowColor.g += (GoColor.g- MotoColor.g) / (FPS * Time);
+            NowColor.b += (GoColor.b- MotoColor.b) / (FPS * Time);
+            NowColor.a += (GoColor.a - MotoColor.a) / (FPS * Time);
+            ChangeObject.GetComponent<Image>().color = NowColor;
+
+            yield return new WaitForSeconds(Time / FPS);//遅延
+            Count++;
+        }
+        ChangeObject.GetComponent<Image>().color = GoColor;
+        yield return null;
+    }
+
+    //XYで大きさを変えるアニメーション
+    private IEnumerator XYChangeCoroutine(GameObject ChangeObject, float GoX, float GoY,float Time)
+    {
+        int Count = 0;
+        Vector2 NowSize;
+        float MotoSizeX = ChangeObject.GetComponent<RectTransform>().sizeDelta.x;
+        float MotoSizeY = ChangeObject.GetComponent<RectTransform>().sizeDelta.y;
+        while (Count <= FPS * Time)
+        {
+
+            NowSize = ChangeObject.GetComponent<RectTransform>().sizeDelta;
+            NowSize.x +=  (GoX- MotoSizeX) / (FPS * Time);
+            NowSize.y += (GoY- MotoSizeY) / (FPS * Time);
+            ChangeObject.GetComponent<RectTransform>().sizeDelta = NowSize;
+
+            yield return new WaitForSeconds(Time / FPS);//遅延
+            Count++;
+        }
+        ChangeObject.GetComponent<RectTransform>().sizeDelta = new Vector2(GoX, GoY);
+
+        yield return null;
+    }
+//Feed演出
+public void GoAttack()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
+        StartCoroutine("GoAttackCoroutine");
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+    }
+
+    private IEnumerator GoAttackCoroutine()
+    {
+
+        int ItemNum = StatGame.GetComponent<StatGame>().UseItemNum;
+        string[] UseItem = StatGame.GetComponent<StatGame>().UseItemData;
+
+
         float Time1 = 0.6f;//ワクが動く時間
+        float Time2 = 0.3f;//具の色が変わる時間
         float Time4 = 0;//間の時間
         float Time5 = 0.8f;//バンズが挟む時間
         float Time6 = 0.8f;//間の時間
-        float Time7 = 0;//効果が広がっていく時間
+        float Time7 = 0.4f;//効果が広がっていく時間
 
         string UseItemColor = UseItem[3];
         Color UseColor = GetComponent<ColorGetter>().ToColor(UseItemColor);
@@ -581,96 +699,141 @@ public class GameController : MonoBehaviour
 
         //押された枠以外をよせる
         GameObject UseWaku = Button4Items1;
+
         if (ItemNum == 1)
         {
             UseWaku = Button4Items1;
-            Button4Items2.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items3.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items4.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+
         }
         else if (ItemNum == 2)
         {
             UseWaku = Button4Items2;
-            Button4Items1.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items3.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items4.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+
         }
         else if (ItemNum == 3)
         {
             UseWaku = Button4Items3;
-            Button4Items1.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items2.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items4.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+
         }
         else if (ItemNum == 4)
         {
             UseWaku = Button4Items4;
-            Button4Items1.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items2.GetComponent<RectTransform>().DOMoveY(-750, Time1);
-            Button4Items3.GetComponent<RectTransform>().DOMoveY(-750, Time1);
+            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+
         }
-        else { Debug.Log("１～４以外のアイテム番号が送られています");//ワク１が動いちゃう
+        else {
+            Debug.Log("１～４以外のアイテム番号が送られています");
         }
 
         //ワクが挟まれる位置へ
-     UseWaku.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, -405), Time1);
+        iTween.MoveTo(UseWaku, iTween.Hash("position", new Vector3(0, -405f, 0f), "time", Time1));
 
         //バンズ現れる
-       Buns1.GetComponent<RectTransform>().DOMoveX(0, Time1);
-        Buns2.GetComponent<RectTransform>().DOMoveX(0, Time1);
+        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -304f, 0f), "time", Time1));
+        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -509f, 0f), "time", Time1));
 
-        string ImagePath = "Item/mu";
+        string ImagePath = "Item/None";
         Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
+
         //ワク縮む
-        UseWaku.GetComponent<RectTransform>().DOSizeDelta(new Vector2(35 * 5, 35), Time1);
-        UseWaku.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(35 * 5, 35), Time1);
-        UseWaku.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(35 * 5, 40), Time1);
-        UseWaku.transform.Find("Mask/ItemImage").GetComponent<Image>().sprite = SpriteImage;
-            //        UseWaku.GetComponent<Image>().DOColor(UseColor, Time1);
-                UseWaku.transform.Find("Mask/AllColor").GetComponent<Image>().DOColor(UseColor, Time1);   
+
+        float GoX = 35 * 5;
+        float GoY = 35;
+        Color GoColor = UseColor;
+        GameObject Mask = UseWaku.transform.Find("Mask").gameObject;
+        GameObject AllColor = UseWaku.transform.Find("Mask/AllColor").gameObject;
+
         UseWaku.transform.Find("Mask/Power").GetComponent<Text>().text = "";
         UseWaku.transform.Find("Mask/Text").GetComponent<Text>().text = "";
         UseWaku.transform.Find("Mask/Sus").GetComponent<Text>().text = "";
+        UseWaku.transform.Find("Mask/ItemImage").GetComponent<Image>().sprite = SpriteImage;
+        UseWaku.transform.Find("Mask/AllColor").GetComponent<Image>().color = UseColor;
 
-        //        UseWaku.transform.Find("Mask/Power").GetComponent<Text>().DOColor(UseColor, Time1);
-        //        UseWaku.transform.Find("Mask/Text").GetComponent<Text>().DOColor(UseColor, Time1);
-        //        UseWaku.transform.Find("Mask/Sus").GetComponent<Text>().DOColor(UseColor, Time1);
+        StartCoroutine(XYChangeCoroutine(UseWaku, GoX, GoY, Time2));
+        StartCoroutine(XYChangeCoroutine(Mask, GoX, GoY, Time2));
+        StartCoroutine(XYChangeCoroutine(AllColor, GoX, GoY, Time2));
+        StartCoroutine(ColorChangeCoroutine(UseWaku, UseColor, Time2));
+        GetComponent<SoundController>().PlaySE("Bans");
 
-        DOVirtual.DelayedCall(Time1 + Time4, () => {
+        yield return new WaitForSeconds(Time4);//遅延
 
-            //バンズはさむ
-            Buns1.GetComponent<RectTransform>().DOMoveY(-360f, Time5);
-            Buns2.GetComponent<RectTransform>().DOMoveY(-450f, Time5);
+        //バンズはさむ
+        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5));
+        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5));
+      //  GetComponent<SoundController>().PlaySE("BansDon");
 
-        });
+        yield return new WaitForSeconds(Time5);//遅延
 
-        DOVirtual.DelayedCall(Time1 + Time4 + Time5, () => {
-            ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
-            color.mode = ParticleSystemGradientMode.Color;
-            color.color = UseColor;
-            ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
-            main.startColor = color;
+        //パーティクル発動
+        ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
+        color.mode = ParticleSystemGradientMode.Color;
+        color.color = UseColor;
+        ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
+        main.startColor = color;
 
-            ParticleFeed.GetComponent<ParticleSystem>().Play();
-            DOVirtual.DelayedCall(Time6 / 4, () => {
-                ParticleFeed.GetComponent<ParticleSystem>().Play();
-            });
+        ParticleFeed.GetComponent<ParticleSystem>().Play();
+        //SE
+        GetComponent<SoundController>().PlaySE("Burger");
 
-        });
+        yield return new WaitForSeconds(Time6 / 4);//遅延
 
+        ParticleFeed.GetComponent<ParticleSystem>().Play();
 
-        DOVirtual.DelayedCall(Time1 + Time4 + Time5 + Time6 + Time7, () => {
+        yield return new WaitForSeconds(Time6 + Time7);//遅延
 
-            Attack(ItemNum, UseItem);
-        });
+        Attack();
+
+        yield return null;
+
+    }
+
+    public void Attack()
+    {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
+
+        StartCoroutine("AttackCoroutine");
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
+    }
 
+    //点滅
+    private IEnumerator Blink(GameObject Customer,Color GOColor,float DelayTime)
+    {
+        yield return new WaitForSeconds(DelayTime);//遅延
+        Customer.GetComponent<Image>().color = GOColor;
+        Debug.Log("B");
+        yield return null;
+    }
+    //Gの移動
+    private IEnumerator GMove(GameObject G,Vector3 GoPosition, float GoTime,float DelayTime)
+    {
+        yield return new WaitForSeconds(DelayTime);//遅延
+        G.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
+        Debug.Log("GMove");
+        iTween.MoveTo(G, iTween.Hash(
+"position", GoPosition,
+"time", GoTime
+));
+    yield return null;
     }
     //勝敗処理
-    public void Attack(int ItemNum, string[] UseItem)
+    private IEnumerator AttackCoroutine()
     {
+        int ItemNum = StatGame.GetComponent<StatGame>().UseItemNum;
+        string[] UseItem = StatGame.GetComponent<StatGame>().UseItemData;
 
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -698,9 +861,9 @@ public class GameController : MonoBehaviour
         GetSus = UseItemUpSus;
 
         float BlinkTime = 0.8f;
-        float HeartTime = 0.5f;
-        float MaTime = 0;//ハートからＧゲットまでの間
-        float GTime = 2.0f;
+        float HeartTime = 0.3f;
+        float MaTime = 0.2f;//ハートからＧゲットまでの間
+        float GTime = 1.0f;
         float MaTime2 = 0.3f;//Ｇゲットからタップできるようになるまでの間
 
         while (Count < CustomerLength)
@@ -734,24 +897,37 @@ public class GameController : MonoBehaviour
             VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, RateColor);
             //点滅演出
             FloatCount = (float)Count * 1.0f;
-            if (VictoryPoint >= 0)
+
+            if (VictoryPoint >= 0& VictoryPoint < 1.5f)
             {
-                Customers[Count].GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(FloatCount / 16);
-                Customers[Count].GetComponent<Image>().DOColor(CustomColor, 0).SetDelay(BlinkTime * 1 / 8 + FloatCount / 16);
-                if (VictoryPoint >= 1.5f)
-                {
-                    Customers[Count].GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(BlinkTime * 2 / 8 + FloatCount / 16);
-                Customers[Count].GetComponent<Image>().DOColor(CustomColor, 0).SetDelay(BlinkTime * 3 / 8 + FloatCount / 16);
-                    if (VictoryPoint >= 2.0f)
-                    {
-                        Customers[Count].GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(BlinkTime * 4 / 8 + FloatCount / 16);
-                        Customers[Count].GetComponent<Image>().DOColor(CustomColor, 0).SetDelay(BlinkTime * 5 / 8 + FloatCount / 16);
-                    }
-                }
+
+                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 1 / 6 + FloatCount / 16));
+                Debug.Log("Blink1");
+
             }
+            else if(VictoryPoint >= 1.5f&VictoryPoint<2.0f) {
+                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 1 / 6 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 3 / 6 + FloatCount / 16));
+            Debug.Log("Blink2");
+        }
+        else if (VictoryPoint > 2.0f)
+            {
+                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 1 / 6 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 3 / 6 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), BlinkTime * 4 / 8 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 5 / 6 + FloatCount / 16));
+            Debug.Log("Blink3");
 
 
-            if (VictoryPoint >= 0)
+        }
+
+
+        if (VictoryPoint >= 0)
             {
                 VictoryNum++;
 
@@ -762,11 +938,23 @@ public class GameController : MonoBehaviour
                        Quaternion.identity);
                 Heart.transform.SetParent(Customers[Count].transform);
                 //位置決定
-                Heart.transform.localPosition = new Vector3(0, 0, 1);
                 Heart.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
+                Heart.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
                 //大きさ変更
-                Heart.GetComponent<RectTransform>().DOScale(new Vector3(1 + (VictoryPoint / (VictoryPoint + CustomerHp)), 1 + (VictoryPoint / (VictoryPoint + CustomerHp)), 1), HeartTime).SetDelay(BlinkTime);
-                Heart.GetComponent<RectTransform>().DOAnchorPos(new Vector2(0, 70), HeartTime).SetDelay(BlinkTime);
+
+                iTween.ScaleTo(Heart, iTween.Hash(
+                    "x", 1 + (VictoryPoint / (VictoryPoint + CustomerHp)),
+                    "y", 1 + (VictoryPoint / (VictoryPoint + CustomerHp)),
+                    "time", HeartTime,
+                    "delay",BlinkTime
+                    ));
+
+                iTween.MoveTo(Heart, iTween.Hash(
+                    "position", new Vector3(0, 70f, 0f),
+                    "time", HeartTime,
+                    "delay", BlinkTime,
+                    "isLocal", true
+                    ));
 
 
                 //タグをつける
@@ -785,8 +973,8 @@ public class GameController : MonoBehaviour
                 //exp獲得
                 GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
 
-                GCount = 1;
-                while (GCount <= FloatNowGetG / 10) {
+                GCount = 0;
+                while (GCount < FloatNowGetG / 10) {
                     //G生成
                     Debug.Log("G!");
                     GameObject G = (GameObject)Instantiate(
@@ -797,10 +985,15 @@ public class GameController : MonoBehaviour
                     //位置決定
                     G.transform.localPosition = new Vector3(0, 30, 1);
                     G.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
+
                     //移動
-                    G.GetComponent<RectTransform>().DOScale(new Vector3(1, 1, 1), 0).SetDelay(BlinkTime + HeartTime + MaTime + ((GCount-1)* GTime / (FloatMaxG / 10)));
-                    G.GetComponent<RectTransform>().DOMove(new Vector2(-205f, 507f), GTime/(FloatMaxG/10)).SetDelay(BlinkTime + HeartTime + MaTime + ((GCount - 1) * GTime / (FloatMaxG / 10)));
-                    G.GetComponent<Image>().DOColor(new Color(0, 0, 0, 0), 0).SetDelay(BlinkTime + HeartTime + MaTime + GTime);
+                    StartCoroutine(GMove(G,
+                        new Vector3(-200f, 500f, 0),
+                        GTime / (FloatMaxG / 10),
+                        (GTime/(FloatMaxG / 10)) * GCount + BlinkTime + HeartTime + MaTime)
+                        );
+
+
                     GCount++;
                 }
 
@@ -816,27 +1009,26 @@ public class GameController : MonoBehaviour
         }
 
         MaxCustomerVictory+=VictoryNum;//うち魅了した客の数
+                                       //SE
+        GetComponent<SoundController>().PlaySE("Heart");
 
-        //一人もつれなかったら演出のディレイ時間消す
+        //一人もつれなかったら演出のディレイ時間減らす
         if (VictoryNum == 0)
         {
             BlinkTime = 0;
             HeartTime = 0;
-            MaTime = 0;
-            GTime = 0;
+            MaTime = 1.0f;
+            GTime = 0f;
+            FloatMaxG = 0.1f;
         }
         float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
 
-      
         //SE
-        DOVirtual.DelayedCall(BlinkTime + HeartTime + MaTime + (1 / CustomerLength * 1.0f)+GTime / (FloatMaxG*3 / 10), () =>
-        {
-            GetComponent<SoundController>().PlaySE("GGetOne");
+        yield return new WaitForSeconds(BlinkTime+HeartTime+MaTime+GTime * 3 / 10);//遅延
+        GetComponent<SoundController>().PlaySE("GGetOne");
 
-
-
-            //合計賞金を加算
-            GetComponent<StatGameController>().GUp(GetG);
+        //合計賞金を加算
+        GetComponent<StatGameController>().GUp(GetG);
 
             //EXPを加算
             GetComponent<StatGameController>().ExpUp(GetExp);
@@ -851,19 +1043,15 @@ public class GameController : MonoBehaviour
             StatGame.GetComponent<StatGame>().ResultGetG= GetG;
             StatGame.GetComponent<StatGame>().ResultGetExp= GetExp;
             StatGame.GetComponent<StatGame>().ResultGetSus= ResultGetSus;
-        });
 
-        //OKボタン表示
-        //        ButtonGoResult.SetActive(true);
-
+        yield return new WaitForSeconds(GTime * 7 / 10 + MaTime2);//遅延
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
 
-        DOVirtual.DelayedCall(BlinkTime + HeartTime + MaTime + (1 / CustomerLength * 1.0f) + GTime  , () =>
-        {
-            PopupResultGPopPop();
-        });
+        PopupResultGPopPop();
+        yield return null;
+
     }
 
     public void PopupResultGPopPop()
@@ -1026,9 +1214,6 @@ public class GameController : MonoBehaviour
         //レベルアップから来た場合のレベルアップポップアップを消す
         PopupLvUp.SetActive(false);
 
-        //演出
-        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0);
-
 
         int Count = 0;
         int CustomerLength;
@@ -1063,10 +1248,6 @@ public class GameController : MonoBehaviour
 
             GetComponent<StatGameController>().DrawItem4();
             GetComponent<StatGameController>().DrawItemSelectItem4();
-
-            //演出
-            //            Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-454, 1.0f);
-            //            Hand.GetComponent<RectTransform>().DOLocalMoveY(345, 1.0f).SetDelay(1.0f);
 
             //TOPを取得
             GameObject[] LoserTop = GetComponent<Sorter>().LoserSort(Loser);
@@ -1146,15 +1327,15 @@ public class GameController : MonoBehaviour
 
         SelectItemImage1.GetComponent<Image>().sprite = null;
         SelectItemImage1.GetComponent<Image>().color = new Color(0, 0, 0, 1f); ;
-        SelectItemName1.text = "";
-        SelectItemPower1.text = "";
-        SelectItemSus1.text = "";
+        SelectItemName1.GetComponent<Text>().text = "";
+        SelectItemPower1.GetComponent<Text>().text = "";
+        SelectItemSus1.GetComponent<Text>().text = "";
 
         SelectItemImage2.GetComponent<Image>().sprite = null;
         SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
-        SelectItemName2.text = "";
-        SelectItemPower2.text = "";
-        SelectItemSus2.text = "";
+        SelectItemName2.GetComponent<Text>().text = "";
+        SelectItemPower2.GetComponent<Text>().text = "";
+        SelectItemSus2.GetComponent<Text>().text = "";
 
         SelectItemImage1.GetComponent<StatItem>().Name = null;
         SelectItemImage1.GetComponent<StatItem>().Image = null;
@@ -1228,9 +1409,9 @@ public class GameController : MonoBehaviour
                     UseBox = SelectItemImage1;
                     SelectItemImage1.GetComponent<Image>().sprite = SpriteImage;
                     SelectItemImage1.GetComponent<Image>().color = Col;
-                    SelectItemName1.text = Name;
-                    SelectItemPower1.text = PowerString;
-                    SelectItemSus1.text = UpSusString;
+                    SelectItemName1.GetComponent<Text>().text = Name;
+                    SelectItemPower1.GetComponent<Text>().text = PowerString;
+                    SelectItemSus1.GetComponent<Text>().text = UpSusString;
                     SelectBox.tag = "Box1";
                     SelectItemImage1.tag = TagName; }
                 else
@@ -1238,9 +1419,9 @@ public class GameController : MonoBehaviour
                     UseBox = SelectItemImage2;
                     SelectItemImage2.GetComponent<Image>().sprite = SpriteImage;
                     SelectItemImage2.GetComponent<Image>().color = Col;
-                    SelectItemName2.text = Name;
-                    SelectItemPower2.text = PowerString;
-                    SelectItemSus2.text =UpSusString;
+                    SelectItemName2.GetComponent<Text>().text = Name;
+                    SelectItemPower2.GetComponent<Text>().text = PowerString;
+                    SelectItemSus2.GetComponent<Text>().text =UpSusString;
                     SelectBox.tag = "Box2";
                     SelectItemImage2.tag = TagName;
                 }
@@ -1284,9 +1465,9 @@ public class GameController : MonoBehaviour
                     UseBox = SelectItemImage1;
                     SelectItemImage1.GetComponent<Image>().sprite = SpriteImage;
                     SelectItemImage1.GetComponent<Image>().color = Col;
-                    SelectItemName1.text = SelectedItem.GetComponent<StatCustomer>().Name;
-                    SelectItemPower1.text = "？";
-                    SelectItemSus1.text = "？";
+                    SelectItemName1.GetComponent<Text>().text = SelectedItem.GetComponent<StatCustomer>().Name;
+                    SelectItemPower1.GetComponent<Text>().text = "？";
+                    SelectItemSus1.GetComponent<Text>().text = "？";
                     SelectBox.tag = "Box1";
                     SelectItemImage1.tag = TagName;
                 }
@@ -1295,9 +1476,9 @@ public class GameController : MonoBehaviour
                     UseBox = SelectItemImage2;
                     SelectItemImage2.GetComponent<Image>().sprite = SpriteImage;
                     SelectItemImage2.GetComponent<Image>().color = Col;
-                    SelectItemName2.text = SelectedItem.GetComponent<StatCustomer>().Name;
-                    SelectItemPower2.text = "？";
-                    SelectItemSus2.text = "？";
+                    SelectItemName2.GetComponent<Text>().text = SelectedItem.GetComponent<StatCustomer>().Name;
+                    SelectItemPower2.GetComponent<Text>().text = "？";
+                    SelectItemSus2.GetComponent<Text>().text = "？";
                     SelectBox.tag = "Box2";
                     SelectItemImage2.tag = TagName;
                 }
@@ -1351,9 +1532,9 @@ public class GameController : MonoBehaviour
             Destroy(GameObject.FindGameObjectWithTag("Box1"));
             SelectItemImage1.GetComponent<Image>().sprite = null;
             SelectItemImage1.GetComponent<Image>().color = new Color(0, 0, 0, 1f); ;
-            SelectItemName1.text = " ";
-            SelectItemPower1.text = " ";
-            SelectItemSus1.text = " ";
+            SelectItemName1.GetComponent<Text>().text = " ";
+            SelectItemPower1.GetComponent<Text>().text = " ";
+            SelectItemSus1.GetComponent<Text>().text = " ";
             SelectItemImage1.tag = "Untagged";
 
         }
@@ -1363,9 +1544,9 @@ public class GameController : MonoBehaviour
             Destroy(GameObject.FindGameObjectWithTag("Box2"));
             SelectItemImage2.GetComponent<Image>().sprite = null;
             SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
-            SelectItemName2.text = " ";
-            SelectItemPower2.text = " ";
-            SelectItemSus2.text = " ";
+            SelectItemName2.GetComponent<Text>().text = " ";
+            SelectItemPower2.GetComponent<Text>().text = " ";
+            SelectItemSus2.GetComponent<Text>().text = " ";
             SelectItemImage2.tag = "Untagged";
         }
         UseBox.GetComponent<StatItem>().Name = null;
@@ -1386,59 +1567,64 @@ public class GameController : MonoBehaviour
     //演出
     public void GoSelectOK()
     {
+        StartCoroutine ("GoSelectOKCoroutine");
+    }
+    private IEnumerator GoSelectOKCoroutine()
+    {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
         float Time1 = 0.5f;//客を上に寄せる時間
-        float Time2 = 0.4f;//客が赤くなる時間
+        float Time2 = 0;//客が赤くなる時間
         float Time3 = 0.4f;//客が消えていく時間
         float Time4 = 0.5f;//アイテムが現われる時間
         float Time5 = 0.3f;//間の時間
         float Time6 = 0.6f;//ワクが動く時間
         float Time7 = 0.1f;//間の時間
 
+        MessageDraw("");
         SelectButtonOK.SetActive(false);
 
         //Dispose画面を準備しておく
         BeforeDispose();
-
+        
         //客は上に寄せる
-        if (GameObject.FindGameObjectWithTag("Top0") != null) { GameObject.FindGameObjectWithTag("Top0").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Top1") != null) { GameObject.FindGameObjectWithTag("Top1").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Top2") != null) { GameObject.FindGameObjectWithTag("Top2").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Top3") != null) { GameObject.FindGameObjectWithTag("Top3").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Item0") != null) { GameObject.FindGameObjectWithTag("Item0").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Item1") != null) { GameObject.FindGameObjectWithTag("Item1").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Item2") != null) { GameObject.FindGameObjectWithTag("Item2").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
-        if (GameObject.FindGameObjectWithTag("Item3") != null) { GameObject.FindGameObjectWithTag("Item3").GetComponent<RectTransform>().DOLocalMoveY(1000, Time1); }
+        if (GameObject.FindGameObjectWithTag("Top0") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top0"), iTween.Hash("y",1000, "time", Time1, "islocal",true)); }
+        if (GameObject.FindGameObjectWithTag("Top1") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top1"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Top2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Top3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Item0") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item0"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Item1") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item1"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Item2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Item3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
 
         //ボックスを上に上げる
-        SelectItem1.GetComponent<RectTransform>().DOLocalMoveY(30, Time1);
-        SelectItem2.GetComponent<RectTransform>().DOLocalMoveY(30, Time1);
-        Hand.GetComponent<RectTransform>().DOLocalMoveY(800, Time1);
+        iTween.MoveTo(SelectItem1, iTween.Hash("y", 30, "time", Time1, "islocal", true));
+        iTween.MoveTo(SelectItem2, iTween.Hash("y", 30, "time", Time1, "islocal", true));
+        iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true));
 
 
         if (SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0" |
             SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
         {
             //遅延処理
-            DOVirtual.DelayedCall(Time1, () =>
-            {
-                //SE　とりあえず、一人でも人間がいたら鳴らす　あとで演出付けるべき
-                GetComponent<SoundController>().PlaySE("Kill");
+
+            yield return new WaitForSeconds(Time1);
+
+            //SE　とりあえず、一人でも人間がいたら鳴らす　あとで演出付けるべき
+            GetComponent<SoundController>().PlaySE("Kill");
                 Debug.Log("Kill");
 
                 //血しぶき
                 //赤色変化してフェードアウトし、アイテム画像に変わる
                 if (SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0")
                 {
-                    CustomerKill(SelectItemImage1, SelectItemName1, SelectItemPower1, SelectItemSus1,Time2, Time3, Time4);
+                StartCoroutine(CustomerKill(SelectItemImage1, SelectItemName1, SelectItemPower1, SelectItemSus1, Time2, Time3, Time4));
                 }
 
                 if (SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
                 {
-                    CustomerKill(SelectItemImage2, SelectItemName2, SelectItemPower2, SelectItemSus2, Time2, Time3, Time4);
-                }
-            });
+                StartCoroutine(CustomerKill(SelectItemImage2, SelectItemName2, SelectItemPower2, SelectItemSus2, Time2, Time3, Time4));
+            }
         }
         else {
             Time1 = 0;
@@ -1446,7 +1632,6 @@ public class GameController : MonoBehaviour
             Time3 = 0;
             Time4 = 0;
             //キルがない時は血しぶき処理をスキップ
-
         }
 
         float Till5Time = Time1 + Time2 + Time3 + Time4 + Time5;
@@ -1456,16 +1641,15 @@ public class GameController : MonoBehaviour
         MemoTill5Time = Till5Time;
         MemoTillAllTime=TillAllTime;
 
-        KillSaveSusOrNot();
+        StartCoroutine("KillSaveSusOrNot");
 
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
 
+        yield return null;
     }
 
 
     //キルによってSaveSusがある時とない時の判定のタイミング
-    public void KillSaveSusOrNot()
+    private IEnumerator KillSaveSusOrNot()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -1474,11 +1658,9 @@ public class GameController : MonoBehaviour
         //キルによってSaveSusがある時
         if (SelectItemImage1.GetComponent<StatItem>().SaveSus > 0 | SelectItemImage2.GetComponent<StatItem>().SaveSus > 0)
         {
-            DOVirtual.DelayedCall(Till5Time, () =>
-            {
-                KillSaveSus(SelectItemImage1.GetComponent<StatItem>().HumanName, SelectItemImage2.GetComponent<StatItem>().HumanName,
+            yield return new WaitForSeconds(Till5Time);
+            KillSaveSus(SelectItemImage1.GetComponent<StatItem>().HumanName, SelectItemImage2.GetComponent<StatItem>().HumanName,
                 SelectItemImage1.GetComponent<StatItem>().SaveSus, SelectItemImage2.GetComponent<StatItem>().SaveSus);
-            });
             }
 
         //ない時はアイテム捨てに直行
@@ -1487,6 +1669,8 @@ public class GameController : MonoBehaviour
         }
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
+        yield return null;
+
 
     }
     //キルによってSaveSusがある時
@@ -1531,6 +1715,10 @@ public class GameController : MonoBehaviour
     //キル演出の後半
     public void AfterCustomerKill(int mode)
     {
+        StartCoroutine(AfterCustomerKillCoroutine(mode));
+    }
+    private IEnumerator AfterCustomerKillCoroutine(int mode)
+    {
         //mode=0 通常 =1 SaveSusでＯＫをタップしての遷移
         //        メモ変数から動作Time読み取る、ただしSaveSusがあった時は別の値を入れる
         float Time6;
@@ -1542,7 +1730,7 @@ public class GameController : MonoBehaviour
             Time6 = MemoTime6;
             Time7 = MemoTime7;
             Till5Time = MemoTill5Time;
-            TillAllTime = MemoTillAllTime;
+            TillAllTime = Time6 + Time7;
         }
         else
         {
@@ -1554,24 +1742,24 @@ public class GameController : MonoBehaviour
         }
 
         PopupSaveSus.SetActive(false);
+        yield return new WaitForSeconds(Till5Time);
 
-        DOVirtual.DelayedCall(Till5Time, () => {
-            //ボックスを下に下げる
-            Button6Items.SetActive(true);
-            SelectItem1.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), Time6);
-            SelectItem2.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), Time6);
-            SelectItemImage1.GetComponent<RectTransform>().DOLocalMoveY(19, Time6);
-            SelectItemImage2.GetComponent<RectTransform>().DOLocalMoveY(19, Time6);
-            SelectItem1.GetComponent<RectTransform>().DOLocalMoveY(-207, Time6);
-            SelectItem2.GetComponent<RectTransform>().DOLocalMoveY(-207, Time6);
-
-            Button6Items.GetComponent<RectTransform>().DOLocalMoveY(0, Time6);
-
-        });
+                 //ボックスを下に下げる
+        StartCoroutine(XYChangeCoroutine(SelectItem1, 335.1f, 149.9f, Time6/2));
+        StartCoroutine(XYChangeCoroutine(SelectItem2, 335.1f, 149.9f, Time6/2));
+     
+        iTween.MoveTo(SelectItemImage1, iTween.Hash("y", 19, "time", Time6, "islocal", true));
+        iTween.MoveTo(SelectItemImage2, iTween.Hash("y", 19, "time", Time6, "islocal", true));
+        iTween.MoveTo(SelectItem1, iTween.Hash("y", -207, "time", Time6, "islocal", true));
+        iTween.MoveTo(SelectItem2, iTween.Hash("y", -207, "time", Time6, "islocal", true));
 
 
-        DOVirtual.DelayedCall(TillAllTime, () => {
-            Button6Items6.SetActive(true);
+        Button6Items.SetActive(true);
+        iTween.MoveTo(Button6Items, iTween.Hash("y", 0, "time", Time6, "islocal", true));
+
+        yield return new WaitForSeconds(TillAllTime);
+
+        Button6Items6.SetActive(true);
             Button6Items5.SetActive(true);
             ButtonSelectItem.SetActive(false);
 
@@ -1580,129 +1768,81 @@ public class GameController : MonoBehaviour
             EventSystem.SetActive(true);
 
             SelectOK();
-
-        });
-
+        yield return null;
     }
 
 
     //キル演出の共有部分
-    public void CustomerKill(GameObject Image, Text Name, Text Power, Text Sus,float Time2, float Time3, float Time4)
+    private IEnumerator CustomerKill(GameObject Image, GameObject Name, GameObject Power, GameObject Sus,float Time2, float Time3, float Time4)
     {
 
         string ImagePath;
         Sprite SpriteImage;
-        Color Col;
+        Color ItemCol = Image.GetComponent<StatItem>().Col;
+        Color CustomCol = Image.GetComponent<Image>().color;
         string PowerString;
         string SusString;
 
-        //客を赤くしてその後透明にする
-        // Image.GetComponent<RectTransform>().DOShakePosition(Time2 + Time3);
+        iTween.ShakePosition(Image,iTween.Hash("x",5, "y", 5, "time",Time2 + Time3));
 
-        DOTween.To(
-            () => Image.GetComponent<Image>().color,
-            x => Image.GetComponent<Image>().color = x,
-            new Color(1.0f, 0, 0, 1.0f),
-            Time2
-            );
-        DOTween.To(
-            () => Name.color,
-            x => Name.color = x,
-            new Color(1.0f, 0, 0, 1.0f),
-            Time2
-            );
-        DOTween.To(
-            () => Sus.color,
-            x => Sus.color = x,
-            new Color(1.0f, 0, 0, 1.0f),
-            Time2
-            );
-        DOTween.To(
-            () => Power.color,
-            x => Power.color = x,
-            new Color(1.0f, 0, 0, 1.0f),
-            Time2
-            );
-        DOTween.To(
-            () => Image.GetComponent<Image>().color,
-            x => Image.GetComponent<Image>().color = x,
-            new Color(1.0f, 0, 0, 0),
-            Time3
-            ).SetDelay(Time2);
-        DOTween.To(
-            () => Name.color,
-            x => Name.color = x,
-            new Color(1.0f, 0, 0, 0),
-            Time3
-            ).SetDelay(Time2);
-        DOTween.To(
-            () => Power.color,
-            x => Power.color = x,
-            new Color(1.0f, 0, 0, 0),
-            Time3
-            ).SetDelay(Time2);
-        DOTween.To(
-            () => Sus.color,
-            x => Sus.color = x,
-            new Color(1.0f, 0, 0, 0),
-            Time3
-            ).SetDelay(Time2);
+        //パーティクル発動
         GameObject Blood1 = Image.transform.Find("ParticleBlood").gameObject;
         GameObject Blood2 = Image.transform.Find("ParticleBloodBack").gameObject;
+
+      
+
+        ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
+        color.mode = ParticleSystemGradientMode.Color;
+        color.color = CustomCol;
+
+        ParticleSystem.MainModule main1 = Blood1.GetComponent<ParticleSystem>().main;
+        main1.startColor = color;
+        ParticleSystem.MainModule main2 = Blood2.GetComponent<ParticleSystem>().main;
+        main2.startColor = color;
+
         Blood1.GetComponent<ParticleSystem>().Play();
         Blood2.GetComponent<ParticleSystem>().Play();
-        float MaTime = 0.2f;//消えている一瞬の間
-        DOVirtual.DelayedCall(Time2 + Time3 + MaTime, () =>
-         {
-            //客のスプライトをアイテムに差し替える
-            ImagePath = "Item/" + Image.GetComponent<StatItem>().Image;
-             SpriteImage = Resources.Load<Sprite>(ImagePath);
-             Image.GetComponent<Image>().sprite = SpriteImage;
-             Col = Image.GetComponent<StatItem>().Col;
-             Image.GetComponent<Image>().color = new Color(0, 0, 0, 1.0f);
-             Image.GetComponent<RectTransform>().sizeDelta = new Vector2(130, 65);
-             Name.color = new Color(0, 0, 0, 1.0f);
-             Power.color = new Color(0, 0, 0, 1.0f);
-             Sus.color = new Color(0, 0, 0, 1.0f);
-             Name.text = Image.GetComponent<StatItem>().Name;
-             PowerString = (Image.GetComponent<StatItem>().Power).ToString();
-             Power.text = PowerString;
-             SusString = (Image.GetComponent<StatItem>().UpSus).ToString();
-             if (SusString == "0"| SusString == "None")
-             {
-                 Sus.text = " ";
-             }
-             else {
-                 Sus.text = SusString;
-             }
-             //情報も差し替える
 
-             //アイテム画像を黒から本来の色に変える
-             DOTween.To(
-                 () => Image.GetComponent<Image>().color,
-                 x => Image.GetComponent<Image>().color = x,
-                 Col,
-                 Time4 - MaTime
-                 );
-             DOTween.To(
-                 () => Name.color,
-                 x => Name.color = x,
-                 new Color(1.0f, 1.0f, 1.0f, 1.0f),
-                 Time4 - MaTime
-                 );
-             DOTween.To(
-                () => Power.color,
-                x => Power.color = x,
-                new Color(1.0f, 1.0f, 1.0f, 1.0f),
-                Time4 - MaTime
-                );
-             DOTween.To(
-                () => Sus.color,
-                x => Sus.color = x,
-                SusGreen,
-                Time4 - MaTime
-                );
-         });
+
+        StartCoroutine(FadeOutCoroutine(Image, Time3));
+        StartCoroutine(TextFadeOutCoroutine(Name, Time3));
+        StartCoroutine(TextFadeOutCoroutine(Power, Time3));
+        StartCoroutine(TextFadeOutCoroutine(Sus,  Time3));
+
+        float MaTime = 0.2f;//消えている一瞬の間
+
+        yield return new WaitForSeconds(Time2 + Time3 + MaTime);//遅延
+
+                                //客のスプライトをアイテムに差し替える
+                                ImagePath = "Item/" + Image.GetComponent<StatItem>().Image;
+                                 SpriteImage = Resources.Load<Sprite>(ImagePath);
+                                 Image.GetComponent<Image>().sprite = SpriteImage;
+       
+                                 Image.GetComponent<Image>().color = new Color(0, 0, 0, 1.0f);
+                                 Image.GetComponent<RectTransform>().sizeDelta = new Vector2(130, 65);
+
+                                Name.GetComponent<Text>().text = Image.GetComponent<StatItem>().Name;
+                                 PowerString = (Image.GetComponent<StatItem>().Power).ToString();
+                                 Power.GetComponent<Text>().text = PowerString;
+                                 SusString = (Image.GetComponent<StatItem>().UpSus).ToString();
+                                 if (SusString == "0"| SusString == "None")
+                                 {
+                                     Sus.GetComponent<Text>().text = " ";
+                                 }
+                                 else {
+                                     Sus.GetComponent<Text>().text = SusString;
+                                 }
+        //情報も差し替える
+
+        //アイテム画像を黒から本来の色に変える
+        StartCoroutine(ColorChangeCoroutine(Image,ItemCol, Time4-MaTime));
+        StartCoroutine(TextColorChangeCoroutine(Name, new Color(1.0f, 1.0f, 1.0f, 1.0f), Time4 - MaTime));
+        StartCoroutine(TextColorChangeCoroutine(Power, new Color(1.0f, 1.0f, 1.0f, 1.0f), Time4 - MaTime));
+        StartCoroutine(TextColorChangeCoroutine(Sus, SusGreen, Time4 - MaTime));
+
+        yield return new WaitForSeconds(Time4);//遅延
+
+        yield return null;
     }
     //捨てる画面の準備
     public void BeforeDispose()
@@ -1901,7 +2041,7 @@ public void SelectOK()
         CustomerDestroy();
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
-        GlowCustomer();
+        //GlowCustomer();
 
         CustomerStart1();
         CustomerStart2();
@@ -1935,53 +2075,51 @@ public void SelectOK()
     {
         //スタート演出で動くものを上によせておく
         //開始時とメニューに戻った時に呼ぶ
-        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(1000, 0);
 
-//        Button4Items.GetComponent<RectTransform>().DOLocalMoveY(-454, 0);
-        Button6Items.GetComponent<RectTransform>().DOLocalMoveY(800, 1.0f);
-        Hand.GetComponent<RectTransform>().DOLocalMoveY(345, 0);
+        CustomerFieldBack.GetComponent<RectTransform>().localPosition = new Vector3(0f, 1000f, 0f);
+        Button4Items1.GetComponent<RectTransform>().localPosition = new Vector3(-177f, -326f, 0f);
+        Button4Items2.GetComponent<RectTransform>().localPosition = new Vector3(177f, -326f, 0f);
+        Button4Items3.GetComponent<RectTransform>().localPosition = new Vector3(-177f, -495f, 0f);
+        Button4Items4.GetComponent<RectTransform>().localPosition = new Vector3(177f, -495f, 0f);
 
-        SelectButtonOK.SetActive(true);
-
-        Button4Items1.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-177f, -326f), 0);
-        Button4Items2.GetComponent<RectTransform>().DOAnchorPos(new Vector2(177f, -326f), 0);
-        Button4Items3.GetComponent<RectTransform>().DOAnchorPos(new Vector2(-177f, -495f), 0);
-        Button4Items4.GetComponent<RectTransform>().DOAnchorPos(new Vector2(177f, -495f), 0);
-
-        Button4Items1.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-        Button4Items2.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-        Button4Items3.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-        Button4Items4.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-
-        Button4Items1.GetComponent<Image>().color=new Color(1.0f,1.0f,1.0f,1.0f);
+        Button4Items1.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f,149.9f);
+        Button4Items2.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items3.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items4.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items1.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items2.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items3.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items4.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
+        Button4Items1.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
+        Button4Items2.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
+        Button4Items3.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
+        Button4Items4.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
+        Button4Items1.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         Button4Items2.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         Button4Items3.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         Button4Items4.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        Button4Items1.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-        Button4Items2.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-        Button4Items3.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
-        Button4Items4.transform.Find("Mask").GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 149.9f), 0);
+        Buns1.GetComponent<RectTransform>().localPosition = new Vector3(-600f, -304f, 0f);
+        Buns2.GetComponent<RectTransform>().localPosition = new Vector3(600f, -509f, 0f);
 
-        Button4Items1.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
-        Button4Items2.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
-        Button4Items3.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
-        Button4Items4.transform.Find("Mask/AllColor").GetComponent<RectTransform>().DOSizeDelta(new Vector2(0, 149.9f), 0);
+        StatGame.GetComponent<StatGame>().UseItemNum = 0;
+        StatGame.GetComponent<StatGame>().UseItemData = new string[] { "None", "None", "None", "None", "None" };
 
-        Buns1.GetComponent<RectTransform>().DOLocalMoveX(-600, 0);
-        Buns2.GetComponent<RectTransform>().DOLocalMoveX(600, 0);
-        Buns1.GetComponent<RectTransform>().DOLocalMoveY(-304, 0);
-        Buns2.GetComponent<RectTransform>().DOLocalMoveY(-509, 0);
+        SelectButtonOK.SetActive(true);
+        SelectButtonOK.GetComponent<Button>().interactable = false;
 
-        SelectItem1.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 254.4f), 0);
-        SelectItem2.GetComponent<RectTransform>().DOSizeDelta(new Vector2(335.1f, 254.4f), 0);
-        SelectItem1.GetComponent<RectTransform>().DOLocalMoveY(-307, 0).SetDelay(0);
-        SelectItem2.GetComponent<RectTransform>().DOLocalMoveY(-307, 0).SetDelay(0);
-        SelectItemImage1.GetComponent<RectTransform>().DOLocalMoveY(5, 0);
-        SelectItemImage2.GetComponent<RectTransform>().DOLocalMoveY(5, 0);
+        Button6Items.GetComponent<RectTransform>().localPosition = new Vector3(0f,800f,0f);
+        Hand.GetComponent<RectTransform>().localPosition = new Vector3(0f, 345f, 0f);
+
+        SelectItem1.GetComponent<RectTransform>().sizeDelta=new Vector2(335.1f, 254.4f);
+        SelectItem2.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 254.4f);
+        SelectItem1.GetComponent<RectTransform>().localPosition = new Vector3(-177f, -307, 0f);
+        SelectItem2.GetComponent<RectTransform>().localPosition = new Vector3(177f, -307, 0f);
+        SelectItemImage1.GetComponent<RectTransform>().localPosition = new Vector3(0, 5f, 0f);
+        SelectItemImage2.GetComponent<RectTransform>().localPosition = new Vector3(0, 5f, 0f);
+
 
         //アイテム選択のＯＫボタンを切る
-        SelectButtonOK.GetComponent<Button>().interactable = false;
 
     }
     // Use this for initialization
@@ -2015,7 +2153,7 @@ public void SelectOK()
     }
     void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = FPS;
     }
     // Update is called once per frame
     void Update()

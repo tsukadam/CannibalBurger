@@ -26,6 +26,10 @@ public class SoundController : MonoBehaviour {
     public AudioClip SEVictory;
     public AudioClip SEGGetOne;
     public AudioClip SELvUp;
+    public AudioClip SEHeart;
+    public AudioClip SEBansDon;
+    public AudioClip SEBurger;
+    public AudioClip SEBans;
 
     //フェードインアウト設定
     public float SEVolume = 1;
@@ -64,6 +68,10 @@ public class SoundController : MonoBehaviour {
         else if (SEName == "Victory") { UseSE = SEVictory; }
         else if (SEName == "GGetOne") { UseSE = SEGGetOne; }
         else if (SEName == "LvUp") { UseSE = SELvUp; }
+        else if (SEName == "Heart") { UseSE = SEHeart; }
+        else if (SEName == "BansDon") { UseSE = SEBansDon; }
+        else if (SEName == "Burger") { UseSE = SEBurger; }
+        else if (SEName == "Bans") { UseSE = SEBans; }
         else { Debug.Log("指定された番号のSEはありません"); }
 
         return UseSE;

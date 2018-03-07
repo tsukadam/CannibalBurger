@@ -116,6 +116,7 @@ public class LvDesignController : MonoBehaviour
         StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "0" };
     }
 
+
     //初回客の生成
     public void MakeCustomerFirst()
     {

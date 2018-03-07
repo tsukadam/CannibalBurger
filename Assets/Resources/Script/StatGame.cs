@@ -34,6 +34,8 @@ public class StatGame : MonoBehaviour
 
 
     public int DisposeItemID = 0;//廃棄時に使う記憶領域
+    public int UseItemNum;//Feed時に使う記憶領域
+    public string[] UseItemData;
 
     public int ResultGetG = 0;//リザルト時に使う記憶領域
     public int ResultGetExp = 0;//リザルト時に使う記憶領域
