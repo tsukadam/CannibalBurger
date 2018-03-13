@@ -330,7 +330,6 @@
     <Compile Include="Assets\Resources\Script\StatGameController.cs" />
     <Compile Include="Assets\Resources\Script\StatItem.cs" />
     <Compile Include="Assets\Resources\Script\StatPlayer.cs" />
-    <Compile Include="Assets\UIEffect-master\Assets\UIEffect\Demo\UIEffectDialogDemo.cs" />
     <Compile Include="Assets\UIEffect-master\Assets\UIEffect\UIEffect.cs" />
     <Compile Include="Assets\UIEffect-master\Assets\UIEffect\UIEffectCapturedImage.cs" />
     <Compile Include="Assets\UIEffect-master\Assets\UIEffect\UIGradient.cs" />

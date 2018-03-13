@@ -35,6 +35,7 @@ public class StatGameController : MonoBehaviour
     public GameObject BarSusOb;
 
     public RectTransform BarExp;
+    public GameObject BarExpOb;
 
     public GameObject ObjectSus;
     public Text TextG;
@@ -104,6 +105,7 @@ public class StatGameController : MonoBehaviour
 
     public Color SusCol;
     public Color GCol;
+    public Color ExpCol;
     public float ColorChangeSpan = 0.5f;
 
     public int SusGlowFlag = 0;
@@ -555,7 +557,9 @@ public class StatGameController : MonoBehaviour
     //Exp描画（アニメーション用）
     public void DrawExp2(float AnimeExp)
     {
-        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 99);
+        ExpCol = GetComponent<GameController>().ExpBlue;
+        BarExpOb.GetComponent<Image>().color = ExpCol;
+        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 105);
     }
 
 
@@ -563,7 +567,8 @@ public class StatGameController : MonoBehaviour
     public void DrawExp()
     {
         int StatExp = StatGame.GetComponent<StatGame>().StatExp;
-        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 99);
+        BarExpOb.GetComponent<Image>().color = ExpCol;
+        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 105);
     }
 
     //レベル描画

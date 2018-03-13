@@ -122,7 +122,8 @@ public class GameController : MonoBehaviour
 
     //SUSの色
     public Color SusGreen;
-    //    public Color SusGreen = new Color(24f / 255, 255f / 255, 150f / 255, 1.0f);
+    //Expの色
+    public Color ExpBlue;
 
     //Gの色
     public Color GYellow;
@@ -473,7 +474,7 @@ public class GameController : MonoBehaviour
         //ゲーム開始演出
         //        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(300, 1.0f);
         //      Button4Items.GetComponent<RectTransform>().DOLocalMoveY(0, 0);
-        iTween.MoveTo(CustomerFieldBack, iTween.Hash("position", new Vector3(0f, 300f, 0f), "time", 1.0f));
+        iTween.MoveTo(CustomerFieldBack, iTween.Hash("position", new Vector3(0f, 300f, 0f), "time", 1.0f, "easeType", iTween.EaseType.linear));
 
         //SE
         GetComponent<SoundController>().PlaySE("DoorOpen");
@@ -711,33 +712,33 @@ public void GoAttack()
         if (ItemNum == 1)
         {
             UseWaku = Button4Items1;
-            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
 
         }
         else if (ItemNum == 2)
         {
             UseWaku = Button4Items2;
-            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
 
         }
         else if (ItemNum == 3)
         {
             UseWaku = Button4Items3;
-            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items4, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
 
         }
         else if (ItemNum == 4)
         {
             UseWaku = Button4Items4;
-            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1));
-            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1));
+            iTween.MoveTo(Button4Items1, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items2, iTween.Hash("position", new Vector3(177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Button4Items3, iTween.Hash("position", new Vector3(-177f, -750f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
 
         }
         else {
@@ -745,11 +746,11 @@ public void GoAttack()
         }
 
         //ワクが挟まれる位置へ
-        iTween.MoveTo(UseWaku, iTween.Hash("position", new Vector3(0, -405f, 0f), "time", Time1));
+        iTween.MoveTo(UseWaku, iTween.Hash("position", new Vector3(0, -405f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
 
         //バンズ現れる
-        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -304f, 0f), "time", Time1));
-        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -509f, 0f), "time", Time1));
+        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -304f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
+        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -509f, 0f), "time", Time1, "easeType", iTween.EaseType.linear));
 
         string ImagePath = "Item/None";
         Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
@@ -777,8 +778,8 @@ public void GoAttack()
         yield return new WaitForSeconds(Time4);//遅延
 
         //バンズはさむ
-        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5));
-        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5));
+        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5, "easeType", iTween.EaseType.linear));
+        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5, "easeType", iTween.EaseType.linear));
       //  GetComponent<SoundController>().PlaySE("BansDon");
 
         yield return new WaitForSeconds(Time5);//遅延
@@ -822,7 +823,6 @@ public void GoAttack()
     {
         yield return new WaitForSeconds(DelayTime);//遅延
         Customer.GetComponent<Image>().color = GOColor;
-        Debug.Log("B");
         yield return null;
     }
     //Gの移動
@@ -831,10 +831,10 @@ public void GoAttack()
         yield return new WaitForSeconds(DelayTime);//遅延
         if (G != null) {
             G.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
-            Debug.Log("GMove");
             iTween.MoveTo(G, iTween.Hash(
     "position", GoPosition,
     "time", GoTime
+    , "easeType", iTween.EaseType.linear
 ));
         }
         yield return null;
@@ -956,14 +956,14 @@ public void GoAttack()
                     "x", 1 + (VictoryPoint / (VictoryPoint + CustomerHp)),
                     "y", 1 + (VictoryPoint / (VictoryPoint + CustomerHp)),
                     "time", HeartTime,
-                    "delay",BlinkTime
+                    "delay",BlinkTime, "easeType", iTween.EaseType.linear
                     ));
 
                 iTween.MoveTo(Heart, iTween.Hash(
                     "position", new Vector3(0, 70f, 0f),
                     "time", HeartTime,
                     "delay", BlinkTime,
-                    "isLocal", true
+                    "isLocal", true, "easeType", iTween.EaseType.linear
                     ));
 
 
@@ -1336,6 +1336,18 @@ public void GoAttack()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
+
+        //Gを破壊
+        GameObject[] Gs = GameObject.FindGameObjectsWithTag("G");
+        int Count = 0;
+        int GLength = Gs.GetLength(0);
+        while (Count < GLength)
+        {
+            Destroy(Gs[Count]);
+            Count++;
+        }
+
+
         if (GameObject.FindGameObjectWithTag("Box1") != null) { Destroy(GameObject.FindGameObjectWithTag("Box1")); }
         if (GameObject.FindGameObjectWithTag("Box2") != null) { Destroy(GameObject.FindGameObjectWithTag("Box2")); }
 
@@ -1604,14 +1616,14 @@ public void GoAttack()
         BeforeDispose();
         
         //客は上に寄せる
-        if (GameObject.FindGameObjectWithTag("Top0") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top0"), iTween.Hash("y",1000, "time", Time1, "islocal",true)); }
-        if (GameObject.FindGameObjectWithTag("Top1") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top1"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
-        if (GameObject.FindGameObjectWithTag("Top2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
-        if (GameObject.FindGameObjectWithTag("Top3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
-        if (GameObject.FindGameObjectWithTag("Item0") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item0"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
-        if (GameObject.FindGameObjectWithTag("Item1") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item1"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
-        if (GameObject.FindGameObjectWithTag("Item2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
-        if (GameObject.FindGameObjectWithTag("Item3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
+        if (GameObject.FindGameObjectWithTag("Top0") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top0"), iTween.Hash("y",1000, "time", Time1, "islocal",true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Top1") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top1"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Top2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Top3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Top3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Item0") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item0"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Item1") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item1"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Item2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
+        if (GameObject.FindGameObjectWithTag("Item3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear)); }
 
 
 
@@ -1619,9 +1631,9 @@ public void GoAttack()
             SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
         {
             //ボックスを上に上げる
-            iTween.MoveTo(SelectItem1, iTween.Hash("y", 30, "time", Time1, "islocal", true));
-            iTween.MoveTo(SelectItem2, iTween.Hash("y", 30, "time", Time1, "islocal", true));
-            iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true));
+            iTween.MoveTo(SelectItem1, iTween.Hash("y", 30, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(SelectItem2, iTween.Hash("y", 30, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
+            iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
 
             //遅延処理
 
@@ -1765,14 +1777,14 @@ public void GoAttack()
         StartCoroutine(XYChangeCoroutine(SelectItem1, 335f, 150f, Time6/2));
         StartCoroutine(XYChangeCoroutine(SelectItem2, 335f, 150f, Time6/2));
      
-        iTween.MoveTo(SelectItemImage1, iTween.Hash("y", 19, "time", Time6, "islocal", true));
-        iTween.MoveTo(SelectItemImage2, iTween.Hash("y", 19, "time", Time6, "islocal", true));
-        iTween.MoveTo(SelectItem1, iTween.Hash("y", -208, "time", Time6, "islocal", true));
-        iTween.MoveTo(SelectItem2, iTween.Hash("y", -208, "time", Time6, "islocal", true));
+        iTween.MoveTo(SelectItemImage1, iTween.Hash("y", 19, "time", Time6, "islocal", true, "easeType", iTween.EaseType.linear));
+        iTween.MoveTo(SelectItemImage2, iTween.Hash("y", 19, "time", Time6, "islocal", true, "easeType", iTween.EaseType.linear));
+        iTween.MoveTo(SelectItem1, iTween.Hash("y", -200, "time", Time6, "islocal", true, "easeType", iTween.EaseType.linear));
+        iTween.MoveTo(SelectItem2, iTween.Hash("y", -200, "time", Time6, "islocal", true, "easeType", iTween.EaseType.linear));
 
 
         Button6Items.SetActive(true);
-        iTween.MoveTo(Button6Items, iTween.Hash("y", 0, "time", Time6, "islocal", true));
+        iTween.MoveTo(Button6Items, iTween.Hash("y", 0, "time", Time6, "islocal", true, "easeType", iTween.EaseType.linear));
 
         yield return new WaitForSeconds(TillAllTime);
 
@@ -2094,30 +2106,30 @@ public void SelectOK()
         //開始時とメニューに戻った時に呼ぶ
 
         CustomerFieldBack.GetComponent<RectTransform>().localPosition = new Vector3(0f, 1000f, 0f);
-        Button4Items1.GetComponent<RectTransform>().localPosition = new Vector3(-177f, -326f, 0f);
-        Button4Items2.GetComponent<RectTransform>().localPosition = new Vector3(177f, -326f, 0f);
-        Button4Items3.GetComponent<RectTransform>().localPosition = new Vector3(-177f, -495f, 0f);
-        Button4Items4.GetComponent<RectTransform>().localPosition = new Vector3(177f, -495f, 0f);
+        Button4Items1.GetComponent<RectTransform>().localPosition = new Vector3(-175f, -325f, 0f);
+        Button4Items2.GetComponent<RectTransform>().localPosition = new Vector3(175f, -325f, 0f);
+        Button4Items3.GetComponent<RectTransform>().localPosition = new Vector3(-175f, -495f, 0f);
+        Button4Items4.GetComponent<RectTransform>().localPosition = new Vector3(175f, -495f, 0f);
 
-        Button4Items1.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f,149.9f);
-        Button4Items2.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items3.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items4.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items1.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items2.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items3.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items4.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 149.9f);
-        Button4Items1.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
-        Button4Items2.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
-        Button4Items3.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
-        Button4Items4.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 149.9f);
+        Button4Items1.GetComponent<RectTransform>().sizeDelta = new Vector2(335f,150f);
+        Button4Items2.GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items3.GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items4.GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items1.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items2.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items3.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items4.transform.Find("Mask").GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 150f);
+        Button4Items1.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 150f);
+        Button4Items2.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 150f);
+        Button4Items3.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 150f);
+        Button4Items4.transform.Find("Mask/AllColor").GetComponent<RectTransform>().sizeDelta = new Vector2(0, 150f);
         Button4Items1.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         Button4Items2.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         Button4Items3.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
         Button4Items4.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        Buns1.GetComponent<RectTransform>().localPosition = new Vector3(-600f, -304f, 0f);
-        Buns2.GetComponent<RectTransform>().localPosition = new Vector3(600f, -509f, 0f);
+        Buns1.GetComponent<RectTransform>().localPosition = new Vector3(-600f, -305f, 0f);
+        Buns2.GetComponent<RectTransform>().localPosition = new Vector3(600f, -510f, 0f);
 
         StatGame.GetComponent<StatGame>().UseItemNum = 0;
         StatGame.GetComponent<StatGame>().UseItemData = new string[] { "None", "None", "None", "None", "None" };
@@ -2128,10 +2140,10 @@ public void SelectOK()
         Button6Items.GetComponent<RectTransform>().localPosition = new Vector3(0f,800f,0f);
         Hand.GetComponent<RectTransform>().localPosition = new Vector3(0f, 345f, 0f);
 
-        SelectItem1.GetComponent<RectTransform>().sizeDelta=new Vector2(335.1f, 254.4f);
-        SelectItem2.GetComponent<RectTransform>().sizeDelta = new Vector2(335.1f, 254.4f);
-        SelectItem1.GetComponent<RectTransform>().localPosition = new Vector3(-177f, -307, 0f);
-        SelectItem2.GetComponent<RectTransform>().localPosition = new Vector3(177f, -307, 0f);
+        SelectItem1.GetComponent<RectTransform>().sizeDelta=new Vector2(335f, 255f);
+        SelectItem2.GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 255f);
+        SelectItem1.GetComponent<RectTransform>().localPosition = new Vector3(-175f, -305, 0f);
+        SelectItem2.GetComponent<RectTransform>().localPosition = new Vector3(175f, -305, 0f);
         SelectItemImage1.GetComponent<RectTransform>().localPosition = new Vector3(0, 5f, 0f);
         SelectItemImage2.GetComponent<RectTransform>().localPosition = new Vector3(0, 5f, 0f);
 
@@ -2145,15 +2157,16 @@ public void SelectOK()
         BeforeStartAnim();
         SusGreen = new Color(255f / 255, 45f / 255, 58f / 255, 1.0f);
         GYellow = new Color(255f / 255, 226f / 255, 129f / 255, 1.0f);
+        ExpBlue = new Color(24f / 255, 255f / 255, 150f / 255, 1.0f);
 
 
-        //ナビゲーションバーを透明に
-        /*
-        ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
-        ApplicationChrome.statusBarState = ApplicationChrome.States.Hidden;
-        */
-        //解像度設定
-        float screenRate = (float)1280 / Screen.height;
+    //ナビゲーションバーを透明に
+    /*
+    ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
+    ApplicationChrome.statusBarState = ApplicationChrome.States.Hidden;
+    */
+    //解像度設定
+    float screenRate = (float)1280 / Screen.height;
         if (screenRate > 1) screenRate = 1;
         int width = (int)(Screen.width * screenRate);
         int height = (int)(Screen.height * screenRate);
