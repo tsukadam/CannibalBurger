@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using DG.Tweening;
+using Coffee.UIExtensions;
+
 //客のステータスを保持する
 //cloneして使う
 public class StatCustomer : MonoBehaviour
@@ -28,21 +29,77 @@ public class StatCustomer : MonoBehaviour
 
     //ステータス表示オブジェクトの取得
     public GameObject Customer;//自分自身
+    
+    public Color CusCol;
+    public float ColorChangeSpan = 0.2f;
 
-
-    /*
+    //グローの光りをオンにする
     public void Glow()
     {
+        Customer.GetComponent<UIEffect>().enabled = true;
 
-        DOTween.To(
-                    () => Customer.GetComponent<GlowImage>().glowSize,
-        (x) => Customer.GetComponent<GlowImage>().glowSize = (-4 * x * (x - 1) )+ 0.5f,
-                    1,
-                    3.0f
-                    ).SetLoops(-1);
+        CusCol = Customer.GetComponent<Image>().color;
+        float CusR = CusCol.r;
+        float CusG = CusCol.g;
+        float CusB = CusCol.b;
+        CusR -= ColorChangeSpan;
+        CusG -= ColorChangeSpan;
+        CusB -= ColorChangeSpan;
+        Customer.GetComponent<Image>().color = new Color(CusR,CusG,CusB,1.0f);
+
+        Hashtable hashGlow = new Hashtable(){
+            {"from", ColorChangeSpan*-1},
+            {"to", ColorChangeSpan},
+            {"time", 0.75f},
+            {"delay", 0f},
+            {"easeType",iTween.EaseType.linear},
+            {"loopType",iTween.LoopType.pingPong},
+            {"onupdate", "OnUpdateGlow"},
+            {"onupdatetarget", gameObject},
+        };
+        iTween.ValueTo(gameObject, hashGlow);
+    }
+
+
+    public void OnUpdateGlow(float NextPoint)
+    {
+        float NextA;
+         NextA = (NextPoint + ColorChangeSpan) * 5 / (20 * ColorChangeSpan);
+
+        Color NextGlow = Customer.GetComponent<UIEffect>().shadowColor;
+        NextGlow.a = NextA;
+
+        Customer.GetComponent<UIEffect>().shadowColor = NextGlow;
+
+        Color NextCol = Customer.GetComponent<Image>().color;
+        float NextR = NextCol.r;
+        float NextG = NextCol.g;
+        float NextB = NextCol.b;
+
+        if (NextPoint <= 1/4+ColorChangeSpan)
+        {
+            NextR += NextPoint*8/5;
+            NextG += NextPoint * 8 / 5;
+            NextB += NextPoint * 8 / 5;
+        }
+        else if (NextPoint == 0)
+        {
+            NextR += CusCol.r;
+            NextG += CusCol.g;
+            NextB += CusCol.b;
+
+        }
+        else {
+        }
+
+        NextCol = new UnityEngine.Color(NextR, NextG, NextB, 1.0f);
+
+        Customer.GetComponent<Image>().color = NextCol;
+
+
 
     }
-    */
+
     // Use this for initialization
     void Start()
     {

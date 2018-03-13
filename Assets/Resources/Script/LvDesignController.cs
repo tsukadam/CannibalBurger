@@ -37,6 +37,7 @@ public class LvDesignController : MonoBehaviour
     public int LowRateR;
     public int LowRateSus;
     public int LowLvUpSus;
+    public int LowCommonItemPower;
 
     //今のレベルでのレベルデザインデータ
     public int NeedExp;
@@ -46,6 +47,7 @@ public class LvDesignController : MonoBehaviour
     public float RateR;
     public float RateSus;
     public int LvUpSus;
+    public int CommonItemPower;
 
     public int LvDesignDataGetCount=0;
 
@@ -75,6 +77,8 @@ public class LvDesignController : MonoBehaviour
                 else if (LvDesignData[0, LowCount] == "RateR") { LowRateR = LowCount; }
                 else if (LvDesignData[0, LowCount] == "RateSus") { LowRateSus = LowCount; }
                 else if (LvDesignData[0, LowCount] == "LvUpSus") { LowLvUpSus = LowCount; }
+                else if (LvDesignData[0, LowCount] == "CommonItemPower") { LowCommonItemPower = LowCount; }
+                else if (LvDesignData[0, LowCount] == "Lv") { }
                 else { Debug.Log("Customerデータの行の取得に失敗しました Low=" + LowCount); }
                 LowCount++;
             }
@@ -91,8 +95,9 @@ public class LvDesignController : MonoBehaviour
         RateR= float.Parse(LvDesignData[NowLv, LowRateR]);
     RateSus= float.Parse(LvDesignData[NowLv, LowRateSus]);
     LvUpSus= int.Parse(LvDesignData[NowLv, LowLvUpSus]);
+        CommonItemPower = int.Parse(LvDesignData[NowLv, LowCommonItemPower]);
 
-}
+    }
 
     //レアリティを数字に変換
     public int GetRarerityInt(string Rarerity)
@@ -101,7 +106,7 @@ public class LvDesignController : MonoBehaviour
         if (Rarerity == "C") { Result = 0; }
         else if (Rarerity == "UC") { Result = 1; }
         else if (Rarerity == "R") { Result = 2; }
-        else if (Rarerity == "Sus") { Result = 3; }
+        else if (Rarerity == "SUS") { Result = 3; }
         else{ Result = 0; Debug.Log("レアリティを数字に変換できません。Cにしました"); }
 
         return Result;
@@ -283,21 +288,31 @@ public class LvDesignController : MonoBehaviour
         string SelectedName;
         string SelectedImage;
         string SelectedHp;
+        float SelectedHpFloat;
         int SelectedHpInt;
         string SelectedCoreColor;
         string SelectedColor;
         string SelectedDropG;
         int SelectedDropGInt;
+        float SelectedDropGFloat;
         string SelectedDropName;
         string SelectedDropImage;
         string SelectedDropPower;
+        float SelectedDropPowerFloat;
+        int SelectedDropPowerInt;
         string SelectedDropColor;
         string SelectedDropSus;
+        float SelectedDropSusFloat;
+        int SelectedDropSusInt;
         string SelectedMeatName;
         string SelectedMeatImage;
         string SelectedMeatPower;
+        float SelectedMeatPowerFloat;
+        int SelectedMeatPowerInt;
         string SelectedMeatColor;
         string SelectedMeatSus;
+        float SelectedMeatSusFloat;
+        int SelectedMeatSusInt;
         string SelectedSaveSus;
         int SelectedSaveSusInt;
         string SelectedRare;
@@ -305,6 +320,8 @@ public class LvDesignController : MonoBehaviour
         int SelectedPopLvInt;
         string SelectedDisLv;
         int SelectedDisLvInt;
+        float RandomTop = 1.2f;//ランダム上限
+        float RandomBottom = 0.8f;//ランダム下限
 
 
         int count = 0;
@@ -362,17 +379,14 @@ public class LvDesignController : MonoBehaviour
             int RandomCount = Random.Range(0,CustomerLength-1);
 
 
-
             SelectedId = UseCustomer[RandomCount, LowId];
             SelectedIdInt = int.Parse(SelectedId);
            SelectedName = UseCustomer[RandomCount,LowName];
             SelectedImage = UseCustomer[RandomCount, LowImage];
             SelectedHp = UseCustomer[RandomCount, LowHp];
-            SelectedHpInt = int.Parse(SelectedHp);
             SelectedCoreColor = UseCustomer[RandomCount, LowCoreColor];
             SelectedColor = "";
             SelectedDropG = UseCustomer[RandomCount, LowDropG];
-            SelectedDropGInt = int.Parse(SelectedDropG);
             SelectedDropName = UseCustomer[RandomCount, LowDropName];
             SelectedDropImage = UseCustomer[RandomCount, LowDropImage];
             SelectedDropPower = UseCustomer[RandomCount, LowDropPower];
@@ -390,6 +404,37 @@ public class LvDesignController : MonoBehaviour
             SelectedPopLvInt = int.Parse(SelectedPopLv);
             SelectedDisLv = UseCustomer[RandomCount, LowDisLv];
             SelectedDisLvInt = int.Parse(SelectedDisLv);
+
+
+
+            //Hp,G,Power,Susのランダム化
+            SelectedHpFloat = float.Parse(SelectedHp);
+            SelectedHpFloat = Random.Range(SelectedHpFloat * RandomBottom, SelectedHpFloat * RandomTop);
+            SelectedHpInt = Mathf.RoundToInt(SelectedHpFloat);
+
+            SelectedDropGFloat = float.Parse(SelectedDropG);
+            SelectedDropGFloat = Random.Range(SelectedDropGFloat * RandomBottom, SelectedDropGFloat * RandomTop);
+            SelectedDropGInt = Mathf.RoundToInt(SelectedDropGFloat);
+
+            SelectedMeatPowerFloat = float.Parse(SelectedMeatPower);
+            SelectedMeatPowerFloat = Random.Range(SelectedMeatPowerFloat * RandomBottom, SelectedMeatPowerFloat * RandomTop);
+            SelectedMeatPowerInt = Mathf.RoundToInt(SelectedMeatPowerFloat);
+            SelectedMeatPower = SelectedMeatPowerInt.ToString();
+
+            SelectedMeatSusFloat = float.Parse(SelectedMeatSus);
+            SelectedMeatSusFloat = Random.Range(SelectedMeatSusFloat * RandomBottom, SelectedMeatSusFloat * RandomTop);
+            SelectedMeatSusInt = Mathf.RoundToInt(SelectedMeatSusFloat);
+            SelectedMeatSus = SelectedMeatSusInt.ToString();
+
+            SelectedDropPowerFloat = float.Parse(SelectedDropPower);
+            SelectedDropPowerFloat = Random.Range(SelectedDropPowerFloat * RandomBottom, SelectedDropPowerFloat * RandomTop);
+            SelectedDropPowerInt = Mathf.RoundToInt(SelectedDropPowerFloat);
+            SelectedDropPower = SelectedDropPowerInt.ToString();
+
+            SelectedDropSusFloat = float.Parse(SelectedDropSus);
+            SelectedDropSusFloat = Random.Range(SelectedDropSusFloat * RandomBottom, SelectedDropSusFloat * RandomTop);
+            SelectedDropSusInt = Mathf.RoundToInt(SelectedDropSusFloat);
+            SelectedDropSus = SelectedDropSusInt.ToString();
 
             GetComponent<CustomerController>().MakeCustomer(
                 SelectedIdInt,
@@ -519,8 +564,12 @@ public int VictoryDropG(int GetG,float VictoryPoint)
     }
     public string[] GetPickUpItem()
     {
+        int PickPower = CommonItemPower*3/2;
+        string PickPowerString = PickPower.ToString();
+        int PickSus = CommonItemPower/2;
+        string PickSusString = PickSus.ToString();
 
-        string[] PickUpItem= { "ネズミにく", "NezunikuSyou", "1", "#d9cac7", "0"};
+        string[] PickUpItem= { "ネズミにく", "NezunikuSyou", PickPowerString, "#d9cac7", PickSusString };
         return PickUpItem;
 
     }

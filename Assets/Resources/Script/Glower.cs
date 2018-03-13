@@ -2,37 +2,67 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using DG.Tweening;
+using Coffee.UIExtensions;
+
 public class Glower : MonoBehaviour {
     //ステータス表示オブジェクトの取得
-    public GameObject Customer;//自分自身
-    
+    public GameObject Myself;//自分自身
+    int GlowFlag = 0;
 
     public void Glow()
     {
-        DOTween.To(
-                    () => Customer.GetComponent<GlowImage>().glowSize,
-        (x) => Customer.GetComponent<GlowImage>().glowSize = (-32 * x * (x - 1))+0.5f,
-                    1,
-                    2.0f
-                    ).SetLoops(-1);
+        GlowFlag = 1;
+       Myself.GetComponent<UIEffect>().enabled = true;
+
+        Hashtable hashGlow = new Hashtable(){
+            {"from", 0},
+            {"to", 0.2f},
+            {"time", 1.0f},
+            {"delay", 0f},
+            {"easeType",iTween.EaseType.linear},
+            {"loopType",iTween.LoopType.pingPong},
+            {"onupdate", "OnUpdateGlow"},
+            {"onupdatetarget", gameObject},
+        };
+        iTween.ValueTo(gameObject, hashGlow);
+
     }
 
     public void GlowStop()
     {
+        GlowFlag = 0;
 
-        DOTween.Kill(Customer.GetComponent<GlowImage>().glowSize);
-        Customer.GetComponent<GlowImage>().glowSize = 0;
+        //       Myself.GetComponent<UIEffect>().enabled = false;
+        iTween.Stop(Myself, "value");
     }
+
+
+    public void OnUpdateGlow(float NextA)
+    {
+        Color NextGlow = Myself.GetComponent<UIEffect>().shadowColor;
+        NextGlow.a = NextA;
+
+        Myself.GetComponent<UIEffect>().shadowColor = NextGlow;
+
+    }
+
 
     // Use this for initialization
     void Start () {
-        Glow();
-
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if (GlowFlag == 0& Myself.GetComponent<Button>().interactable == true)
+        {
+
+            Glow();
+
+        }
+        if (Myself.GetComponent<Button>().interactable == false)
+        {
+            GlowStop();
+
+        }
 	}
 }

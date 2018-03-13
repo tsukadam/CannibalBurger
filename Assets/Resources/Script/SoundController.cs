@@ -2,7 +2,6 @@
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using System.Collections;
-using DG.Tweening;
 
 //音関係の演出
 
@@ -101,8 +100,8 @@ public class SoundController : MonoBehaviour {
     {
         SESource.volume = 0;
         AudioClip UseSE = GetNameSE(SEName);
-        SESource.DOFade(MaxVolume, FadeInTime).SetEase(Ease.InCubic);
-        SESource.DOFade(0.0f, FadeOutTime).SetDelay(MaxTime + FadeInTime);
+//        SESource.DOFade(MaxVolume, FadeInTime).SetEase(Ease.InCubic);
+//        SESource.DOFade(0.0f, FadeOutTime).SetDelay(MaxTime + FadeInTime);
         SESource.PlayOneShot(UseSE);
 
     }
@@ -118,17 +117,18 @@ public class SoundController : MonoBehaviour {
     //前の曲をフェードアウトしてフェードインするBgm
     public void FadeInOutBgm(string BgmName, float FadeOutTime, float WaitTime, float FadeInTime)
     {
-        SESource.DOFade(0.0f, FadeOutTime).SetEase(Ease.InCubic);//まず前の曲をフェードアウト
+  //      SESource.DOFade(0.0f, FadeOutTime).SetEase(Ease.InCubic);//まず前の曲をフェードアウト
 
-        DOVirtual.DelayedCall(WaitTime + FadeOutTime, () => {//曲を切り替える
+  //      DOVirtual.DelayedCall(WaitTime + FadeOutTime, () => {//曲を切り替える
             BgmSource.clip = GetNameBgm(BgmName);
             BgmSource.Play();
-        });
+//        });
 
-        SESource.DOFade(BgmVolume, FadeInTime).SetDelay(WaitTime+FadeOutTime) ;//Delayで無音の時間のあと、フェードイン
+   //     SESource.DOFade(BgmVolume, FadeInTime).SetDelay(WaitTime+FadeOutTime) ;//Delayで無音の時間のあと、フェードイン
  
     }
-    public void StopStoreBgm()
+
+public void StopStoreBgm()
     {
         BgmSource.Stop();
     }

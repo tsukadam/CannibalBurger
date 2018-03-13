@@ -76,7 +76,7 @@ public class Sorter : MonoBehaviour
             {
 
 
-//                Customers[Count3].GetComponent<StatCustomer>().Glow();
+                Customers[Count3].GetComponent<StatCustomer>().Glow();
 
             }
             Count3++;
@@ -133,38 +133,40 @@ public class Sorter : MonoBehaviour
             while (Count1 < CustomersLength -Count2- 1)
             {
                 Count1Plus = Count1 + 1;
-                PointColor1 = TopCustomer.GetComponent<StatCustomer>().PointColor;
-                PointColor2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointColor;
+                Rarerity1 = TopCustomer.GetComponent<StatCustomer>().Rarerity;
+                Rarerity2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().Rarerity;
+                Rarerity1Int = GetComponent<LvDesignController>().GetRarerityInt(Rarerity1);
+                Rarerity2Int = GetComponent<LvDesignController>().GetRarerityInt(Rarerity2);
                 //暫定トップとCount1Plus番目を比較し、低い方は「少なくともトップではない」の箱に入れる
                 //「少なくともトップではない」の箱を使った回数はカウントされる（最大CustomersLength - Count2 - 1）
-                if (PointColor1 > PointColor2)
+                //まずはレアリティを比較する
+
+                if (Rarerity1Int > Rarerity2Int)
                 {
                     CustomersNotTopNext[CountNotTopNext] = CustomersNotTop[Count1Plus];
                     CountNotTopNext++;
                 }
-                else if (PointColor1 < PointColor2)
+                else if (Rarerity1Int < Rarerity2Int)
                 {
                     CustomersNotTopNext[CountNotTopNext] = TopCustomer;
                     CountNotTopNext++;
                     TopCustomer = CustomersNotTop[Count1Plus];
                 }
-                //PointColorが同じ場合はレアリティを比較する
+                //レアリティが同じ場合はPointColorを比較する
                 else
                 {
-                    Rarerity1 = TopCustomer.GetComponent<StatCustomer>().Rarerity;
-                    Rarerity2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().Rarerity;
-                    Rarerity1Int = GetComponent<LvDesignController>().GetRarerityInt(Rarerity1);
-                    Rarerity2Int = GetComponent<LvDesignController>().GetRarerityInt(Rarerity2);
 
+                    PointColor1 = TopCustomer.GetComponent<StatCustomer>().PointColor;
+                    PointColor2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointColor;
 
-                    if (Rarerity1Int > Rarerity2Int)
+                    if (PointColor1 > PointColor2)
                     {
                         CustomersNotTopNext[CountNotTopNext] = CustomersNotTop[Count1Plus];
                         CountNotTopNext++;
                     }
                     else
                     {
-                        //レアリティも同じなら勝利度を比較する（同じ場合は暫定トップの負け）辛勝の方が残る
+                        //PointColorも同じなら勝利度を比較する（同じ場合は暫定トップの負け）辛勝の方が残る
                         PointPower1 = TopCustomer.GetComponent<StatCustomer>().PointPower;
                         PointPower2 = CustomersNotTop[Count1Plus].GetComponent<StatCustomer>().PointPower;
                         if (PointColor1 < PointColor2)

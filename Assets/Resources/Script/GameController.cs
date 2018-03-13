@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-//using DG.Tweening;
 
 //ゲームの進行を制御する
 
@@ -9,6 +8,7 @@ public class GameController : MonoBehaviour
 {
     public int FPS=60;//FPS設定
  
+    public int ITweenCount=0;
     //プレイヤーstat
     public GameObject StatPlayer;
     //ゲームstat
@@ -120,12 +120,17 @@ public class GameController : MonoBehaviour
     float MemoTill5Time;
     float MemoTillAllTime;
 
-    //SUSの緑色
-    public Color SusGreen = new Color(24f / 255, 255f / 255, 150f / 255, 1.0f);
+    //SUSの色
+    public Color SusGreen;
+    //    public Color SusGreen = new Color(24f / 255, 255f / 255, 150f / 255, 1.0f);
+
+    //Gの色
+    public Color GYellow;
 
     //ゲームスタート
     public void GameStart()
     {
+
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
@@ -246,7 +251,7 @@ public class GameController : MonoBehaviour
 
         //初期客の生成
         GetComponent<LvDesignController>().MakeSavedCustomer();
-        //GlowCustomer();
+
 
 
         TapBlock.SetActive(false);
@@ -298,7 +303,7 @@ public class GameController : MonoBehaviour
 
         //初期客の生成
         GetComponent<LvDesignController>().MakeCustomerFirst();
-        //       GlowCustomer();
+
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -306,21 +311,24 @@ public class GameController : MonoBehaviour
 
 
     //トップ客を光らせる
-    /*
+  /*
     public void GlowCustomer() {
-        if (GameObject.FindGameObjectsWithTag("Customer") != null)
-        {
-            GameObject[] NormalCustomer = GameObject.FindGameObjectsWithTag("Customer");
-            GetComponent<Sorter>().GlowSort(NormalCustomer);
-        }
-    }
-    */
+              if (GameObject.FindGameObjectsWithTag("Customer") != null)
+            {
+                GameObject[] NormalCustomer = GameObject.FindGameObjectsWithTag("Customer");
+                GetComponent<Sorter>().GlowSort(NormalCustomer);
+            }
 
+    }
+
+    */
     //今いる客をすべて破壊
     public void CustomerDestroy()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
+
+        iTween.tweens.Clear();
 
         //前周の客を破壊
         if (GameObject.FindGameObjectWithTag("Top0") != null) { Destroy(GameObject.FindGameObjectWithTag("Top0")); }
@@ -821,13 +829,15 @@ public void GoAttack()
     private IEnumerator GMove(GameObject G,Vector3 GoPosition, float GoTime,float DelayTime)
     {
         yield return new WaitForSeconds(DelayTime);//遅延
-        G.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
-        Debug.Log("GMove");
-        iTween.MoveTo(G, iTween.Hash(
-"position", GoPosition,
-"time", GoTime
+        if (G != null) {
+            G.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 0);
+            Debug.Log("GMove");
+            iTween.MoveTo(G, iTween.Hash(
+    "position", GoPosition,
+    "time", GoTime
 ));
-    yield return null;
+        }
+        yield return null;
     }
     //勝敗処理
     private IEnumerator AttackCoroutine()
@@ -981,6 +991,7 @@ public void GoAttack()
                            GPrefab,
                            transform.position,
                            Quaternion.identity);
+                    G.GetComponent<Image>().color = GYellow;
                     G.transform.SetParent(Customers[Count].transform);
                     //位置決定
                     G.transform.localPosition = new Vector3(0, 30, 1);
@@ -1080,12 +1091,15 @@ public void GoAttack()
         Button4Items3.SetActive(true);
         Button4Items4.SetActive(true);
 
+        PopupResultGTextSus.color = SusGreen;
 
         GetG = Mathf.Abs(GetG);
         string TextGetG = (GetG).ToString();
         string TextGetExp = GetComponent<LvDesignController>().StringGetExp(GetExp);
         string TextGetSus = (GetSus).ToString();
-        if (GetG <= 0) { TextGetG = "<color='red'>" + TextGetG + "</color>"; }
+        if (GetG <= 0) { PopupResultGTextG.color = SusGreen; }
+        else { PopupResultGTextG.color = GYellow; }
+
         if (GetSus > 0) { SusLine.SetActive(true); }
         else { SusLine.SetActive(false); }
 
@@ -1330,12 +1344,14 @@ public void GoAttack()
         SelectItemName1.GetComponent<Text>().text = "";
         SelectItemPower1.GetComponent<Text>().text = "";
         SelectItemSus1.GetComponent<Text>().text = "";
+        SelectItemSus1.GetComponent<Text>().color = SusGreen;
 
         SelectItemImage2.GetComponent<Image>().sprite = null;
         SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
         SelectItemName2.GetComponent<Text>().text = "";
         SelectItemPower2.GetComponent<Text>().text = "";
         SelectItemSus2.GetComponent<Text>().text = "";
+        SelectItemSus2.GetComponent<Text>().color = SusGreen;
 
         SelectItemImage1.GetComponent<StatItem>().Name = null;
         SelectItemImage1.GetComponent<StatItem>().Image = null;
@@ -1597,15 +1613,16 @@ public void GoAttack()
         if (GameObject.FindGameObjectWithTag("Item2") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item2"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
         if (GameObject.FindGameObjectWithTag("Item3") != null) { iTween.MoveTo(GameObject.FindGameObjectWithTag("Item3"), iTween.Hash("y", 1000, "time", Time1, "islocal", true)); }
 
-        //ボックスを上に上げる
-        iTween.MoveTo(SelectItem1, iTween.Hash("y", 30, "time", Time1, "islocal", true));
-        iTween.MoveTo(SelectItem2, iTween.Hash("y", 30, "time", Time1, "islocal", true));
-        iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true));
 
 
         if (SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0" |
             SelectItemImage2.tag == "Top1" | SelectItemImage2.tag == "Top2" | SelectItemImage2.tag == "Top3" | SelectItemImage2.tag == "Top0")
         {
+            //ボックスを上に上げる
+            iTween.MoveTo(SelectItem1, iTween.Hash("y", 30, "time", Time1, "islocal", true));
+            iTween.MoveTo(SelectItem2, iTween.Hash("y", 30, "time", Time1, "islocal", true));
+            iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true));
+
             //遅延処理
 
             yield return new WaitForSeconds(Time1);
@@ -1745,13 +1762,13 @@ public void GoAttack()
         yield return new WaitForSeconds(Till5Time);
 
                  //ボックスを下に下げる
-        StartCoroutine(XYChangeCoroutine(SelectItem1, 335.1f, 149.9f, Time6/2));
-        StartCoroutine(XYChangeCoroutine(SelectItem2, 335.1f, 149.9f, Time6/2));
+        StartCoroutine(XYChangeCoroutine(SelectItem1, 335f, 150f, Time6/2));
+        StartCoroutine(XYChangeCoroutine(SelectItem2, 335f, 150f, Time6/2));
      
         iTween.MoveTo(SelectItemImage1, iTween.Hash("y", 19, "time", Time6, "islocal", true));
         iTween.MoveTo(SelectItemImage2, iTween.Hash("y", 19, "time", Time6, "islocal", true));
-        iTween.MoveTo(SelectItem1, iTween.Hash("y", -207, "time", Time6, "islocal", true));
-        iTween.MoveTo(SelectItem2, iTween.Hash("y", -207, "time", Time6, "islocal", true));
+        iTween.MoveTo(SelectItem1, iTween.Hash("y", -208, "time", Time6, "islocal", true));
+        iTween.MoveTo(SelectItem2, iTween.Hash("y", -208, "time", Time6, "islocal", true));
 
 
         Button6Items.SetActive(true);
@@ -2041,7 +2058,7 @@ public void SelectOK()
         CustomerDestroy();
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
-        //GlowCustomer();
+
 
         CustomerStart1();
         CustomerStart2();
@@ -2126,6 +2143,8 @@ public void SelectOK()
     void Start()
     {
         BeforeStartAnim();
+        SusGreen = new Color(255f / 255, 45f / 255, 58f / 255, 1.0f);
+        GYellow = new Color(255f / 255, 226f / 255, 129f / 255, 1.0f);
 
 
         //ナビゲーションバーを透明に
@@ -2153,12 +2172,13 @@ public void SelectOK()
     }
     void Awake()
     {
+        //FPS固定
         Application.targetFrameRate = FPS;
     }
     // Update is called once per frame
     void Update()
     {
-
+        ITweenCount = iTween.Count();
     }
 }
 

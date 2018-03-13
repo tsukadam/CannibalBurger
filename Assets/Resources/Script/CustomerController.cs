@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Coffee.UIExtensions;
+
 //客の生成を制御する
 public class CustomerController : MonoBehaviour
 {
@@ -275,15 +277,22 @@ public class CustomerController : MonoBehaviour
         if (Color == "" | Color == null || Color == "None")
         {
             Customer.GetComponent<Image>().color = UseCol;
-  //          Customer.GetComponent<GlowImage>().glowColor = UseCol;
+            Customer.GetComponent<UIEffect>().shadowColor = UseCol;
             ColorString = "#" + GetComponent<ColorGetter>().ToColorString(UseCol);
         }
         //そうでないならカラーに一意的に決定
         else
         {
             Customer.GetComponent<Image>().color = Col;
-//            Customer.GetComponent<GlowImage>().glowColor = Col;
+            Customer.GetComponent<UIEffect>().shadowColor = Col;
             ColorString = "#" + GetComponent<ColorGetter>().ToColorString(Col);
+        }
+
+
+        //レアなら光らせる
+        if (Rarerity == "R")
+        {
+            Customer.GetComponent<StatCustomer>().Glow();
         }
 
         //タグをつける

@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
-using DG.Tweening;
+using Coffee.UIExtensions;
+
 //プレイ中のプレイヤーのステータス周りの変化と描写を行う
 public class StatGameController : MonoBehaviour
 {
 
     //プレイヤーstat
+    public GameObject Script;
     public GameObject StatGame;
     //タップ切るための板
         public GameObject TapBlockSus;
@@ -30,6 +32,7 @@ public class StatGameController : MonoBehaviour
 
 
     public RectTransform BarSus;
+    public GameObject BarSusOb;
 
     public RectTransform BarExp;
 
@@ -99,6 +102,11 @@ public class StatGameController : MonoBehaviour
     public Text GetPower;
     public Text GetSus;
 
+    public Color SusCol;
+    public Color GCol;
+    public float ColorChangeSpan = 0.5f;
+
+    public int SusGlowFlag = 0;
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
@@ -526,20 +534,22 @@ public class StatGameController : MonoBehaviour
     //Ｇ描画
     public void DrawG()
     {
+        GCol = GetComponent<GameController>().GYellow;
         int StatG = StatGame.GetComponent<StatGame>().StatG;//所持金
         string StatGText = StatG.ToString();
-        TextG.text = StatGText;
+        TextG.color = GCol;
+            TextG.text = StatGText;
     }
     //Sus描画
     public void DrawSus()
     {
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
-        BarSus.sizeDelta = new Vector2(325 * StatSus / 100, 52);
+        BarSus.sizeDelta = new Vector2(325 * StatSus / 100, 70);
     }
     //Sus描画（アニメーション用）
     public void DrawSus2(float AnimeSus)
     {
-        BarSus.sizeDelta = new Vector2(325 * AnimeSus / 100, 52);
+        BarSus.sizeDelta = new Vector2(325 * AnimeSus / 100, 70);
     }
 
     //Exp描画（アニメーション用）
@@ -578,6 +588,64 @@ public class StatGameController : MonoBehaviour
 
     }
 
+
+
+    public void SusGlow()
+    {
+        SusGlowFlag = 1;
+        BarSusOb.GetComponent<UIEffect>().enabled = true;
+        BarSus.GetComponent<UIEffect>().shadowColor=SusCol;
+
+        Hashtable hashGlow = new Hashtable(){
+            {"from", 0},
+            {"to", ColorChangeSpan},
+            {"time", 1.0f},
+            {"delay", 0f},
+            {"easeType",iTween.EaseType.linear},
+            {"loopType",iTween.LoopType.pingPong},
+            {"onupdate", "OnUpdateSusGlow"},
+            {"onupdatetarget", gameObject},
+        };
+        iTween.ValueTo(gameObject, hashGlow);
+
+    }
+
+
+    IEnumerator SusGlowStop()
+            {
+
+        BarSusOb.GetComponent<UIEffect>().enabled = false;
+        iTween.Stop(Script, "value");
+        yield return new WaitForSeconds(0.01f);
+        SusGlowFlag = 0;
+        yield return null;
+    }
+
+
+    public void OnUpdateSusGlow(float NextPoint)
+    {
+        Color NextGlow = BarSus.GetComponent<UIEffect>().shadowColor;
+        float NextA;
+        NextA = NextPoint;
+        NextGlow.a = NextA;
+
+        BarSusOb.GetComponent<UIEffect>().shadowColor = NextGlow;
+
+        Color NextCol = BarSusOb.GetComponent<Image>().color;
+        float NextR = NextCol.r;
+        float NextG = NextCol.g;
+        float NextB = NextCol.b;
+
+            NextR += NextPoint*3;
+            NextG += NextPoint*3;
+            NextB += NextPoint*3/2;
+
+        NextCol = new UnityEngine.Color(NextR, NextG, NextB, 1.0f);
+
+        BarSusOb.GetComponent<Image>().color = NextCol;
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -585,9 +653,19 @@ public class StatGameController : MonoBehaviour
         if (StatGame.GetComponent<StatGame>().StatSus > 90)
         {
             ObjectSus.GetComponent<Image>().color = new Color(1f,0,0,1f);
+            SusCol = new Color(1f, 0, 0, 1f);
+            if (SusGlowFlag == 0)
+            {
+                SusGlow();
+            }
         }
         else {
-            ObjectSus.GetComponent<Image>().color = new Color(24f/255, 1f, 150f/255, 1f);
+            if (SusGlowFlag == 1)
+            {
+                StartCoroutine("SusGlowStop");
+            }
+            ObjectSus.GetComponent<Image>().color = GetComponent<GameController>().SusGreen;
+            SusCol = GetComponent<GameController>().SusGreen;
         }
     }
 }

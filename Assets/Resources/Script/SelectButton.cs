@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectButton : MonoBehaviour {
     public GameObject Self;//自分自身
+
 
     public void SendTag()    // Use this for initialization
     {
@@ -21,11 +23,12 @@ public class SelectButton : MonoBehaviour {
     }
 
     void Start () {
-		
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+
+    }
 }
