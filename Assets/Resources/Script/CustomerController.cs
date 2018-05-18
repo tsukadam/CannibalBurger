@@ -242,6 +242,9 @@ public class CustomerController : MonoBehaviour
 //        Customer.transform.parent = CustomerField.transform;
         Customer.transform.SetParent(CustomerField.transform);
 
+        //CustomerBaseを取得
+GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
+
         //位置決定
         int PositionY = Random.Range(-200, 200);
         int PositionX = Random.Range(-200, 200);
@@ -254,9 +257,15 @@ public class CustomerController : MonoBehaviour
 
         //画像決定
 
-        string ImagePath = "Customer/" + Image;
+        string ImagePath = "CustomerColor/" + Image;
+        string ImagePathBase = "CustomerBase/" + Image;
+
         Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
+        Sprite SpriteImageBase = Resources.Load<Sprite>(ImagePathBase);
+
         Customer.GetComponent<Image>().sprite = SpriteImage;
+        CustomerBase.GetComponent<Image>().sprite = SpriteImageBase;
+
 
         //色決定
         Color CoreCol = GetComponent<ColorGetter>().ToColor(CoreColor);

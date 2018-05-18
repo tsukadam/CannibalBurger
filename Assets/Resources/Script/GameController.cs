@@ -62,10 +62,13 @@ public class GameController : MonoBehaviour
     public GameObject SelectItem1;
     public GameObject SelectItem2;
 
+    public GameObject SelectItemImage1Base;
     public GameObject SelectItemImage1;
     public GameObject SelectItemName1;
     public GameObject SelectItemPower1;
     public GameObject SelectItemSus1;
+
+    public GameObject SelectItemImage2Base;
     public GameObject SelectItemImage2;
     public GameObject SelectItemName2;
     public GameObject SelectItemPower2;
@@ -819,10 +822,18 @@ public void GoAttack()
     }
 
     //点滅
-    private IEnumerator Blink(GameObject Customer,Color GOColor,float DelayTime)
+    private IEnumerator Blink(GameObject Customer,GameObject Base,Color GOColor,float DelayTime,int mode)
     {
         yield return new WaitForSeconds(DelayTime);//遅延
         Customer.GetComponent<Image>().color = GOColor;
+        if (mode==0)
+        {
+            Base.GetComponent<Image>().color = new Color(0,0,0,0);
+        }
+        else
+        {
+            Base.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        }
         yield return null;
     }
     //Gの移動
@@ -876,6 +887,8 @@ public void GoAttack()
         float GTime = 1.0f;
         float MaTime2 = 0.3f;//Ｇゲットからタップできるようになるまでの間
 
+        GameObject Base;
+
         while (Count < CustomerLength)
         {
             MaxCustomer++;//さばいた客の数
@@ -907,30 +920,32 @@ public void GoAttack()
             VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, RateColor);
             //点滅演出
             FloatCount = (float)Count * 1.0f;
+            //Baseを取得
+            Base = Customers[Count].transform.Find("CustomerBase").gameObject;
 
             if (VictoryPoint >= 0& VictoryPoint < 1.5f)
             {
 
-                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 1 / 6 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], Base,new Color(0, 0, 0, 0), FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base,CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
                 Debug.Log("Blink1");
 
             }
             else if(VictoryPoint >= 1.5f&VictoryPoint<2.0f) {
-                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 1 / 6 + FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 3 / 6 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
+                StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 3 / 6 + FloatCount / 16, 1));
             Debug.Log("Blink2");
         }
         else if (VictoryPoint > 2.0f)
             {
-                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 1 / 6 + FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 3 / 6 + FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], new Color(0, 0, 0, 0), BlinkTime * 4 / 8 + FloatCount / 16));
-                StartCoroutine(Blink(Customers[Count], CustomColor, BlinkTime * 5 / 6 + FloatCount / 16));
+                StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
+                StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 3 / 6 + FloatCount / 16, 1));
+                StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 4 / 8 + FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 5 / 6 + FloatCount / 16, 1));
             Debug.Log("Blink3");
 
 
@@ -1352,6 +1367,9 @@ public void GoAttack()
         if (GameObject.FindGameObjectWithTag("Box2") != null) { Destroy(GameObject.FindGameObjectWithTag("Box2")); }
 
         SelectItemImage1.GetComponent<Image>().sprite = null;
+        SelectItemImage1Base.GetComponent<Image>().sprite = null;
+        SelectItemImage1Base.GetComponent<Image>().color = new Color(1f,1f,1f,1f) ;
+        SelectItemImage1Base.SetActive(false);
         SelectItemImage1.GetComponent<Image>().color = new Color(0, 0, 0, 1f); ;
         SelectItemName1.GetComponent<Text>().text = "";
         SelectItemPower1.GetComponent<Text>().text = "";
@@ -1359,6 +1377,9 @@ public void GoAttack()
         SelectItemSus1.GetComponent<Text>().color = SusGreen;
 
         SelectItemImage2.GetComponent<Image>().sprite = null;
+        SelectItemImage2Base.GetComponent<Image>().sprite = null;
+        SelectItemImage2Base.GetComponent<Image>().color = new Color(1f, 1f, 1f, 1f);
+        SelectItemImage2Base.SetActive(false);
         SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
         SelectItemName2.GetComponent<Text>().text = "";
         SelectItemPower2.GetComponent<Text>().text = "";
@@ -1436,6 +1457,9 @@ public void GoAttack()
                 {
                     UseBox = SelectItemImage1;
                     SelectItemImage1.GetComponent<Image>().sprite = SpriteImage;
+                    SelectItemImage1Base.GetComponent<Image>().sprite = null;
+                    SelectItemImage1Base.SetActive(false);
+
                     SelectItemImage1.GetComponent<Image>().color = Col;
                     SelectItemName1.GetComponent<Text>().text = Name;
                     SelectItemPower1.GetComponent<Text>().text = PowerString;
@@ -1446,6 +1470,9 @@ public void GoAttack()
                 {
                     UseBox = SelectItemImage2;
                     SelectItemImage2.GetComponent<Image>().sprite = SpriteImage;
+                    SelectItemImage2Base.GetComponent<Image>().sprite = null;
+                    SelectItemImage2Base.SetActive(false);
+
                     SelectItemImage2.GetComponent<Image>().color = Col;
                     SelectItemName2.GetComponent<Text>().text = Name;
                     SelectItemPower2.GetComponent<Text>().text = PowerString;
@@ -1483,15 +1510,20 @@ public void GoAttack()
                 UpSus = float.Parse(UpSusString);
                 SaveSus = SelectedItem.GetComponent<StatCustomer>().SaveSus;
 
-                string ImagePath = "Customer/" + SelectedItem.GetComponent<StatCustomer>().Image;
+                string ImagePath = "CustomerColor/" + SelectedItem.GetComponent<StatCustomer>().Image;
                 Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
 
+                string ImagePathBase = "CustomerBase/" + SelectedItem.GetComponent<StatCustomer>().Image;
+                Sprite SpriteImageBase = Resources.Load<Sprite>(ImagePathBase);
 
                 if ((GameObject.FindGameObjectWithTag("Box1") == null & GameObject.FindGameObjectWithTag("Box2") != null) |
                     (GameObject.FindGameObjectWithTag("Box1") == null & GameObject.FindGameObjectWithTag("Box2") == null))
                 {
                     UseBox = SelectItemImage1;
                     SelectItemImage1.GetComponent<Image>().sprite = SpriteImage;
+                    SelectItemImage1Base.GetComponent<Image>().sprite = SpriteImageBase;
+                    SelectItemImage1Base.SetActive(true);
+
                     SelectItemImage1.GetComponent<Image>().color = Col;
                     SelectItemName1.GetComponent<Text>().text = SelectedItem.GetComponent<StatCustomer>().Name;
                     SelectItemPower1.GetComponent<Text>().text = "？";
@@ -1503,6 +1535,9 @@ public void GoAttack()
                 {
                     UseBox = SelectItemImage2;
                     SelectItemImage2.GetComponent<Image>().sprite = SpriteImage;
+                    SelectItemImage2Base.GetComponent<Image>().sprite = SpriteImageBase;
+                    SelectItemImage2Base.SetActive(true);
+
                     SelectItemImage2.GetComponent<Image>().color = Col;
                     SelectItemName2.GetComponent<Text>().text = SelectedItem.GetComponent<StatCustomer>().Name;
                     SelectItemPower2.GetComponent<Text>().text = "？";
@@ -1558,6 +1593,10 @@ public void GoAttack()
         {
             UseBox = SelectItemImage1;
             Destroy(GameObject.FindGameObjectWithTag("Box1"));
+
+            SelectItemImage1Base.GetComponent<Image>().sprite = null;
+            SelectItemImage1Base.SetActive(false);
+
             SelectItemImage1.GetComponent<Image>().sprite = null;
             SelectItemImage1.GetComponent<Image>().color = new Color(0, 0, 0, 1f); ;
             SelectItemName1.GetComponent<Text>().text = " ";
@@ -1570,6 +1609,10 @@ public void GoAttack()
         {
             UseBox = SelectItemImage2;
             Destroy(GameObject.FindGameObjectWithTag("Box2"));
+
+            SelectItemImage2Base.GetComponent<Image>().sprite = null;
+            SelectItemImage2Base.SetActive(false);
+
             SelectItemImage2.GetComponent<Image>().sprite = null;
             SelectItemImage2.GetComponent<Image>().color = new Color(0, 0, 0, 1f);
             SelectItemName2.GetComponent<Text>().text = " ";
@@ -1811,6 +1854,7 @@ public void GoAttack()
         Color CustomCol = Image.GetComponent<Image>().color;
         string PowerString;
         string SusString;
+        GameObject Base = Image.transform.Find("Base").gameObject;
 
         iTween.ShakePosition(Image,iTween.Hash("x",5, "y", 5, "time",Time2 + Time3));
 
@@ -1834,6 +1878,7 @@ public void GoAttack()
 
 
         StartCoroutine(FadeOutCoroutine(Image, Time3));
+        StartCoroutine(FadeOutCoroutine(Base, Time3));
         StartCoroutine(TextFadeOutCoroutine(Name, Time3));
         StartCoroutine(TextFadeOutCoroutine(Power, Time3));
         StartCoroutine(TextFadeOutCoroutine(Sus,  Time3));
