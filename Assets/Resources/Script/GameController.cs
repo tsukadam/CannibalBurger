@@ -110,6 +110,7 @@ public class GameController : MonoBehaviour
     public GameObject GPrefab;
     public GameObject ColorCheckPrefab;
     public GameObject SelectBoxPrefab;
+    public GameObject HPbarPrefab;
 
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
@@ -883,11 +884,15 @@ public void GoAttack()
 
         float BlinkTime = 0.8f;
         float HeartTime = 0.3f;
+        float HPTime = 0.4f;
         float MaTime = 0.2f;//ハートからＧゲットまでの間
         float GTime = 1.0f;
         float MaTime2 = 0.3f;//Ｇゲットからタップできるようになるまでの間
 
+        float HpPoint;
+
         GameObject Base;
+        GameObject HPbar;
 
         while (Count < CustomerLength)
         {
@@ -916,12 +921,17 @@ public void GoAttack()
             */
 
             //Powerを比べる
-            //こちらの勝利
+            //勝利点算出
             VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, RateColor);
+            HpPoint = VictoryPoint*-1f;
+            if (HpPoint < 0) { HpPoint = 0; }
+
+            
             //点滅演出
             FloatCount = (float)Count * 1.0f;
             //Baseを取得
             Base = Customers[Count].transform.Find("CustomerBase").gameObject;
+
 
             if (VictoryPoint >= 0& VictoryPoint < 1.5f)
             {
@@ -951,8 +961,44 @@ public void GoAttack()
 
         }
 
+            //HP演出
+            //生成
+            GameObject HPwaku = (GameObject)Instantiate(
+                   HPbarPrefab,
+                   transform.position,
+                   Quaternion.identity);
+            HPwaku.transform.SetParent(Customers[Count].transform);
+            //bar取得
+            HPbar = HPwaku.transform.Find("HPbar").gameObject;
+            HPbar.GetComponent<Image>().color = ExpBlue;
 
-        if (VictoryPoint >= 0)
+            //位置決定
+            HPwaku.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 1);
+            HPwaku.GetComponent<RectTransform>().localPosition = new Vector3(0, 87f, 0);
+            //大きさ変更
+            
+                        iTween.ScaleTo(HPwaku, iTween.Hash(
+                            "x", 1,
+                            "y", 1,
+                            "time", 0,
+                            "delay", BlinkTime/2, "easeType", iTween.EaseType.linear
+                            ));
+            /*
+            iTween.MoveTo(HPwaku, iTween.Hash(
+                "position", new Vector3(0, 87f, 0f),
+                "time", HeartTime,
+                "isLocal", true, "easeType", iTween.EaseType.linear
+                ));
+                */
+            //Hpbarを減らす
+            iTween.ScaleTo(HPbar, iTween.Hash(
+               "x", HpPoint,
+                "time", HPTime,
+                "delay", BlinkTime / 2,
+                "isLocal", true, "easeType", iTween.EaseType.linear
+                ));
+
+            if (VictoryPoint >= 0)
             {
                 VictoryNum++;
 
@@ -964,22 +1010,21 @@ public void GoAttack()
                 Heart.transform.SetParent(Customers[Count].transform);
                 //位置決定
                 Heart.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
-                Heart.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+                Heart.GetComponent<RectTransform>().localPosition = new Vector3(0, 77f, 0);
                 //大きさ変更
-
-                iTween.ScaleTo(Heart, iTween.Hash(
-                    "x", 1 + (VictoryPoint / (VictoryPoint + CustomerHp)),
-                    "y", 1 + (VictoryPoint / (VictoryPoint + CustomerHp)),
-                    "time", HeartTime,
-                    "delay",BlinkTime, "easeType", iTween.EaseType.linear
-                    ));
-
-                iTween.MoveTo(Heart, iTween.Hash(
-                    "position", new Vector3(0, 70f, 0f),
-                    "time", HeartTime,
-                    "delay", BlinkTime,
-                    "isLocal", true, "easeType", iTween.EaseType.linear
-                    ));
+                                iTween.ScaleTo(Heart, iTween.Hash(
+                                    "x", 5,
+                                    "y", 5,
+                                    "time", 0,
+                                    "delay",BlinkTime, "easeType", iTween.EaseType.linear
+                                    ));
+                
+                                iTween.MoveTo(Heart, iTween.Hash(
+                                    "position", new Vector3(0, 87f, 0f),
+                                    "time", HeartTime,
+                                    "delay", BlinkTime,
+                                    "isLocal", true, "easeType", iTween.EaseType.easeOutElastic
+                                    ));
 
 
                 //タグをつける
@@ -1359,6 +1404,16 @@ public void GoAttack()
         while (Count < GLength)
         {
             Destroy(Gs[Count]);
+            Count++;
+        }
+
+        //Heartを破壊
+        GameObject[] Hearts = GameObject.FindGameObjectsWithTag("Heart");
+        Count = 0;
+        int HeartLength = Hearts.GetLength(0);
+        while (Count < HeartLength)
+        {
+            Destroy(Hearts[Count]);
             Count++;
         }
 
