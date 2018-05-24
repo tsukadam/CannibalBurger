@@ -115,7 +115,7 @@ public class LvDesignController : MonoBehaviour
     //初回アイテムの生成
     public void MakeItemFirst()
     {
-        StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "1", "#dd6645", "0" };
+        StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "3", "#dd6645", "0" };
         StatGame.GetComponent<StatGame>().Item2 = new string[] { "レタス", "Retasu", "1", "#88cc66", "0" };
         StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "1", "#dddd77", "0" };
         StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "0" };
@@ -578,6 +578,95 @@ public int VictoryDropG(int GetG,float VictoryPoint)
     {
         int NowLv = StatGame.GetComponent<StatGame>().StatLv;
         GetComponent<StatGameController>().SusUp(-10);//常に１０下げる
+    }
+
+    //休日行動のステ
+    //レベル等を元に値を返す
+    //type=0 コスト,=1 効果量
+    //size=0 小,=1 大
+    public int ActPolice(int type,int size)
+    {
+        int ReturnValue=0;
+        int RandomCount =0;
+
+        if (size == 0)//小わいろ
+        {
+            if (type == 0)
+            {
+                RandomCount = Random.Range(2,5);
+                //所持金の2-5%
+                ReturnValue = StatGame.GetComponent<StatGame>().StatG * RandomCount / 100+1;
+            }
+            else {
+                //レベルと同じ量、ただし最大10
+                ReturnValue = StatGame.GetComponent<StatGame>().StatLv;
+                if (ReturnValue > 10) { ReturnValue = 10; }
+            }
+        }
+        else//大わいろ
+        {
+            if (type == 0)
+            {
+                RandomCount = Random.Range(8, 15);
+                //所持金の8-15%
+                ReturnValue = StatGame.GetComponent<StatGame>().StatG * RandomCount / 100+5;
+            }
+            else {
+                //レベル×3、ただし最大20
+                ReturnValue = StatGame.GetComponent<StatGame>().StatLv*3;
+                if (ReturnValue > 20) { ReturnValue = 20; }
+            }
+
+        }
+        return ReturnValue;
+    }
+
+    //type=0 カルマダウン　=1 Ｇアップ
+    public int ActChurch(int type)
+    {
+        int ReturnValue = 0;
+        int RandomCount = 0;
+        if (type == 0) {
+
+            RandomCount = Random.Range(4, 7);
+            //レベル×4～7倍％取得カルマを下げる
+            ReturnValue = StatGame.GetComponent<StatGame>().StatLv * RandomCount;
+
+        }
+        else {
+            RandomCount = Random.Range(7, 15);
+            //レベル×7～15倍％取得Ｇを上げる
+            ReturnValue = StatGame.GetComponent<StatGame>().StatLv * RandomCount;
+
+        }
+
+        return ReturnValue;
+
+    }
+
+
+    //type=0 カルマダウン　=1 パワーアップ
+    public int ActHome(int type)
+    {
+        int ReturnValue = 0;
+        int RandomCount = 0;
+        if (type == 0)
+        {
+
+            RandomCount = Random.Range(10, 40);
+            //10～40％取得カルマを下げる
+            ReturnValue = RandomCount;
+
+        }
+        else {
+            RandomCount = Random.Range(20, 50);
+            //20～50％パワーを上げる
+            ReturnValue = RandomCount;
+
+        }
+
+        return ReturnValue;
+
     }
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;

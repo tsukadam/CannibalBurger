@@ -31,11 +31,8 @@ public class GameController : MonoBehaviour
     public GameObject CustomerFieldBack;
     public GameObject CustomerFieldCollider;
 
-
-
     //ボタン類
     public GameObject ButtonSave;
-
     public GameObject Button4Items;
     public GameObject Button4Items1;
     public GameObject Button4Items2;
@@ -55,10 +52,7 @@ public class GameController : MonoBehaviour
     public GameObject ParticleFeed;
 
     public GameObject Hand;
-
     public GameObject ButtonSelectItem;
-
-
     public GameObject SelectItem1;
     public GameObject SelectItem2;
 
@@ -92,6 +86,44 @@ public class GameController : MonoBehaviour
     public Text PopupSaveSusName2;
     public Text PopupSaveSusValue;
 
+    public GameObject PopupSelectAction;
+    public GameObject PopupAction;
+    public GameObject ActHito1;
+    public GameObject ActHito2;
+    public GameObject ActMessage;
+    public Text ActMessageText;
+    public GameObject ActButtonPolice;
+    public GameObject ActButtonChurch;
+    public GameObject ActButtonHome;
+    public GameObject ActButtonMarket;
+
+    public Text PoliceCost1;
+    public Text PoliceReturn1;
+    public Text PoliceCost2;
+    public Text PoliceReturn2;
+
+    public Text ChurchReturn1;
+    public Text ChurchReturn2;
+
+    public Text HomeReturn1;
+    public Text HomeReturn2;
+
+    public Text MarketName1;
+    public Text MarketSus1;
+    public Text MarketPower1;
+    public Text MarketCost1;
+    public GameObject MarketPict1;
+
+    public Text MarketName2;
+    public Text MarketSus2;
+    public Text MarketPower2;
+    public Text MarketCost2;
+    public GameObject MarketPict2;
+
+
+   
+
+    public GameObject ActionEndOK;
 
     public GameObject PopupDisposeItem;
     public Text PopupDisposeText;
@@ -128,7 +160,6 @@ public class GameController : MonoBehaviour
     public Color SusGreen;
     //Expの色
     public Color ExpBlue;
-
     //Gの色
     public Color GYellow;
 
@@ -165,6 +196,9 @@ public class GameController : MonoBehaviour
         PopupSave.SetActive(false);
         PopupLoad.SetActive(false);
         PopupSaveSus.SetActive(false);
+        PopupAction.SetActive(false);
+        PopupSelectAction.SetActive(false);
+
 
         Buns1.SetActive(false);
         Buns2.SetActive(false);
@@ -273,16 +307,13 @@ public class GameController : MonoBehaviour
 
         StatPlayer.GetComponent<StatPlayer>().SaveDelete();//セーブは消す
 
-
-
-
         //セーブがない場合の初期値
         //パラメータ初期化
         StatGame.GetComponent<StatGame>().StatSus = 0;
         StatGame.GetComponent<StatGame>().StatG = 0;
         StatGame.GetComponent<StatGame>().StatLv = 1;
         StatGame.GetComponent<StatGame>().StatExp = 0;
-        StatGame.GetComponent<StatGame>().StatDays = 0;
+        StatGame.GetComponent<StatGame>().StatDays = 1;
 
         MaxKill = 0;//殺人数
         MaxCustomer = 0;//さばいた客の数
@@ -314,25 +345,11 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(true);
     }
 
-
-    //トップ客を光らせる
-  /*
-    public void GlowCustomer() {
-              if (GameObject.FindGameObjectsWithTag("Customer") != null)
-            {
-                GameObject[] NormalCustomer = GameObject.FindGameObjectsWithTag("Customer");
-                GetComponent<Sorter>().GlowSort(NormalCustomer);
-            }
-
-    }
-
-    */
     //今いる客をすべて破壊
     public void CustomerDestroy()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
-
         iTween.tweens.Clear();
 
         //前周の客を破壊
@@ -423,6 +440,8 @@ public class GameController : MonoBehaviour
         PopupSave.SetActive(false);
         PopupLoad.SetActive(false);
         PopupSaveSus.SetActive(false);
+        PopupAction.SetActive(false);
+        PopupSelectAction.SetActive(false);
 
         Button6Items5.SetActive(false);
         Button6Items6.SetActive(false);
@@ -442,9 +461,12 @@ public class GameController : MonoBehaviour
     //ノルマなどを表示するのに使うのもあり
     public void SelectSave()
     {
-        PopupSave.SetActive(true);
+
+        //        PopupSave.SetActive(true);
         //セーブ選択画面を表示
 
+        //セーブ画面は経由せず、自動セーブしてＴＯＰに戻る
+        SaveEnd();
     }
 
     //セーブせず続ける
@@ -476,21 +498,10 @@ public class GameController : MonoBehaviour
 
 
         //ゲーム開始演出
-        //        CustomerFieldBack.GetComponent<RectTransform>().DOLocalMoveY(300, 1.0f);
-        //      Button4Items.GetComponent<RectTransform>().DOLocalMoveY(0, 0);
         iTween.MoveTo(CustomerFieldBack, iTween.Hash("position", new Vector3(0f, 300f, 0f), "time", 1.0f, "easeType", iTween.EaseType.linear));
 
         //SE
         GetComponent<SoundController>().PlaySE("DoorOpen");
-        /*
-        //遅延処理
-                DOVirtual.DelayedCall(0.5f, () => {
-                    GetComponent<SoundController>().FadeInOutSE("CustomerVoice",1.0f, 3.0f, 3.0f,0.7f);
-                });
-        */
-
-        //日付を経過させる
-        GetComponent<StatGameController>().DaysUp(1);
 
         //ステ描画
         GetComponent<StatGameController>().DrawSus();
@@ -536,12 +547,10 @@ public class GameController : MonoBehaviour
         ButtonSave.SetActive(false);
         MessageDraw("");
         //Item4ボタン押せなくする
-        /*
         Button4Items1.GetComponent<Button>().interactable = false;
         Button4Items2.GetComponent<Button>().interactable = false;
         Button4Items3.GetComponent<Button>().interactable = false;
         Button4Items4.GetComponent<Button>().interactable = false;
-        */
 
 
         //どの所持アイテムが押されたか判定、そのアイテムは所持アイテムから消す
@@ -693,6 +702,8 @@ public void GoAttack()
 
     private IEnumerator GoAttackCoroutine()
     {
+        TapBlock.SetActive(true);
+        EventSystem.SetActive(false);
 
         int ItemNum = StatGame.GetComponent<StatGame>().UseItemNum;
         string[] UseItem = StatGame.GetComponent<StatGame>().UseItemData;
@@ -806,6 +817,9 @@ public void GoAttack()
         yield return new WaitForSeconds(Time6 + Time7);//遅延
 
         Attack();
+
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
 
         yield return null;
 
@@ -1035,11 +1049,17 @@ public void GoAttack()
 
                 //賞金取得
                 NowGetG = GetComponent<LvDesignController>().VictoryDropG(CustomerDropG, VictoryPoint);
+
+                //修正値による修正
+                FloatNowGetG = (float)NowGetG;
+                FloatNowGetG = FloatNowGetG * (StatGame.GetComponent<StatGame>().ModifyG + 100)/100;
+                NowGetG = Mathf.RoundToInt(FloatNowGetG);
+
                 GetG += NowGetG;
                 if (MaxG < NowGetG) { MaxG = NowGetG; }
                 FloatMaxG = (float)MaxG;
                 FloatNowGetG = (float)NowGetG;
-                FloatNowGetG = (float)GetG;
+                
                 //exp獲得
                 GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
 
@@ -1093,6 +1113,8 @@ public void GoAttack()
             FloatMaxG = 0.1f;
         }
         float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
+        //修正値による修正
+        ResultGetSus = ResultGetSus * (StatGame.GetComponent<StatGame>().ModifySus + 100) / 100;
 
         //SE
         yield return new WaitForSeconds(BlinkTime+HeartTime+MaTime+GTime * 3 / 10);//遅延
@@ -2155,27 +2177,340 @@ public void SelectOK()
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
 
-        CustomerEnd();
+        RoundEnd();
 
     }
 
 
     //その周の終わりの処理→一時保存画面
-    public void CustomerEnd()
+    public void RoundEnd()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
+
         //客破壊
         CustomerDestroy();
+
+        //曜日振り分け
+        int Youbi =StatGame.GetComponent<StatGame>().StatDays;
+        if (Youbi % 7 != 1)
+        {
+            Debug.Log("平日");
+            WorkingDay();
+        }
+        else
+        {
+            Debug.Log("休日");
+            HolyDay();
+        }
+        TapBlock.SetActive(false);
+        EventSystem.SetActive(true);
+    }
+
+    //休日の開始
+    public void HolyDay()
+    {
+        //SE
+        //GetComponent<SoundController>().PlaySE("DoorOpen");
+
+        //日付を経過させる
+        GetComponent<StatGameController>().DaysUp(1);
+
+        //ステ描画
+        GetComponent<StatGameController>().DrawSus();
+        GetComponent<StatGameController>().DrawG();
+        GetComponent<StatGameController>().DrawLv();
+        GetComponent<StatGameController>().DrawDays();
+        GetComponent<StatGameController>().DrawExp();
+
+
+        //行動ステの算出
+        StatGame.GetComponent<StatGame>().PoliceCost1 = GetComponent<LvDesignController>().ActPolice(0,0);
+        StatGame.GetComponent<StatGame>().PoliceReturn1 = GetComponent<LvDesignController>().ActPolice(1, 0);
+        StatGame.GetComponent<StatGame>().PoliceCost2 = GetComponent<LvDesignController>().ActPolice(0, 1);
+        StatGame.GetComponent<StatGame>().PoliceReturn2 = GetComponent<LvDesignController>().ActPolice(1, 1);
+        PoliceCost1.text = StatGame.GetComponent<StatGame>().PoliceCost1.ToString();
+        PoliceReturn1.text = StatGame.GetComponent<StatGame>().PoliceReturn1.ToString();
+        PoliceCost2.text = StatGame.GetComponent<StatGame>().PoliceCost2.ToString();
+        PoliceReturn2.text = StatGame.GetComponent<StatGame>().PoliceReturn2.ToString();
+
+        StatGame.GetComponent<StatGame>().ChurchReturn1 = GetComponent<LvDesignController>().ActChurch(0);
+        StatGame.GetComponent<StatGame>().ChurchReturn2 = GetComponent<LvDesignController>().ActChurch(1);
+        ChurchReturn1.text = StatGame.GetComponent<StatGame>().ChurchReturn1.ToString();
+        ChurchReturn2.text = StatGame.GetComponent<StatGame>().ChurchReturn2.ToString();
+
+        StatGame.GetComponent<StatGame>().HomeReturn1 = GetComponent<LvDesignController>().ActHome(0);
+        StatGame.GetComponent<StatGame>().HomeReturn2 = GetComponent<LvDesignController>().ActHome(1);
+        HomeReturn1.text = StatGame.GetComponent<StatGame>().HomeReturn1.ToString();
+        HomeReturn2.text = StatGame.GetComponent<StatGame>().HomeReturn2.ToString();
+
+
+        //前の週の修正値を無効にする
+        StatGame.GetComponent<StatGame>().ModifyG = 0;
+        StatGame.GetComponent<StatGame>().ModifySus = 0;
+
+        //初期化
+        ActionEndOK.SetActive(false);
+
+        MessageDraw("どこ に でかけますか？");
+
+        HolyDaySelect();
+    }
+
+    public void HolyDaySelect()
+    {
+        //行先選択を表示
+        PopupSelectAction.SetActive(true);
+        ActButtonPolice.SetActive(false);
+        ActButtonChurch.SetActive(false);
+        ActButtonHome.SetActive(false);
+        ActButtonMarket.SetActive(false);
+        PopupAction.SetActive(false);
+        ActMessageText.text = "";
+
+    }
+
+    public void ActionPolice()
+    {
+        PopupSelectAction.SetActive(false);
+        PopupAction.SetActive(true);
+        ActButtonPolice.SetActive(true);
+        string ImagePath1 = "Face/" + "Miyako";
+        Sprite SpriteImage1 = Resources.Load<Sprite>(ImagePath1);
+        ActHito1.GetComponent<Image>().sprite = SpriteImage1;
+
+        string ImagePath2 = "Face/" + "Police";
+        Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
+        ActHito2.GetComponent<Image>().sprite = SpriteImage2;
+
+        ActMessage.SetActive(true);
+        ActMessageText.text="なんの よう かね。\nいそがしいんだが…";
+
+    }
+    public void ActionChurch()
+    {
+        PopupSelectAction.SetActive(false);
+        PopupAction.SetActive(true);
+        ActButtonChurch.SetActive(true);
+
+        string ImagePath1 = "Face/" + "Miyako";
+        Sprite SpriteImage1 = Resources.Load<Sprite>(ImagePath1);
+        ActHito1.GetComponent<Image>().sprite = SpriteImage1;
+
+        string ImagePath2 = "Face/" + "Church";
+        Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
+        ActHito2.GetComponent<Image>().sprite = SpriteImage2;
+
+        ActMessage.SetActive(true);
+        ActMessageText.text = "ようこそ。\nともに いのりましょう";
+
+    }
+    public void ActionHome()
+    {
+        PopupSelectAction.SetActive(false);
+        PopupAction.SetActive(true);
+        ActButtonHome.SetActive(true);
+
+        string ImagePath1 = "Face/" + "Miyako";
+        Sprite SpriteImage1 = Resources.Load<Sprite>(ImagePath1);
+        ActHito1.GetComponent<Image>().sprite = SpriteImage1;
+
+        string ImagePath2 = "Face/" + "Morrel";
+        Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
+        ActHito2.GetComponent<Image>().sprite = SpriteImage2;
+
+        ActMessage.SetActive(true);
+        ActMessageText.text = "しこみでも しようか。";
+
+    }
+    public void ActionMarket()
+    {
+        PopupSelectAction.SetActive(false);
+        PopupAction.SetActive(true);
+        ActButtonMarket.SetActive(true);
+
+        string ImagePath1 = "Face/" + "Miyako";
+        Sprite SpriteImage1 = Resources.Load<Sprite>(ImagePath1);
+        ActHito1.GetComponent<Image>().sprite = SpriteImage1;
+
+        string ImagePath2 = "Face/" + "Market";
+        Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
+        ActHito2.GetComponent<Image>().sprite = SpriteImage2;
+
+        ActMessage.SetActive(true);
+        ActMessageText.text = "らっしゃい…。\nいま あるのは これだけだ。";
+    }
+
+    //行動の結果を反映
+    public void ActionPoliceResult(int type)
+    {
+        int Cost;
+        int Return;
+        if (type == 0)
+        {
+            Cost = StatGame.GetComponent<StatGame>().PoliceCost1;
+            Return = StatGame.GetComponent<StatGame>().PoliceReturn1;
+        }
+        else
+        {
+            Cost = StatGame.GetComponent<StatGame>().PoliceCost2;
+            Return = StatGame.GetComponent<StatGame>().PoliceReturn2;
+        }
+
+        GetComponent<StatGameController>().GUp(Cost*-1);
+        GetComponent<StatGameController>().SusUp(Return*-1);
+        ActButtonPolice.SetActive(false);
+
+        ActMessageText.text = "オヤ おとしもの だね？\nあずかって おこう";
+        ActionEndOK.SetActive(true);
+
+    }
+
+    public void ActionChurchResult(int type)
+    {
+        int Return;
+        if (type == 0)
+        {
+            Return = StatGame.GetComponent<StatGame>().ChurchReturn1;
+            StatGame.GetComponent<StatGame>().ModifySus = Return * -1;
+
+        }
+        else
+        {
+            Return = StatGame.GetComponent<StatGame>().ChurchReturn2;
+            StatGame.GetComponent<StatGame>().ModifyG = Return;
+        }
+
+        ActButtonChurch.SetActive(false);
+        if (type == 0)
+        {
+            ActMessageText.text = "あなたの つみ が\nやわらぎます ように…";
+        }
+        else {
+            ActMessageText.text = "あなたの うりあげ が\nふえます ように…";
+        }
+        ActionEndOK.SetActive(true);
+
+    }
+
+    public void ActionHomeResult(int type)
+    {
+        int Return;
+        if (type == 0)
+        {
+            Return = StatGame.GetComponent<StatGame>().HomeReturn1;
+            float ThisSus = 0;
+            int IntThisSus = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == 0)
+                {
+                    ThisSus = float.Parse(StatGame.GetComponent<StatGame>().Item1[4]);
+                }
+                else if (i == 1)
+                {
+                    ThisSus = float.Parse(StatGame.GetComponent<StatGame>().Item2[4]);
+                }
+                else if (i == 2)
+                {
+                    ThisSus = float.Parse(StatGame.GetComponent<StatGame>().Item3[4]);
+                }
+                else
+                {
+                    ThisSus = float.Parse(StatGame.GetComponent<StatGame>().Item4[4]);
+                }
+
+                ThisSus = ThisSus * (Return*-1 + 100) / 100;
+                IntThisSus = Mathf.RoundToInt(ThisSus);
+
+                if (i == 0)
+                {
+                    StatGame.GetComponent<StatGame>().Item1[4] = IntThisSus.ToString();
+                }
+                else if (i == 1)
+                {
+                    StatGame.GetComponent<StatGame>().Item2[4] = IntThisSus.ToString();
+                }
+                else if (i == 2)
+                {
+                    StatGame.GetComponent<StatGame>().Item3[4] = IntThisSus.ToString();
+                }
+                else
+                {
+                    StatGame.GetComponent<StatGame>().Item4[4] = IntThisSus.ToString();
+                }
+
+            }
+        }
+        else
+        {
+            Return = StatGame.GetComponent<StatGame>().HomeReturn2;
+            float ThisPower = 0;
+            int IntThisPower = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == 0)
+                {
+                    ThisPower = float.Parse(StatGame.GetComponent<StatGame>().Item1[2]);
+                }
+                else if (i == 1)
+                {
+                    ThisPower = float.Parse(StatGame.GetComponent<StatGame>().Item2[2]);
+                }
+                else if (i == 2)
+                {
+                    ThisPower = float.Parse(StatGame.GetComponent<StatGame>().Item3[2]);
+                }
+                else
+                {
+                    ThisPower = float.Parse(StatGame.GetComponent<StatGame>().Item4[2]);
+                }
+
+                ThisPower = ThisPower * (Return  + 100) / 100;
+                IntThisPower = Mathf.RoundToInt(ThisPower);
+
+                if (i == 0)
+                {
+                    StatGame.GetComponent<StatGame>().Item1[2] = IntThisPower.ToString();
+                }
+                else if (i == 1)
+                {
+                    StatGame.GetComponent<StatGame>().Item2[2] = IntThisPower.ToString();
+                }
+                else if (i == 2)
+                {
+                    StatGame.GetComponent<StatGame>().Item3[2] = IntThisPower.ToString();
+                }
+                else
+                {
+                    StatGame.GetComponent<StatGame>().Item4[2] = IntThisPower.ToString();
+                }
+            }
+        }
+        ActButtonHome.SetActive(false);
+        if (type == 0)
+        {
+            ActMessageText.text = "きよく なれ。\nきよく なれ。";
+        }
+        else {
+            ActMessageText.text = "おいしく なれ。\nおいしく なれ。";
+        }
+        ActionEndOK.SetActive(true);
+
+    }
+
+    public void WorkingDay()
+    {
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
 
+        //日付を経過させる
+        GetComponent<StatGameController>().DaysUp(1);
 
         CustomerStart1();
         CustomerStart2();
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
     }
 
 

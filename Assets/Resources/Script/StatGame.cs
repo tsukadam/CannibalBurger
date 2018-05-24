@@ -42,6 +42,36 @@ public class StatGame : MonoBehaviour
     public float ResultGetSus = 0;//リザルト時に使う記憶領域
 
 
+    //Ｇ，カルマ取得修正率
+    public int ModifyG=0;
+    public int ModifySus =0;
+
+    //休日行動のステ
+    //レベルデザインが計算し、スタットゲームが持つ
+    public int PoliceCost1;
+    public int PoliceReturn1;
+    public int PoliceCost2;
+    public int PoliceReturn2;
+
+    public int ChurchReturn1;
+    public int ChurchReturn2;
+
+    public int HomeReturn1;
+    public int HomeReturn2;
+
+    public string MarketName1;
+    public int MarketSus1;
+    public int MarketPower1;
+    public int MarketCost1;
+    public string MarketPict1;
+
+    public string MarketName2;
+    public int MarketSus2;
+    public int MarketPower2;
+    public int MarketCost2;
+    public string MarketPict2;
+
+
     //ハイスコア記録用、殺人数など
 
     //イベントシステムの取得（処理中に切る場合がある）

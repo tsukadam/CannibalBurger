@@ -109,6 +109,9 @@ public class StatGameController : MonoBehaviour
     public float ColorChangeSpan = 0.5f;
 
     public int SusGlowFlag = 0;
+
+
+
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
