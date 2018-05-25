@@ -278,6 +278,117 @@ public class LvDesignController : MonoBehaviour
      SelectedDisLvInt);
     
 }
+    //Market用のアイテム生成
+    //そのレベル帯の客から、指定されたレアリティからランダムで１体選び、dropItemかMeatItemを返す
+    //ItemType=0 drop =1 meat
+    public string[] GetMarketItem(int ItemType,string Rarerity)
+    {
+        string[] ReturnItem = { "Name", "PictuePath", "Power", "Color", "Sus" };
+        int GameLv = StatGame.GetComponent<StatGame>().StatLv;
+
+        string SelectedDropName;
+        string SelectedDropImage;
+        string SelectedDropPower;
+        string SelectedDropSus;
+        string SelectedMeatName;
+        string SelectedMeatImage;
+        string SelectedMeatPower;
+        string SelectedMeatSus;
+
+        string SelectedCoreColor;
+
+        string[,] UseCustomer;
+        string ThisRarerity = Rarerity;
+
+        if (ThisRarerity == "C")
+        {
+            if (StatGame.GetComponent<StatGame>().CustmerC[0, 0] == "None")
+            {
+                UseCustomer = StatGame.GetComponent<StatGame>().CustmerUC;
+                Debug.Log("CがいないのでUCにしました");
+            }
+            else {
+                UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+            }
+        }
+        else if (ThisRarerity == "UC")
+        {
+            if (StatGame.GetComponent<StatGame>().CustmerUC[0, 0] == "None")
+            {
+                UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                Debug.Log("UCがいないのでCにしました");
+
+            }
+            else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerUC; }
+        }
+        else if (ThisRarerity == "R")
+        {
+            if (StatGame.GetComponent<StatGame>().CustmerR[0, 0] == "None")
+            {
+                UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                Debug.Log("RがいないのでCにしました");
+            }
+            else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerR; }
+        }
+        else if (ThisRarerity == "SUS")
+        {
+            if (StatGame.GetComponent<StatGame>().CustmerSus[0, 0] == "None")
+            {
+                UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+                Debug.Log("SUSがいないのでCにしました");
+            }
+            else { UseCustomer = StatGame.GetComponent<StatGame>().CustmerSus; }
+        }
+        else {
+            UseCustomer = StatGame.GetComponent<StatGame>().CustmerC;
+            Debug.Log("レアリティが変です。Cにしました");
+        }
+
+
+        int CustomerLength = UseCustomer.GetLength(0);
+        int RandomCount = Random.Range(0, CustomerLength - 1);
+
+        SelectedDropName = UseCustomer[RandomCount, LowDropName];
+        SelectedDropImage = UseCustomer[RandomCount, LowDropImage];
+        SelectedDropPower = UseCustomer[RandomCount, LowDropPower];
+        SelectedDropSus = UseCustomer[RandomCount, LowDropSus];
+        SelectedMeatName = UseCustomer[RandomCount, LowMeatName];
+        SelectedMeatImage = UseCustomer[RandomCount, LowMeatImage];
+        SelectedMeatPower = UseCustomer[RandomCount, LowMeatPower];
+        SelectedMeatSus = UseCustomer[RandomCount, LowMeatSus];
+
+        //        SelectedCoreColor = UseCustomer[RandomCount, LowCoreColor];
+        //colorはランダム
+
+        //色のゆれ
+        float PlusR = Random.Range(50f / 255, 200f / 255);
+        float PlusG = Random.Range(50f / 255, 200f / 255);
+        float PlusB = Random.Range(50f / 255, 200f / 255);
+        Color UseCol = new Color(PlusR,PlusG,PlusB, 1f);
+        SelectedCoreColor = "#" + GetComponent<ColorGetter>().ToColorString(UseCol);
+        
+
+        if (ItemType == 0) {
+            ReturnItem[3] = SelectedCoreColor;
+
+            ReturnItem[0] = SelectedDropName;
+            ReturnItem[1] = SelectedDropImage;
+            ReturnItem[2] = SelectedDropPower;
+            ReturnItem[4] = SelectedDropSus;
+        }
+        else
+        {
+            ReturnItem[3] = SelectedCoreColor;
+
+            ReturnItem[0] = SelectedMeatName;
+            ReturnItem[1] = SelectedMeatImage;
+            ReturnItem[2] = SelectedMeatPower;
+            ReturnItem[4] = SelectedMeatSus;
+        }
+
+        return ReturnItem;
+    }
+
     //通常客の生成
     public void MakeCustomerNormal()
     {
@@ -326,7 +437,7 @@ public class LvDesignController : MonoBehaviour
 
         int count = 0;
         //そのレアリティの客がそのレベル帯にいない場合、別のレアリティのを入れる。
-        //※代替レアリティの客が存在する保証はプログラム内にはない
+        //※代替レアリティの客が存在する保証はプログラム内にはない　→　どのレベル帯にも最低ＣとＵＣはいるようにする
 
         if (CustomerNum > 20) { Debug.Log("20人いるので20人にします"); CustomerNum = 20; }
         while (count < CustomerNum)
@@ -668,6 +779,103 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         return ReturnValue;
 
     }
+
+    public string[] ActMarket()
+    {
+        string[] ReturnItem= { "Name", "PictuePath", "Power", "Color", "Sus","Cost" };
+
+        //材料はUCかRの肉と所持品
+        //Sus高低
+        //Power高低
+        //の２要素がランダム変化、その結果により値段が計算される
+        //低いと極端に安くなり、高いと極端に高くなる
+        int RandomRarerity= Random.Range(0, 100);
+        int RandomItem = Random.Range(0, 100);
+        string Rarerity;
+        int ItemType;
+        if (RandomRarerity < 50) { Rarerity = "UC"; }
+        else { Rarerity = "R"; }
+
+        if (RandomItem < 50) { ItemType = 0; }
+        else { ItemType = 1; }
+
+        string[] GetItem = GetMarketItem(ItemType,Rarerity);
+
+        float Power = float.Parse(GetItem[2]);
+        float Sus = float.Parse(GetItem[4]);
+
+        float RandomPower = Random.Range(50f/100, 180f/100);
+        float RandomSus = Random.Range(50f / 100, 180f / 100);
+
+        Power = Power * RandomPower;
+        Sus = Sus * RandomSus;
+        int PowerInt=Mathf.RoundToInt(Power);
+        int SusInt = Mathf.RoundToInt(Sus);
+
+        float Cost=0;
+        //大コスト　所持金の7%
+        //中コスト　所持金の3%
+        //小コスト　所持金の1%
+        float BigCost = 7f/100;
+        float MediumCost = 3f / 100;
+        float SmallCost = 1f/100;
+        
+        //100~360
+
+        if(RandomPower<75f/100)//パワー75%以下
+        {
+            Cost += SmallCost;
+        }
+        else if(RandomPower>=75f/100& RandomPower<120f/100)//75%以上120以下
+        {
+            Cost += MediumCost;
+        }
+        else if (RandomPower >= 120f / 100 & RandomPower < 150f/100)//120%以上150以下
+        {
+            Cost += BigCost;
+        }
+        else
+        {
+            Cost += BigCost*2;
+        }
+
+        if (RandomSus < 75f / 100)//Sus75%以下
+        {
+            Cost += BigCost;
+        }
+        else if (RandomSus >= 75f / 100 & RandomSus < 120f/100)//75%以上120以下
+        {
+            Cost += MediumCost;
+        }
+        else if (RandomSus >= 120f / 100 & RandomSus < 150f/100)//120%以上150以下
+        {
+            Cost += SmallCost;
+        }
+        else
+        {
+            Cost =Cost/2;
+        }
+
+        Debug.Log("FloatCost:"+Cost);
+        float MyG = (float)StatGame.GetComponent<StatGame>().StatG;
+        Cost = Cost * MyG;
+        Debug.Log("GCost:" + Cost);
+
+        int CostInt = Mathf.RoundToInt(Cost);
+        Debug.Log("IntCost:" + Cost);
+
+        ReturnItem[0] = GetItem[0];
+        ReturnItem[1] = GetItem[1];
+        ReturnItem[2] = PowerInt.ToString();
+        ReturnItem[3] = GetItem[3];
+        ReturnItem[4] = SusInt.ToString();
+        ReturnItem[5] = CostInt.ToString();
+
+        return ReturnItem;
+    }
+
+
+
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 

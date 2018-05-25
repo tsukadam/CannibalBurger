@@ -110,7 +110,17 @@ public class StatGameController : MonoBehaviour
 
     public int SusGlowFlag = 0;
 
+    public GameObject MarketPict1;
+    public Text MarketName1;
+    public Text MarketPower1;
+    public Text MarketSus1;
+    public Text MarketCost1;
 
+    public GameObject MarketPict2;
+    public Text MarketName2;
+    public Text MarketPower2;
+    public Text MarketSus2;
+    public Text MarketCost2;
 
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
@@ -118,6 +128,44 @@ public class StatGameController : MonoBehaviour
     //ここから描写処理
 
     //アイテム描写
+
+    //休日のアイテム描写
+    //waku=0 左側 =1 右側　
+    public void DrawMarketItem(string[] MarketItem,int cost,int waku)
+    {
+
+        string[] UseItem;
+        Text UsePower;
+        Text UseSus;
+        Text UseName;
+        GameObject UseImage;
+
+        UseItem = MarketItem;
+
+        if (waku == 0)
+        {
+            UsePower = MarketPower1;
+            UseSus = MarketSus1;
+            UseImage = MarketPict1;
+            UseName = MarketName1;
+
+            MarketCost1.text = cost.ToString();
+        }
+        else{
+            UsePower = MarketPower2;
+            UseSus = MarketSus2;
+            UseImage = MarketPict2;
+            UseName = MarketName2;
+
+            MarketCost2.text = cost.ToString();
+        }
+
+
+        DrowItemAll(UseItem, UsePower, UseSus, UseName, UseImage);
+
+
+    }
+
     //取得アイテムがない時のゲットアイテムの確認ポップアップ
     public void DrawGetItem(string[] GetItem)
     {

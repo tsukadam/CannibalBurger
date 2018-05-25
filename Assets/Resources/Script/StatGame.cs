@@ -59,17 +59,10 @@ public class StatGame : MonoBehaviour
     public int HomeReturn1;
     public int HomeReturn2;
 
-    public string MarketName1;
-    public int MarketSus1;
-    public int MarketPower1;
+    public string[] MarketItem1 = { "Name", "PictuePath", "Power", "Color", "Sus" };
+    public string[] MarketItem2 = { "Name", "PictuePath", "Power", "Color", "Sus" };
     public int MarketCost1;
-    public string MarketPict1;
-
-    public string MarketName2;
-    public int MarketSus2;
-    public int MarketPower2;
     public int MarketCost2;
-    public string MarketPict2;
 
 
     //ハイスコア記録用、殺人数など

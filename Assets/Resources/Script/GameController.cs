@@ -108,22 +108,13 @@ public class GameController : MonoBehaviour
     public Text HomeReturn1;
     public Text HomeReturn2;
 
-    public Text MarketName1;
-    public Text MarketSus1;
-    public Text MarketPower1;
-    public Text MarketCost1;
-    public GameObject MarketPict1;
 
-    public Text MarketName2;
-    public Text MarketSus2;
-    public Text MarketPower2;
-    public Text MarketCost2;
-    public GameObject MarketPict2;
 
 
    
 
     public GameObject ActionEndOK;
+    public GameObject ActionDispose;
 
     public GameObject PopupDisposeItem;
     public Text PopupDisposeText;
@@ -225,6 +216,26 @@ public class GameController : MonoBehaviour
         //所持扱いにならない、取得処理時に使う枠
         StatGame.GetComponent<StatGame>().Item5 = new string[] { "None", "None", "None", "None", "None" };
         StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" };
+
+        //休日行動のステ
+        StatGame.GetComponent<StatGame>().MarketItem1 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().MarketItem2 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().MarketCost1 = 0;
+        StatGame.GetComponent<StatGame>().MarketCost2 = 0;
+
+        StatGame.GetComponent<StatGame>().PoliceCost1=0;
+        StatGame.GetComponent<StatGame>().PoliceReturn1=0;
+        StatGame.GetComponent<StatGame>().PoliceCost2 = 0;
+        StatGame.GetComponent<StatGame>().PoliceReturn2 = 0;    
+        StatGame.GetComponent<StatGame>().ChurchReturn1 = 0;
+        StatGame.GetComponent<StatGame>().ChurchReturn2 = 0;
+        StatGame.GetComponent<StatGame>().HomeReturn1 = 0;
+        StatGame.GetComponent<StatGame>().HomeReturn2 = 0;
+
+        //Ｇ，カルマ取得修正率
+        StatGame.GetComponent<StatGame>().ModifyG = 0;
+        StatGame.GetComponent<StatGame>().ModifySus = 0;
+
 
         //Feed記憶領域の初期化
         StatGame.GetComponent<StatGame>().UseItemNum = 0;
@@ -1064,7 +1075,8 @@ public void GoAttack()
                 GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
 
                 GCount = 0;
-                while (GCount < FloatNowGetG / 10) {
+                
+                while (GCount < FloatNowGetG / 10& GCount <10) {
                     //G生成
                     Debug.Log("G!");
                     GameObject G = (GameObject)Instantiate(
@@ -2171,6 +2183,8 @@ public void SelectOK()
             }
         }
 
+        StatGame.GetComponent<StatGame>().Item5 = new string[] { "None", "None", "None", "None", "None" };
+        StatGame.GetComponent<StatGame>().Item6 = new string[] { "None", "None", "None", "None", "None" };
 
         Button6Items.SetActive(false);
 
@@ -2188,6 +2202,7 @@ public void SelectOK()
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
+        PopupAction.SetActive(false);
 
         //客破壊
         CustomerDestroy();
@@ -2245,12 +2260,26 @@ public void SelectOK()
         HomeReturn1.text = StatGame.GetComponent<StatGame>().HomeReturn1.ToString();
         HomeReturn2.text = StatGame.GetComponent<StatGame>().HomeReturn2.ToString();
 
+        string[] MarketItem1Moto = GetComponent<LvDesignController>().ActMarket();
+        string[] MarketItem2Moto = GetComponent<LvDesignController>().ActMarket();
+        string[] MarketItem1 = { MarketItem1Moto[0], MarketItem1Moto[1], MarketItem1Moto[2], MarketItem1Moto[3], MarketItem1Moto[4] };
+        string[] MarketItem2 = { MarketItem2Moto[0], MarketItem2Moto[1], MarketItem2Moto[2], MarketItem2Moto[3], MarketItem2Moto[4] };
+
+        StatGame.GetComponent<StatGame>().MarketItem1 = MarketItem1;
+        StatGame.GetComponent<StatGame>().MarketCost1 = int.Parse(MarketItem1Moto[5]);
+        StatGame.GetComponent<StatGame>().MarketItem2 = MarketItem2;
+        StatGame.GetComponent<StatGame>().MarketCost2 = int.Parse(MarketItem2Moto[5]);
+
+        //マーケットのアイテム描画
+        GetComponent<StatGameController>().DrawMarketItem(MarketItem1, StatGame.GetComponent<StatGame>().MarketCost1, 0);
+        GetComponent<StatGameController>().DrawMarketItem(MarketItem2, StatGame.GetComponent<StatGame>().MarketCost2, 1);
 
         //前の週の修正値を無効にする
         StatGame.GetComponent<StatGame>().ModifyG = 0;
         StatGame.GetComponent<StatGame>().ModifySus = 0;
 
         //初期化
+        ActionDispose.SetActive(false);
         ActionEndOK.SetActive(false);
 
         MessageDraw("どこ に でかけますか？");
@@ -2501,7 +2530,48 @@ public void SelectOK()
 
     }
 
-    public void WorkingDay()
+    public void ActionMarketResult(int type)
+    {
+        int Cost = 0;
+        if (type == 0)
+        {
+            StatGame.GetComponent<StatGame>().Item5 = StatGame.GetComponent<StatGame>().MarketItem1;
+            Cost = StatGame.GetComponent<StatGame>().MarketCost1;
+        }
+        else {
+            StatGame.GetComponent<StatGame>().Item5 = StatGame.GetComponent<StatGame>().MarketItem2;
+            Cost = StatGame.GetComponent<StatGame>().MarketCost2;
+        }
+        GetComponent<StatGameController>().GUp(Cost * -1);
+
+        ActButtonMarket.SetActive(false);
+        ActMessageText.text = "まいど……。";
+
+        ActionDispose.SetActive(true);
+
+    }
+    public void ActionMarketDispose()
+    {
+        PopupAction.SetActive(false);
+
+        if (StatGame.GetComponent<StatGame>().Item1[0] == "None") { Button6Items1.GetComponent<Button>().interactable = false; }
+        else { Button6Items1.GetComponent<Button>().interactable = true; }
+        if (StatGame.GetComponent<StatGame>().Item2[0] == "None") { Button6Items2.GetComponent<Button>().interactable = false; }
+        else { Button6Items2.GetComponent<Button>().interactable = true; }
+        if (StatGame.GetComponent<StatGame>().Item3[0] == "None") { Button6Items3.GetComponent<Button>().interactable = false; }
+        else { Button6Items3.GetComponent<Button>().interactable = true; }
+        if (StatGame.GetComponent<StatGame>().Item4[0] == "None") { Button6Items4.GetComponent<Button>().interactable = false; }
+        else { Button6Items4.GetComponent<Button>().interactable = true; }
+        if (StatGame.GetComponent<StatGame>().Item5[0] == "None") { Button6Items5.GetComponent<Button>().interactable = false; }
+        else { Button6Items5.GetComponent<Button>().interactable = true; }
+        if (StatGame.GetComponent<StatGame>().Item6[0] == "None") { Button6Items6.GetComponent<Button>().interactable = false; }
+        else { Button6Items6.GetComponent<Button>().interactable = true; }
+
+        GetComponent<StatGameController>().DrawItem6();
+        Button6Items.SetActive(true);
+        SelectOK();
+}
+public void WorkingDay()
     {
         //客の生成
         GetComponent<LvDesignController>().MakeCustomerNormal();
