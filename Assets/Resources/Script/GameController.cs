@@ -51,7 +51,11 @@ public class GameController : MonoBehaviour
     public GameObject Buns2;
     public GameObject ParticleFeed;
 
+    public GameObject PopupHand;
+
     public GameObject Hand;
+    public GameObject HandButton;
+
     public GameObject ButtonSelectItem;
     public GameObject SelectItem1;
     public GameObject SelectItem2;
@@ -72,6 +76,9 @@ public class GameController : MonoBehaviour
 
     public GameObject TapButton;
 
+
+
+
     //ポップアップ類
     public GameObject PopupResultG;
     public Text PopupResultGTextG;
@@ -91,6 +98,9 @@ public class GameController : MonoBehaviour
     public GameObject ActHito1;
     public GameObject ActHito2;
     public GameObject ActMessage;
+    public GameObject ActPlacePict;
+    public Text ActPlaceText;
+
     public Text ActMessageText;
     public GameObject ActButtonPolice;
     public GameObject ActButtonChurch;
@@ -108,11 +118,6 @@ public class GameController : MonoBehaviour
     public Text HomeReturn1;
     public Text HomeReturn2;
 
-
-
-
-   
-
     public GameObject ActionEndOK;
     public GameObject ActionDispose;
 
@@ -122,11 +127,16 @@ public class GameController : MonoBehaviour
     public Text PopupGetText;
     public GameObject PopupLvUp;
     public Text PopupLvUpText;
+    public Text PopupLvUpSusText;
     public GameObject PopupGameOver;
 
     //メッセージ欄
     public GameObject Message;
     public Text MessageText;
+
+    //平日休日の切り替え基準
+    //7で割った余り
+
 
     //プレハブ
     public GameObject HeartPrefab;
@@ -172,7 +182,7 @@ public class GameController : MonoBehaviour
 
         //ボタン初期化
         ButtonSave.SetActive(false);
-        Button4Items.SetActive(true);
+        Button4Items.SetActive(false);
         Button6Items.SetActive(false);
         ButtonSelectItem.SetActive(false);
         PopupResultG.SetActive(false);
@@ -190,6 +200,9 @@ public class GameController : MonoBehaviour
         PopupAction.SetActive(false);
         PopupSelectAction.SetActive(false);
 
+        PopupHand.SetActive(true);
+        Hand.SetActive(false);
+        HandButton.SetActive(false);
 
         Buns1.SetActive(false);
         Buns2.SetActive(false);
@@ -248,6 +261,8 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawDays();
         GetComponent<StatGameController>().DrawExp();
         GetComponent<StatGameController>().DrawItem4();
+        GetComponent<StatGameController>().DrawModify();
+        GetComponent<StatGameController>().DrawYoubi();
 
         if (StatPlayer.GetComponent<StatPlayer>().ExistSave == 1)
         {
@@ -296,11 +311,8 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawDays();
         GetComponent<StatGameController>().DrawExp();
 
-        CustomerStart1();
-        CustomerStart2();
+        RoundStart(1);
 
-        //初期客の生成
-        GetComponent<LvDesignController>().MakeSavedCustomer();
 
 
 
@@ -324,7 +336,7 @@ public class GameController : MonoBehaviour
         StatGame.GetComponent<StatGame>().StatG = 0;
         StatGame.GetComponent<StatGame>().StatLv = 1;
         StatGame.GetComponent<StatGame>().StatExp = 0;
-        StatGame.GetComponent<StatGame>().StatDays = 1;
+        StatGame.GetComponent<StatGame>().StatDays = 0;
 
         MaxKill = 0;//殺人数
         MaxCustomer = 0;//さばいた客の数
@@ -345,12 +357,7 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawDays();
         GetComponent<StatGameController>().DrawExp();
 
-        CustomerStart1();
-        CustomerStart2();
-
-        //初期客の生成
-        GetComponent<LvDesignController>().MakeCustomerFirst();
-
+        RoundStart(0);
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -418,7 +425,6 @@ public class GameController : MonoBehaviour
     }
 
     //来客開始前
-    //この状態にしつつSaveポップアップなどが出ている
     public void CustomerStart1()
     {
         TapBlock.SetActive(true);
@@ -460,8 +466,6 @@ public class GameController : MonoBehaviour
         CustomerFieldBack.SetActive(false);
         CustomerFieldCollider.SetActive(false);
 
-        //アニメで動いたものを元に戻す
-        BeforeStartAnim();
 
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
@@ -492,6 +496,7 @@ public class GameController : MonoBehaviour
         //BGM止める
         GetComponent<SoundController>().StopStoreBgm();
 
+        //セーブ
         GetHighScore();
         StatPlayer.GetComponent<StatPlayer>().Save();
         //客破壊はGoMenu内にあり
@@ -504,7 +509,7 @@ public class GameController : MonoBehaviour
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
-        PopupSave.SetActive(false);
+        //PopupSave.SetActive(false);
         ButtonSave.SetActive(true);
 
 
@@ -963,7 +968,7 @@ public void GoAttack()
 
                 StartCoroutine(Blink(Customers[Count], Base,new Color(0, 0, 0, 0), FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base,CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
-                Debug.Log("Blink1");
+               // Debug.Log("Blink1");
 
             }
             else if(VictoryPoint >= 1.5f&VictoryPoint<2.0f) {
@@ -971,7 +976,7 @@ public void GoAttack()
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
                 StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 3 / 6 + FloatCount / 16, 1));
-            Debug.Log("Blink2");
+           // Debug.Log("Blink2");
         }
         else if (VictoryPoint > 2.0f)
             {
@@ -981,7 +986,7 @@ public void GoAttack()
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 3 / 6 + FloatCount / 16, 1));
                 StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 4 / 8 + FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 5 / 6 + FloatCount / 16, 1));
-            Debug.Log("Blink3");
+           // Debug.Log("Blink3");
 
 
         }
@@ -1078,7 +1083,7 @@ public void GoAttack()
                 
                 while (GCount < FloatNowGetG / 10& GCount <10) {
                     //G生成
-                    Debug.Log("G!");
+                  //  Debug.Log("G!");
                     GameObject G = (GameObject)Instantiate(
                            GPrefab,
                            transform.position,
@@ -1127,7 +1132,7 @@ public void GoAttack()
         float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
         //修正値による修正
         ResultGetSus = ResultGetSus * (StatGame.GetComponent<StatGame>().ModifySus + 100) / 100;
-
+        ResultGetSus = Mathf.Round(ResultGetSus);
         //SE
         yield return new WaitForSeconds(BlinkTime+HeartTime+MaTime+GTime * 3 / 10);//遅延
         GetComponent<SoundController>().PlaySE("GGetOne");
@@ -1221,6 +1226,10 @@ public void GoAttack()
 
             PopupLvUp.SetActive(true);
             PopupLvUpText.text = "レベルアップ！";
+
+            int SaveSus = GetComponent<LvDesignController>().LvUpSus;
+            PopupLvUpSusText.color = ExpBlue;
+            PopupLvUpSusText.text = SaveSus.ToString();
             //レベルアップ時のボーナス処理
             GetComponent<StatGameController>().LvUp(1);
 
@@ -1316,11 +1325,13 @@ public void GoAttack()
     //アイテムゲット選択画面へ
     public void Select()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
 
         //レベルアップから来た場合のレベルアップポップアップを消す
         PopupLvUp.SetActive(false);
+
+        //手持ちボタン表示
+        Hand.SetActive(false);
+        HandButton.SetActive(true);
 
 
         int Count = 0;
@@ -1355,7 +1366,6 @@ public void GoAttack()
             CustomerFieldBack.SetActive(false);
 
             GetComponent<StatGameController>().DrawItem4();
-            GetComponent<StatGameController>().DrawItemSelectItem4();
 
             //TOPを取得
             GameObject[] LoserTop = GetComponent<Sorter>().LoserSort(Loser);
@@ -1424,12 +1434,23 @@ public void GoAttack()
         EventSystem.SetActive(true);
 
     }
+    //手持ち開く
+    public void HandOpen()
+    {
+        GetComponent<StatGameController>().DrawItemSelectItem4();
+        Hand.SetActive(true);
+        HandButton.SetActive(false);
+    }
+    //手持ち閉じる
+    public void HandClose()
+    {
+        Hand.SetActive(false);
+        HandButton.SetActive(true);
+    }
 
     //選択ワクの初期化
     public void SelectStart()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
 
         //Gを破壊
         GameObject[] Gs = GameObject.FindGameObjectsWithTag("G");
@@ -1486,9 +1507,6 @@ public void GoAttack()
         SelectItemImage2.GetComponent<StatItem>().Power = 0;
         SelectItemImage2.GetComponent<StatItem>().Col = new Color(0, 0, 0, 1f);
         SelectItemImage2.GetComponent<StatItem>().UpSus = 0;
-
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
 
     }
 
@@ -1765,7 +1783,10 @@ public void GoAttack()
             //ボックスを上に上げる
             iTween.MoveTo(SelectItem1, iTween.Hash("y", 30, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
             iTween.MoveTo(SelectItem2, iTween.Hash("y", 30, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
-            iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
+            Hand.SetActive(false);
+            HandButton.SetActive(false);
+
+            // iTween.MoveTo(Hand, iTween.Hash("y", 800, "time", Time1, "islocal", true, "easeType", iTween.EaseType.linear));
 
             //遅延処理
 
@@ -1773,7 +1794,7 @@ public void GoAttack()
 
             //SE　とりあえず、一人でも人間がいたら鳴らす　あとで演出付けるべき
             GetComponent<SoundController>().PlaySE("Kill");
-                Debug.Log("Kill");
+               // Debug.Log("Kill");
 
                 //血しぶき
                 //赤色変化してフェードアウトし、アイテム画像に変わる
@@ -2196,41 +2217,55 @@ public void SelectOK()
     }
 
 
-    //その周の終わりの処理→一時保存画面
+    //その周の終わりの処理
     public void RoundEnd()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
-
         PopupAction.SetActive(false);
+
+        //アニメで動いたものを元に戻す
+        BeforeStartAnim();
 
         //客破壊
         CustomerDestroy();
+        RoundStart(2);
+    }
+
+    //その周の始まりの処理
+    //mode=0　セーブなし開始
+    //mode=1 セーブあり開始
+    //mode=2　道中
+    public void RoundStart(int Mode)
+    {
+        if (Mode != 1) { 
+            //日付を経過させる
+            GetComponent<StatGameController>().DaysUp(1);
+        }
+        GetComponent<StatGameController>().DrawYoubi();
 
         //曜日振り分け
-        int Youbi =StatGame.GetComponent<StatGame>().StatDays;
+        int Youbi = StatGame.GetComponent<StatGame>().StatDays;
         if (Youbi % 7 != 1)
         {
-            Debug.Log("平日");
-            WorkingDay();
+         //   Debug.Log("平日");
+            WorkingDay(Mode);
         }
         else
         {
-            Debug.Log("休日");
-            HolyDay();
+          //  Debug.Log("休日");
+            HolyDay(Mode);
         }
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
-    }
 
+    }
     //休日の開始
-    public void HolyDay()
+    //mode=0　セーブなし開始
+    //mode=1 セーブあり開始
+    //mode=2　道中
+    public void HolyDay(int Mode)
     {
         //SE
         //GetComponent<SoundController>().PlaySE("DoorOpen");
 
-        //日付を経過させる
-        GetComponent<StatGameController>().DaysUp(1);
+
 
         //ステ描画
         GetComponent<StatGameController>().DrawSus();
@@ -2241,24 +2276,17 @@ public void SelectOK()
 
 
         //行動ステの算出
+        if (Mode != 1) { 
         StatGame.GetComponent<StatGame>().PoliceCost1 = GetComponent<LvDesignController>().ActPolice(0,0);
         StatGame.GetComponent<StatGame>().PoliceReturn1 = GetComponent<LvDesignController>().ActPolice(1, 0);
         StatGame.GetComponent<StatGame>().PoliceCost2 = GetComponent<LvDesignController>().ActPolice(0, 1);
         StatGame.GetComponent<StatGame>().PoliceReturn2 = GetComponent<LvDesignController>().ActPolice(1, 1);
-        PoliceCost1.text = StatGame.GetComponent<StatGame>().PoliceCost1.ToString();
-        PoliceReturn1.text = StatGame.GetComponent<StatGame>().PoliceReturn1.ToString();
-        PoliceCost2.text = StatGame.GetComponent<StatGame>().PoliceCost2.ToString();
-        PoliceReturn2.text = StatGame.GetComponent<StatGame>().PoliceReturn2.ToString();
 
         StatGame.GetComponent<StatGame>().ChurchReturn1 = GetComponent<LvDesignController>().ActChurch(0);
         StatGame.GetComponent<StatGame>().ChurchReturn2 = GetComponent<LvDesignController>().ActChurch(1);
-        ChurchReturn1.text = StatGame.GetComponent<StatGame>().ChurchReturn1.ToString();
-        ChurchReturn2.text = StatGame.GetComponent<StatGame>().ChurchReturn2.ToString();
-
+    
         StatGame.GetComponent<StatGame>().HomeReturn1 = GetComponent<LvDesignController>().ActHome(0);
         StatGame.GetComponent<StatGame>().HomeReturn2 = GetComponent<LvDesignController>().ActHome(1);
-        HomeReturn1.text = StatGame.GetComponent<StatGame>().HomeReturn1.ToString();
-        HomeReturn2.text = StatGame.GetComponent<StatGame>().HomeReturn2.ToString();
 
         string[] MarketItem1Moto = GetComponent<LvDesignController>().ActMarket();
         string[] MarketItem2Moto = GetComponent<LvDesignController>().ActMarket();
@@ -2270,25 +2298,53 @@ public void SelectOK()
         StatGame.GetComponent<StatGame>().MarketItem2 = MarketItem2;
         StatGame.GetComponent<StatGame>().MarketCost2 = int.Parse(MarketItem2Moto[5]);
 
-        //マーケットのアイテム描画
-        GetComponent<StatGameController>().DrawMarketItem(MarketItem1, StatGame.GetComponent<StatGame>().MarketCost1, 0);
-        GetComponent<StatGameController>().DrawMarketItem(MarketItem2, StatGame.GetComponent<StatGame>().MarketCost2, 1);
+            //前の週の修正値を無効にする
+            StatGame.GetComponent<StatGame>().ModifyG = 0;
+            StatGame.GetComponent<StatGame>().ModifySus = 0;
+        }
 
-        //前の週の修正値を無効にする
-        StatGame.GetComponent<StatGame>().ModifyG = 0;
-        StatGame.GetComponent<StatGame>().ModifySus = 0;
+        GetComponent<StatGameController>().DrawModify();
+
+        PoliceCost1.text = StatGame.GetComponent<StatGame>().PoliceCost1.ToString();
+        PoliceCost1.color = GYellow;
+        PoliceReturn1.text = StatGame.GetComponent<StatGame>().PoliceReturn1.ToString();
+        PoliceReturn1.color = ExpBlue;
+        PoliceCost2.text = StatGame.GetComponent<StatGame>().PoliceCost2.ToString();
+        PoliceCost2.color = GYellow;
+        PoliceReturn2.text = StatGame.GetComponent<StatGame>().PoliceReturn2.ToString();
+        PoliceReturn2.color = ExpBlue;
+
+        ChurchReturn1.text = StatGame.GetComponent<StatGame>().ChurchReturn1.ToString();
+        ChurchReturn1.color = ExpBlue;
+        ChurchReturn2.text = StatGame.GetComponent<StatGame>().ChurchReturn2.ToString();
+        ChurchReturn2.color = GYellow;
+        HomeReturn1.text = StatGame.GetComponent<StatGame>().HomeReturn1.ToString();
+        HomeReturn1.color = ExpBlue;
+        HomeReturn2.text = StatGame.GetComponent<StatGame>().HomeReturn2.ToString();
+
+
+
+        //マーケットのアイテム描画
+        GetComponent<StatGameController>().DrawMarketItem(StatGame.GetComponent<StatGame>().MarketItem1, StatGame.GetComponent<StatGame>().MarketCost1, 0);
+        GetComponent<StatGameController>().DrawMarketItem(StatGame.GetComponent<StatGame>().MarketItem2, StatGame.GetComponent<StatGame>().MarketCost2, 1);
+
+
+        //手持ちボタン表示
+        Hand.SetActive(false);
+        HandButton.SetActive(true);
+
 
         //初期化
         ActionDispose.SetActive(false);
         ActionEndOK.SetActive(false);
 
-        MessageDraw("どこ に でかけますか？");
 
         HolyDaySelect();
     }
 
     public void HolyDaySelect()
     {
+        MessageDraw("どこ に でかけますか？");
         //行先選択を表示
         PopupSelectAction.SetActive(true);
         ActButtonPolice.SetActive(false);
@@ -2313,8 +2369,14 @@ public void SelectOK()
         Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
         ActHito2.GetComponent<Image>().sprite = SpriteImage2;
 
+        string ImagePath3 = "Place/" + "Police";
+        Sprite SpriteImage3 = Resources.Load<Sprite>(ImagePath3);
+        ActPlacePict.GetComponent<Image>().sprite = SpriteImage3;
+        ActPlaceText.text = "こうばん";
+
         ActMessage.SetActive(true);
         ActMessageText.text="なんの よう かね。\nいそがしいんだが…";
+        MessageDraw("タップ で わいろ");
 
     }
     public void ActionChurch()
@@ -2331,8 +2393,14 @@ public void SelectOK()
         Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
         ActHito2.GetComponent<Image>().sprite = SpriteImage2;
 
+        string ImagePath3 = "Place/" + "Church";
+        Sprite SpriteImage3 = Resources.Load<Sprite>(ImagePath3);
+        ActPlacePict.GetComponent<Image>().sprite = SpriteImage3;
+        ActPlaceText.text = "きょうかい";
+
         ActMessage.SetActive(true);
         ActMessageText.text = "ようこそ。\nともに いのりましょう";
+        MessageDraw("タップ で いのる");
 
     }
     public void ActionHome()
@@ -2349,8 +2417,14 @@ public void SelectOK()
         Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
         ActHito2.GetComponent<Image>().sprite = SpriteImage2;
 
+        string ImagePath3 = "Place/" + "Home";
+        Sprite SpriteImage3 = Resources.Load<Sprite>(ImagePath3);
+        ActPlacePict.GetComponent<Image>().sprite = SpriteImage3;
+        ActPlaceText.text = "ホーム";
+
         ActMessage.SetActive(true);
         ActMessageText.text = "しこみでも しようか。";
+        MessageDraw("タップ で しこみ");
 
     }
     public void ActionMarket()
@@ -2367,8 +2441,15 @@ public void SelectOK()
         Sprite SpriteImage2 = Resources.Load<Sprite>(ImagePath2);
         ActHito2.GetComponent<Image>().sprite = SpriteImage2;
 
+        string ImagePath3 = "Place/" + "Market";
+        Sprite SpriteImage3 = Resources.Load<Sprite>(ImagePath3);
+        ActPlacePict.GetComponent<Image>().sprite = SpriteImage3;
+        ActPlaceText.text = "やみいち";
+
+
         ActMessage.SetActive(true);
         ActMessageText.text = "らっしゃい…。\nいま あるのは これだけだ。";
+        MessageDraw("タップ で こうにゅう");
     }
 
     //行動の結果を反映
@@ -2393,7 +2474,9 @@ public void SelectOK()
 
         ActMessageText.text = "オヤ おとしもの だね？\nあずかって おこう";
         ActionEndOK.SetActive(true);
-
+        //手持ちボタン非表示
+        Hand.SetActive(false);
+        HandButton.SetActive(false);
     }
 
     public void ActionChurchResult(int type)
@@ -2403,6 +2486,7 @@ public void SelectOK()
         {
             Return = StatGame.GetComponent<StatGame>().ChurchReturn1;
             StatGame.GetComponent<StatGame>().ModifySus = Return * -1;
+        
 
         }
         else
@@ -2419,7 +2503,12 @@ public void SelectOK()
         else {
             ActMessageText.text = "あなたの うりあげ が\nふえます ように…";
         }
+        GetComponent<StatGameController>().DrawModify();
+
         ActionEndOK.SetActive(true);
+        //手持ちボタン非表示
+        Hand.SetActive(false);
+        HandButton.SetActive(false);
 
     }
 
@@ -2527,6 +2616,9 @@ public void SelectOK()
             ActMessageText.text = "おいしく なれ。\nおいしく なれ。";
         }
         ActionEndOK.SetActive(true);
+        //手持ちボタン非表示
+        Hand.SetActive(false);
+        HandButton.SetActive(false);
 
     }
 
@@ -2548,6 +2640,9 @@ public void SelectOK()
         ActMessageText.text = "まいど……。";
 
         ActionDispose.SetActive(true);
+        //手持ちボタン非表示
+        Hand.SetActive(false);
+        HandButton.SetActive(false);
 
     }
     public void ActionMarketDispose()
@@ -2569,15 +2664,34 @@ public void SelectOK()
 
         GetComponent<StatGameController>().DrawItem6();
         Button6Items.SetActive(true);
+        Button6Items6.SetActive(true);
+        Button6Items5.SetActive(true);
+        iTween.MoveTo(Button6Items, iTween.Hash("y", 0, "time", 0.5f, "islocal", true, "easeType", iTween.EaseType.linear));
+
         SelectOK();
 }
-public void WorkingDay()
+    //mode=0　セーブなし開始
+    //mode=1 セーブあり開始
+    //mode=2　道中
+public void WorkingDay(int Mode)
     {
-        //客の生成
-        GetComponent<LvDesignController>().MakeCustomerNormal();
 
-        //日付を経過させる
-        GetComponent<StatGameController>().DaysUp(1);
+        //客の生成
+        if (Mode==0)
+        {
+            //初期客の生成
+            GetComponent<LvDesignController>().MakeCustomerFirst();
+        }
+        else if(Mode==1)
+        {
+            //セーブ客の生成
+            GetComponent<LvDesignController>().MakeSavedCustomer();
+        }
+        else
+        {
+            //通常客の生成
+            GetComponent<LvDesignController>().MakeCustomerNormal();
+        }
 
         CustomerStart1();
         CustomerStart2();
@@ -2643,7 +2757,7 @@ public void WorkingDay()
         SelectButtonOK.GetComponent<Button>().interactable = false;
 
         Button6Items.GetComponent<RectTransform>().localPosition = new Vector3(0f,800f,0f);
-        Hand.GetComponent<RectTransform>().localPosition = new Vector3(0f, 345f, 0f);
+      //  Hand.GetComponent<RectTransform>().localPosition = new Vector3(0f, 345f, 0f);
 
         SelectItem1.GetComponent<RectTransform>().sizeDelta=new Vector2(335f, 255f);
         SelectItem2.GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 255f);

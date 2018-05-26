@@ -135,7 +135,7 @@ public class CustomerController : MonoBehaviour
             }
             Count++;
         }
-        Debug.Log("C="+CountC);
+   //     Debug.Log("C="+CountC);
         string[,] CustmerC;
         string[,] CustmerUC;
         string[,] CustmerR;

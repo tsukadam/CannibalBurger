@@ -226,11 +226,74 @@ public class StatPlayer : MonoBehaviour {
     public string MaxGetG5Key = "MaxgetG5";
     public string CountPlay5Key = "CountPlay5";
 
+    //休日アクション値のセーブ
+    public string ModifyGKey = " ModifyGKey";
+    public string ModifySusKey = " ModifySusKey";
+
+    public string PoliceCost1Key = " PoliceCost1Key";
+    public string PoliceReturn1Key = " PoliceReturn1Key";
+    public string PoliceCost2Key = " PoliceCost2Key";
+    public string PoliceReturn2Key = " PoliceReturn2Key";
+
+    public string ChurchReturn1Key = " ChurchReturn1Key";
+    public string ChurchReturn2Key = " ChurchReturn2Key";
+
+    public string HomeReturn1Key = " HomeReturn1Key";
+    public string HomeReturn2Key = " HomeReturn2Key";
+
+    public string MarketItem1NameKey = " MarketItem1NameKey";
+    public string MarketItem1PicturePathKey = " MarketItem1PicturePathKey";
+    public string MarketItem1PowerKey = " MarketItem1PowerKey";
+    public string MarketItem1ColorKey = " MarketItem1ColorKey";
+    public string MarketItem1SusKey = " MarketItem1SusKey";
+    public string MarketItem1CostKey = " MarketItem1CostKey";
+
+    public string MarketItem2NameKey = " MarketItem2NameKey";
+    public string MarketItem2PicturePathKey = " MarketItem2PicturePathKey";
+    public string MarketItem2PowerKey = " MarketItem2PowerKey";
+    public string MarketItem2ColorKey = " MarketItem2ColorKey";
+    public string MarketItem2SusKey = " MarketItem2SusKey";
+    public string MarketItem2CostKey = " MarketItem2CostKey";
+
+
     //セーブ中断のセーブ処理部分
     public void Save()
     {
+            //Ｇ，カルマ取得修正率
+    int ModifyG = StatGame.GetComponent<StatGame>().ModifyG;
+    int ModifySus = StatGame.GetComponent<StatGame>().ModifySus;
 
-        int NowLv = StatGame.GetComponent<StatGame>().StatLv;
+    //休日行動のステ
+    int PoliceCost1 = StatGame.GetComponent<StatGame>().PoliceCost1;
+    int PoliceReturn1 = StatGame.GetComponent<StatGame>().PoliceReturn1;
+    int PoliceCost2 = StatGame.GetComponent<StatGame>().PoliceCost2;
+    int PoliceReturn2 = StatGame.GetComponent<StatGame>().PoliceReturn2;
+
+    int ChurchReturn1 = StatGame.GetComponent<StatGame>().ChurchReturn1;
+    int ChurchReturn2 = StatGame.GetComponent<StatGame>().ChurchReturn2;
+
+    int HomeReturn1 = StatGame.GetComponent<StatGame>().HomeReturn1;
+    int HomeReturn2 = StatGame.GetComponent<StatGame>().HomeReturn2;
+
+        string MarketItem1Name = StatGame.GetComponent<StatGame>().MarketItem1[0];
+        string MarketItem1PicturePath = StatGame.GetComponent<StatGame>().MarketItem1[1];
+        string MarketItem1Power = StatGame.GetComponent<StatGame>().MarketItem1[2];
+        string MarketItem1Color = StatGame.GetComponent<StatGame>().MarketItem1[3];
+        string MarketItem1Sus = StatGame.GetComponent<StatGame>().MarketItem1[4];
+
+
+        string MarketItem2Name = StatGame.GetComponent<StatGame>().MarketItem2[0];
+        string MarketItem2PicturePath = StatGame.GetComponent<StatGame>().MarketItem2[1];
+        string MarketItem2Power = StatGame.GetComponent<StatGame>().MarketItem2[2];
+        string MarketItem2Color = StatGame.GetComponent<StatGame>().MarketItem2[3];
+        string MarketItem2Sus = StatGame.GetComponent<StatGame>().MarketItem2[4];
+
+        int MarketCost1 = StatGame.GetComponent<StatGame>().MarketCost1;
+    int MarketCost2 = StatGame.GetComponent<StatGame>().MarketCost2;
+
+
+
+    int NowLv = StatGame.GetComponent<StatGame>().StatLv;
         int NowDays = StatGame.GetComponent<StatGame>().StatDays;
         float NowSus = StatGame.GetComponent<StatGame>().StatSus;
         int NowExp = StatGame.GetComponent<StatGame>().StatExp;
@@ -331,11 +394,41 @@ public class StatPlayer : MonoBehaviour {
         PlayerPrefs.SetString(Item4ColorKey, Item4Color);
         PlayerPrefs.SetString(Item4SusKey, Item4Sus);
 
+        PlayerPrefs.SetInt(ModifyGKey, ModifyG);
+        PlayerPrefs.SetInt(ModifySusKey, ModifySus);
 
-    }
-    //セーブ情報のロード
-    //ゲーム開始時に一回だけ呼ばれる
-    public void Load()
+        PlayerPrefs.SetInt(PoliceCost1Key, PoliceCost1);
+        PlayerPrefs.SetInt(PoliceReturn1Key, PoliceReturn1);
+        PlayerPrefs.SetInt(PoliceCost2Key, PoliceCost2);
+        PlayerPrefs.SetInt(PoliceReturn2Key, PoliceReturn2);
+
+        PlayerPrefs.SetInt(ChurchReturn1Key, ChurchReturn1);
+        PlayerPrefs.SetInt(ChurchReturn2Key, ChurchReturn2);
+
+        PlayerPrefs.SetInt(HomeReturn1Key, HomeReturn1);
+        PlayerPrefs.SetInt(HomeReturn2Key, HomeReturn2);
+
+        PlayerPrefs.SetInt(MarketItem1CostKey, MarketCost1);
+        PlayerPrefs.SetInt(MarketItem2CostKey, MarketCost2);
+
+        PlayerPrefs.SetString(MarketItem1NameKey, MarketItem1Name);
+        PlayerPrefs.SetString(MarketItem1PicturePathKey, MarketItem1PicturePath);
+        PlayerPrefs.SetString(MarketItem1PowerKey, MarketItem1Power);
+        PlayerPrefs.SetString(MarketItem1ColorKey, MarketItem1Color);
+        PlayerPrefs.SetString(MarketItem1SusKey, MarketItem1Sus);
+
+        PlayerPrefs.SetString(MarketItem2NameKey, MarketItem2Name);
+        PlayerPrefs.SetString(MarketItem2PicturePathKey, MarketItem2PicturePath);
+        PlayerPrefs.SetString(MarketItem2PowerKey, MarketItem2Power);
+        PlayerPrefs.SetString(MarketItem2ColorKey, MarketItem2Color);
+        PlayerPrefs.SetString(MarketItem2SusKey, MarketItem2Sus);
+
+
+
+}
+//セーブ情報のロード
+//ゲーム開始時に一回だけ呼ばれる
+public void Load()
     {
         if (ExistSave == 1)
         {
@@ -390,6 +483,41 @@ public class StatPlayer : MonoBehaviour {
             MaxCustomer = PlayerPrefs.GetInt(SaveCustomerKey, 0);
             MaxCustomerVictory = PlayerPrefs.GetInt(SaveCustomerVictoryKey, 0);
             MaxKill = PlayerPrefs.GetInt(SaveKillKey, 0);
+
+            StatGame.GetComponent<StatGame>().ModifyG= PlayerPrefs.GetInt(ModifyGKey, 0);
+            StatGame.GetComponent<StatGame>().ModifySus = PlayerPrefs.GetInt(ModifySusKey, 0);
+
+            StatGame.GetComponent<StatGame>().PoliceCost1 = PlayerPrefs.GetInt(PoliceCost1Key, 0);
+            StatGame.GetComponent<StatGame>().PoliceReturn1 = PlayerPrefs.GetInt(PoliceReturn1Key, 0);
+            StatGame.GetComponent<StatGame>().PoliceCost2 = PlayerPrefs.GetInt(PoliceCost2Key, 0);
+            StatGame.GetComponent<StatGame>().PoliceReturn2 = PlayerPrefs.GetInt(PoliceReturn2Key, 0);
+
+            StatGame.GetComponent<StatGame>().ChurchReturn1 = PlayerPrefs.GetInt(ChurchReturn1Key, 0);
+            StatGame.GetComponent<StatGame>().ChurchReturn2 = PlayerPrefs.GetInt(ChurchReturn2Key, 0);
+
+            StatGame.GetComponent<StatGame>().HomeReturn1 = PlayerPrefs.GetInt(HomeReturn1Key, 0);
+            StatGame.GetComponent<StatGame>().HomeReturn2 = PlayerPrefs.GetInt(HomeReturn2Key, 0);
+
+            StatGame.GetComponent<StatGame>().MarketCost1 = PlayerPrefs.GetInt(MarketItem1CostKey, 0);
+            StatGame.GetComponent<StatGame>().MarketCost2 = PlayerPrefs.GetInt(MarketItem2CostKey, 0);
+
+            string[] MarketItem1 = { "None", "None", "None", "None", "None" };//
+            string[] MarketItem2 = { "None", "None", "None", "None", "None" };//
+
+            MarketItem1[0] = PlayerPrefs.GetString(MarketItem1NameKey);
+            MarketItem1[1] = PlayerPrefs.GetString(MarketItem1PicturePathKey);
+            MarketItem1[2] = PlayerPrefs.GetString(MarketItem1PowerKey);
+            MarketItem1[3] = PlayerPrefs.GetString(MarketItem1ColorKey);
+            MarketItem1[4] = PlayerPrefs.GetString(MarketItem1SusKey);
+
+            MarketItem2[0] = PlayerPrefs.GetString(MarketItem2NameKey);
+            MarketItem2[1] = PlayerPrefs.GetString(MarketItem2PicturePathKey);
+            MarketItem2[2] = PlayerPrefs.GetString(MarketItem2PowerKey);
+            MarketItem2[3] = PlayerPrefs.GetString(MarketItem2ColorKey);
+            MarketItem2[4] = PlayerPrefs.GetString(MarketItem2SusKey);
+
+            StatGame.GetComponent<StatGame>().MarketItem1 = MarketItem1;
+            StatGame.GetComponent<StatGame>().MarketItem2 = MarketItem2;
 
             //ロードしたら情報は破棄する？
             //いまのところ残しておく、セーブ存在フラグは降ろした状態で書き込んでおくので不正出来ないはず

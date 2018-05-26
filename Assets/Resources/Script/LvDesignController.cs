@@ -626,7 +626,7 @@ public class LvDesignController : MonoBehaviour
         float FloatHp = (float)CustomerHp;
         float FloatColor = (float)RateColor;
         float Vic = (FloatItem * FloatColor / 100 - FloatHp) / FloatHp;
-        Debug.Log(UseItemPower+":"+CustomerHp+":"+RateColor+"="+Vic);
+//        Debug.Log(UseItemPower+":"+CustomerHp+":"+RateColor+"="+Vic);
         return Vic;
     }
 
@@ -680,15 +680,17 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         int PickSus = CommonItemPower/2;
         string PickSusString = PickSus.ToString();
 
-        string[] PickUpItem= { "ネズミにく", "NezunikuSyou", PickPowerString, "#d9cac7", PickSusString };
+        int ItemType = Random.Range(0, 1);
+        string[] PickUpItem = GetMarketItem(ItemType, "UC");
+
+
         return PickUpItem;
 
     }
     //レベルアップ時のSus減少計算して加算
     public void LvUpSaveSus()
     {
-        int NowLv = StatGame.GetComponent<StatGame>().StatLv;
-        GetComponent<StatGameController>().SusUp(-10);//常に１０下げる
+        GetComponent<StatGameController>().SusUp(LvUpSus*-1);
     }
 
     //休日行動のステ
@@ -813,16 +815,16 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         int SusInt = Mathf.RoundToInt(Sus);
 
         float Cost=0;
-        //大コスト　所持金の7%
-        //中コスト　所持金の3%
-        //小コスト　所持金の1%
-        float BigCost = 7f/100;
-        float MediumCost = 3f / 100;
-        float SmallCost = 1f/100;
-        
+        //大コスト　所持金の6%
+        //中コスト　所持金の2%
+        //小コスト　所持金の0.5%
+        float BigCost = 6f/100;
+        float MediumCost = 2f / 100;
+        float SmallCost = 5f/1000;
+
         //100~360
 
-        if(RandomPower<75f/100)//パワー75%以下
+        if (RandomPower<75f/100)//パワー75%以下
         {
             Cost += SmallCost;
         }
@@ -853,16 +855,24 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         }
         else
         {
-            Cost =Cost/2;
         }
 
-        Debug.Log("FloatCost:"+Cost);
+        //レアだと高く
+        if (Rarerity == "R") { Cost = Cost * Random.Range(110f / 100, 150f / 100); }
+        else { Cost = Cost * Random.Range(85f / 100, 100f / 100); }
+
+        //Meatだと高く
+        if (ItemType == 0) { Cost = Cost * Random.Range(85f / 100, 100f / 100); }
+        else { Cost = Cost * Random.Range(110f / 100, 150f / 100); }
+
+
+        //Debug.Log("FloatCost:"+Cost);
         float MyG = (float)StatGame.GetComponent<StatGame>().StatG;
         Cost = Cost * MyG;
-        Debug.Log("GCost:" + Cost);
+        //Debug.Log("GCost:" + Cost);
 
         int CostInt = Mathf.RoundToInt(Cost);
-        Debug.Log("IntCost:" + Cost);
+        //Debug.Log("IntCost:" + Cost);
 
         ReturnItem[0] = GetItem[0];
         ReturnItem[1] = GetItem[1];

@@ -11,7 +11,7 @@ public class StatGameController : MonoBehaviour
     public GameObject Script;
     public GameObject StatGame;
     //タップ切るための板
-        public GameObject TapBlockSus;
+    public GameObject TapBlockSus;
     public GameObject TapBlockG;
     public GameObject TapBlockExp;
 
@@ -122,6 +122,11 @@ public class StatGameController : MonoBehaviour
     public Text MarketSus2;
     public Text MarketCost2;
 
+    public GameObject Modify;
+    public GameObject ModifyYa;
+    public GameObject ModifyLine;
+    public GameObject Youbi;
+
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
@@ -131,7 +136,7 @@ public class StatGameController : MonoBehaviour
 
     //休日のアイテム描写
     //waku=0 左側 =1 右側　
-    public void DrawMarketItem(string[] MarketItem,int cost,int waku)
+    public void DrawMarketItem(string[] MarketItem, int cost, int waku)
     {
 
         string[] UseItem;
@@ -151,7 +156,7 @@ public class StatGameController : MonoBehaviour
 
             MarketCost1.text = cost.ToString();
         }
-        else{
+        else {
             UsePower = MarketPower2;
             UseSus = MarketSus2;
             UseImage = MarketPict2;
@@ -160,6 +165,8 @@ public class StatGameController : MonoBehaviour
             MarketCost2.text = cost.ToString();
         }
 
+        MarketCost1.color = GetComponent<GameController>().GYellow;
+        MarketCost2.color = GetComponent<GameController>().GYellow;
 
         DrowItemAll(UseItem, UsePower, UseSus, UseName, UseImage);
 
@@ -195,10 +202,10 @@ public class StatGameController : MonoBehaviour
         Text UseSus;
         Text UseName;
         GameObject UseImage;
-                UseItem = DisposeItem;
-                UsePower = DisPosePower;
-                UseSus = DisPoseSus;
-                UseImage = DisPoseImage;
+        UseItem = DisposeItem;
+        UsePower = DisPosePower;
+        UseSus = DisPoseSus;
+        UseImage = DisPoseImage;
         UseName = DisPoseText;
 
         DrowItemAll(UseItem, UsePower, UseSus, UseName, UseImage);
@@ -210,7 +217,7 @@ public class StatGameController : MonoBehaviour
         string[] UseItem;
         Text UsePower;
         Text UseSus;
-    
+
         GameObject UseImage;
         int Count = 0;
         while (Count < 6)
@@ -220,7 +227,7 @@ public class StatGameController : MonoBehaviour
                 UseItem = StatGame.GetComponent<StatGame>().Item1;
                 UsePower = SelectItemItem1Power;
                 UseSus = SelectItemItem1Sus;
-                UseImage = SelectItemItem1Image;;
+                UseImage = SelectItemItem1Image; ;
             }
             else if (Count == 1)
             {
@@ -236,7 +243,7 @@ public class StatGameController : MonoBehaviour
                 UseSus = SelectItemItem3Sus;
                 UseImage = SelectItemItem3Image;
             }
-       
+
             else {
                 UseItem = StatGame.GetComponent<StatGame>().Item4;
                 UsePower = SelectItemItem4Power;
@@ -357,7 +364,7 @@ public class StatGameController : MonoBehaviour
                 UseName = Item4_4Text;
             }
 
-            DrowItemAll(UseItem,UsePower,UseSus,UseName,UseImage);
+            DrowItemAll(UseItem, UsePower, UseSus, UseName, UseImage);
             Count++;
         }
 
@@ -405,7 +412,7 @@ public class StatGameController : MonoBehaviour
         UsePower.text = PowerText;
         UseImage.GetComponent<Image>().sprite = SpriteImage;
         UseImage.GetComponent<Image>().color = ColorColor;
-        Debug.Log(SusText);
+        // Debug.Log(SusText);
         if (SusText == "None" | SusText == "0") { SusText = " "; }
         UseSus.text = SusText;
 
@@ -469,7 +476,7 @@ public class StatGameController : MonoBehaviour
             yield return new WaitForSeconds(0.05f);//描画一回にかける遅延時間
             i = i + Plus;
         }
-        yield return new WaitUntil(() => i >= iCount-1);
+        yield return new WaitUntil(() => i >= iCount - 1);
 
         StatG = Goal;
         //        Debug.Log("StatG: " + Moto + " → " + Goal);
@@ -497,7 +504,7 @@ public class StatGameController : MonoBehaviour
         float Moto = StatSus;//元のステータス値
         float Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
-        else if (Goal > 100) { Goal = 101.0f;Count = 100 - Moto; }//結果が１００以上なら１００
+        else if (Goal > 100) { Goal = 101.0f; Count = 100 - Moto; }//結果が１００以上なら１００
         float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
         float iCount = Mathf.Abs(Count / Memori);
         float Start = Moto - Moto % Memori;//開始地点を丸める
@@ -509,10 +516,10 @@ public class StatGameController : MonoBehaviour
 
             if (Count >= 0)
             {
-                AnimeSus +=Memori;
+                AnimeSus += Memori;
             }
             else {
-                AnimeSus -=Memori;
+                AnimeSus -= Memori;
             }
             if (AnimeSus < 0) { AnimeSus = 0; break; }
             if (AnimeSus > 100) { AnimeSus = 100; break; }
@@ -529,40 +536,79 @@ public class StatGameController : MonoBehaviour
     //Exp増減
     public void ExpUp(int Count)
     {
-       StartCoroutine("ExpUpCoroutine", Count);
+        StartCoroutine("ExpUpCoroutine", Count);
     }
     IEnumerator ExpUpCoroutine(int Count)
     {
         TapBlockExp.SetActive(true);
         EventSystem.SetActive(false);
+        int StatSus = StatGame.GetComponent<StatGame>().StatExp;
+        float AnimeSus = StatGame.GetComponent<StatGame>().StatExp;
 
-
-        int StatExp = StatGame.GetComponent<StatGame>().StatExp;
-        int AnimeExp = StatGame.GetComponent<StatGame>().StatExp;
-
-        int Moto = StatExp;//元のステータス値
+        float BarSize = 720;//バー全体の長さ
+        float MemoriSize = 10;//１目盛りの長さ
+        int Moto = StatSus;//元のステータス値
         int Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
         else if (Goal > 100) { Goal = 100; Count = 100 - Moto; }//結果が１００以上なら１００
-        int iCount = Count;
-        int Start = Moto;//開始地点を丸める
-        float AnimeExpFloat = (float)Start;
+        float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
+        float iCount = Mathf.Abs(Count / Memori);
+        float Start = Moto - Moto % Memori;//開始地点を丸める
 
+        AnimeSus = Start;
         int i;
         for (i = 1; i <= iCount; i++)
         {
-            AnimeExpFloat += 1;
-            if (AnimeExp < 0) { AnimeExp = 0; break; }
-            if (AnimeExp > 100) { AnimeExp = 100; break; }
-            DrawExp2(AnimeExpFloat);
-            yield return new WaitForSeconds(0.005f);//描画一回にかける遅延時間
+
+            if (Count >= 0)
+            {
+                AnimeSus += Memori;
+            }
+            else {
+                AnimeSus -= Memori;
+            }
+            if (AnimeSus < 0) { AnimeSus = 0; break; }
+            if (AnimeSus > 100) { AnimeSus = 100; break; }
+            DrawExp2(AnimeSus);
+
+            yield return new WaitForSeconds(1.0f / iCount);//描画一回にかける遅延時間
         }
         StatGame.GetComponent<StatGame>().StatExp = Goal;
-
-
         DrawExp();
+        //       Debug.Log("StatSus: " + Moto + " → " + Goal);
         TapBlockExp.SetActive(false);
         EventSystem.SetActive(true);
+        /*        TapBlockExp.SetActive(true);
+                EventSystem.SetActive(false);
+
+
+                int StatExp = StatGame.GetComponent<StatGame>().StatExp;
+                int AnimeExp = StatGame.GetComponent<StatGame>().StatExp;
+
+                int Moto = StatExp;//元のステータス値
+                int Goal = Moto + Count;//変化後のステータス値
+                if (Goal < 0) { Goal = 0; }//結果が０以下なら０
+                else if (Goal > 100) { Goal = 100; Count = 100 - Moto; }//結果が１００以上なら１００
+                int iCount = Count;
+                int Start = Moto;//開始地点を丸める
+                float AnimeExpFloat = (float)Start;
+
+                int i;
+                for (i = 1; i <= iCount; i++)
+                {
+                    AnimeExpFloat += 1;
+                    if (AnimeExp < 0) { AnimeExp = 0; break; }
+                    if (AnimeExp > 100) { AnimeExp = 100; break; }
+                    DrawExp2(AnimeExpFloat);
+                    yield return new WaitForSeconds(0.005f);//描画一回にかける遅延時間
+                }
+                StatGame.GetComponent<StatGame>().StatExp = Goal;
+
+
+                DrawExp();
+                TapBlockExp.SetActive(false);
+                EventSystem.SetActive(true);
+                */
     }
 
     //Lv増減
@@ -591,7 +637,7 @@ public class StatGameController : MonoBehaviour
         int StatG = StatGame.GetComponent<StatGame>().StatG;//所持金
         string StatGText = StatG.ToString();
         TextG.color = GCol;
-            TextG.text = StatGText;
+        TextG.text = StatGText;
     }
     //Sus描画
     public void DrawSus()
@@ -608,18 +654,78 @@ public class StatGameController : MonoBehaviour
     //Exp描画（アニメーション用）
     public void DrawExp2(float AnimeExp)
     {
-        ExpCol = GetComponent<GameController>().ExpBlue;
-        BarExpOb.GetComponent<Image>().color = ExpCol;
-        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 105);
+        //ExpCol = GetComponent<GameController>().ExpBlue;
+        BarExpOb.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        BarExp.sizeDelta = new Vector2(720 * AnimeExp / 100, 25);
     }
 
+    //曜日描画
+    public void DrawYoubi() {
+        int Day = StatGame.GetComponent<StatGame>().StatDays;
+        string ImagePath="";
+        Sprite SpriteImage;
 
+        if (Day % 7 == 1){ImagePath = "Stat/" + "you_mon";}
+        else if (Day % 7 == 2) { ImagePath = "Stat/" + "you_tue"; }
+        else if (Day % 7 == 3) { ImagePath = "Stat/" + "you_wed"; }
+        else if (Day % 7 == 4) { ImagePath = "Stat/" + "you_thu"; }
+        else if (Day % 7 == 5) { ImagePath = "Stat/" + "you_fri"; }
+        else if (Day % 7 == 6) { ImagePath = "Stat/" + "you_sat"; }
+        else{ ImagePath = "Stat/" + "you_sun"; }
+
+        SpriteImage = Resources.Load<Sprite>(ImagePath);
+        Youbi.GetComponent<Image>().sprite = SpriteImage;
+
+    }
+
+    //Modify描画
+    public void DrawModify()
+    {
+        int ModifyGValue = StatGame.GetComponent<StatGame>().ModifyG;
+        int ModifySusValue = StatGame.GetComponent<StatGame>().ModifySus;
+        string ImagePathYa;
+        Sprite SpriteImageYa;
+        string ImagePathLine;
+        Sprite SpriteImageLine;
+if(ModifyGValue != 0& ModifySusValue != 0) { Debug.Log("SusとG両方修正は出来ません　両方表示しません"); }
+        else if (ModifyGValue != 0 & ModifySusValue == 0)
+        {
+            Modify.SetActive(true);
+            ImagePathYa = "Stat/" + "Pict_ModiYaAge";
+            SpriteImageYa = Resources.Load<Sprite>(ImagePathYa);
+            ModifyYa.GetComponent<Image>().sprite = SpriteImageYa;
+            ModifyYa.GetComponent<Image>().color = GetComponent<GameController>().GYellow;
+
+            ImagePathLine = "Stat/" + "Pict_ModiLineG";
+            SpriteImageLine = Resources.Load<Sprite>(ImagePathLine);
+            ModifyLine.GetComponent<Image>().sprite = SpriteImageLine;
+        }
+        else if (ModifySusValue != 0 & ModifyGValue == 0)
+        {
+            Modify.SetActive(true);
+            ImagePathYa = "Stat/" + "Pict_ModiYaSage";
+            SpriteImageYa = Resources.Load<Sprite>(ImagePathYa);
+            ModifyYa.GetComponent<Image>().sprite = SpriteImageYa;
+            ModifyYa.GetComponent<Image>().color = GetComponent<GameController>().ExpBlue;
+
+            ImagePathLine = "Stat/" + "Pict_ModiLineK";
+            SpriteImageLine = Resources.Load<Sprite>(ImagePathLine);
+            ModifyLine.GetComponent<Image>().sprite = SpriteImageLine;
+
+
+        }
+        else
+        {
+            Modify.SetActive(false);
+
+        }
+    }
     //Exp描画
     public void DrawExp()
     {
         int StatExp = StatGame.GetComponent<StatGame>().StatExp;
-        BarExpOb.GetComponent<Image>().color = ExpCol;
-        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 105);
+        BarExpOb.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 25);
     }
 
     //レベル描画
