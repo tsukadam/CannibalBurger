@@ -129,6 +129,7 @@ public class GameController : MonoBehaviour
     public Text PopupLvUpText;
     public Text PopupLvUpSusText;
     public GameObject PopupGameOver;
+    public GameObject ButtonActionBack;
 
     //メッセージ欄
     public GameObject Message;
@@ -2344,6 +2345,8 @@ public void SelectOK()
 
     public void HolyDaySelect()
     {
+        GetComponent<StoryController>().SkipActionReadLine();
+
         MessageDraw("どこ に でかけますか？");
         //行先選択を表示
         PopupSelectAction.SetActive(true);
@@ -2353,11 +2356,11 @@ public void SelectOK()
         ActButtonMarket.SetActive(false);
         PopupAction.SetActive(false);
         ActMessageText.text = "";
-
     }
 
     public void ActionPolice()
     {
+        ButtonActionBack.SetActive(true);
         PopupSelectAction.SetActive(false);
         PopupAction.SetActive(true);
         ActButtonPolice.SetActive(true);
@@ -2375,12 +2378,13 @@ public void SelectOK()
         ActPlaceText.text = "こうばん";
 
         ActMessage.SetActive(true);
-        ActMessageText.text="なんの よう かね。\nいそがしいんだが…";
+        GetComponent<StoryController>().ActionReadLine("なんの よう かね。\nいそがしいんだが…");
         MessageDraw("タップ で わいろ");
 
     }
     public void ActionChurch()
     {
+        ButtonActionBack.SetActive(true);
         PopupSelectAction.SetActive(false);
         PopupAction.SetActive(true);
         ActButtonChurch.SetActive(true);
@@ -2399,12 +2403,14 @@ public void SelectOK()
         ActPlaceText.text = "きょうかい";
 
         ActMessage.SetActive(true);
-        ActMessageText.text = "ようこそ。\nともに いのりましょう";
+        GetComponent<StoryController>().ActionReadLine("ようこそ。\nともに いのりましょう");
+
         MessageDraw("タップ で いのる");
 
     }
     public void ActionHome()
     {
+        ButtonActionBack.SetActive(true);
         PopupSelectAction.SetActive(false);
         PopupAction.SetActive(true);
         ActButtonHome.SetActive(true);
@@ -2423,12 +2429,14 @@ public void SelectOK()
         ActPlaceText.text = "ホーム";
 
         ActMessage.SetActive(true);
-        ActMessageText.text = "しこみでも しようか。";
+        GetComponent<StoryController>().ActionReadLine("しこみでも しようか。");
+
         MessageDraw("タップ で しこみ");
 
     }
     public void ActionMarket()
     {
+        ButtonActionBack.SetActive(true);
         PopupSelectAction.SetActive(false);
         PopupAction.SetActive(true);
         ActButtonMarket.SetActive(true);
@@ -2448,13 +2456,17 @@ public void SelectOK()
 
 
         ActMessage.SetActive(true);
-        ActMessageText.text = "らっしゃい…。\nいま あるのは これだけだ。";
+        GetComponent<StoryController>().ActionReadLine("らっしゃい…。\nいま あるのは これだけだ。");
         MessageDraw("タップ で こうにゅう");
+
     }
 
     //行動の結果を反映
     public void ActionPoliceResult(int type)
     {
+        ButtonActionBack.SetActive(false);
+        GetComponent<StoryController>().SkipActionReadLine();
+
         int Cost;
         int Return;
         if (type == 0)
@@ -2472,7 +2484,7 @@ public void SelectOK()
         GetComponent<StatGameController>().SusUp(Return*-1);
         ActButtonPolice.SetActive(false);
 
-        ActMessageText.text = "オヤ おとしもの だね？\nあずかって おこう";
+        GetComponent<StoryController>().ActionReadLine("オヤ おとしもの だね？\nあずかって おこう");
         ActionEndOK.SetActive(true);
         //手持ちボタン非表示
         Hand.SetActive(false);
@@ -2481,6 +2493,8 @@ public void SelectOK()
 
     public void ActionChurchResult(int type)
     {
+        ButtonActionBack.SetActive(false);
+        GetComponent<StoryController>().SkipActionReadLine();
         int Return;
         if (type == 0)
         {
@@ -2498,10 +2512,10 @@ public void SelectOK()
         ActButtonChurch.SetActive(false);
         if (type == 0)
         {
-            ActMessageText.text = "あなたの つみ が\nやわらぎます ように…";
+            GetComponent<StoryController>().ActionReadLine("あなたの つみ が\nやわらぎます ように…");
         }
         else {
-            ActMessageText.text = "あなたの うりあげ が\nふえます ように…";
+            GetComponent<StoryController>().ActionReadLine("あなたの うりあげ が\nふえます ように…");
         }
         GetComponent<StatGameController>().DrawModify();
 
@@ -2514,6 +2528,8 @@ public void SelectOK()
 
     public void ActionHomeResult(int type)
     {
+        ButtonActionBack.SetActive(false);
+        GetComponent<StoryController>().SkipActionReadLine();
         int Return;
         if (type == 0)
         {
@@ -2608,12 +2624,14 @@ public void SelectOK()
             }
         }
         ActButtonHome.SetActive(false);
+        ButtonActionBack.SetActive(false);
+        GetComponent<StoryController>().SkipActionReadLine();
         if (type == 0)
         {
-            ActMessageText.text = "きよく なれ。\nきよく なれ。";
+            GetComponent<StoryController>().ActionReadLine("きよく なれ。\nきよく なれ。");
         }
         else {
-            ActMessageText.text = "おいしく なれ。\nおいしく なれ。";
+            GetComponent<StoryController>().ActionReadLine("おいしく なれ。\nおいしく なれ。");
         }
         ActionEndOK.SetActive(true);
         //手持ちボタン非表示
