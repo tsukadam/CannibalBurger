@@ -6,9 +6,9 @@ using System.Collections;
 
 public class GameController : MonoBehaviour
 {
-    public int FPS=60;//FPS設定
- 
-    public int ITweenCount=0;
+    public int FPS = 60;//FPS設定
+
+    public int ITweenCount = 0;
     //プレイヤーstat
     public GameObject StatPlayer;
     //ゲームstat
@@ -26,10 +26,13 @@ public class GameController : MonoBehaviour
     public GameObject HighScore;
     public GameObject AdsDelete;
 
+
     //各パーツ
     public GameObject CustomerField;
     public GameObject CustomerFieldBack;
     public GameObject CustomerFieldCollider;
+    public GameObject Status;
+    public GameObject StoryAll;
 
     //ボタン類
     public GameObject ButtonSave;
@@ -129,6 +132,7 @@ public class GameController : MonoBehaviour
     public Text PopupLvUpText;
     public Text PopupLvUpSusText;
     public GameObject PopupGameOver;
+    public Text PopupGameOverText;
     public GameObject ButtonActionBack;
 
     //メッセージ欄
@@ -165,9 +169,37 @@ public class GameController : MonoBehaviour
     //Gの色
     public Color GYellow;
 
+    //ゲームスタート前オープニング
+    public void GameOpening() {
+        //ゲーム画面への遷移
+        Menu.SetActive(false);
+        HighScore.SetActive(false);
+        AdsDelete.SetActive(false);
+        Game.SetActive(true);
+        Status.SetActive(false);
+        StoryAll.SetActive(false);
+
+        if (StatPlayer.GetComponent<StatPlayer>().FlagStoryOP == 0)//オープニング見ていなければ表示
+        {
+            StatPlayer.GetComponent<StatPlayer>().FlagStoryOP = 1;
+            StatPlayer.GetComponent<StatPlayer>().SaveFlag();
+
+            GetComponent<StoryController>().StartStory("Opening");
+        }
+
+        else
+        {
+            GameStart();
+        }
+    }
+
     //ゲームスタート
     public void GameStart()
     {
+        //ゲーム画面への遷移
+        Status.SetActive(true);
+        StoryAll.SetActive(false);
+
 
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -175,11 +207,6 @@ public class GameController : MonoBehaviour
         //BGM
         GetComponent<SoundController>().PlayStoreBgm("StoreBgm1");
 
-        //ゲーム画面への遷移
-        Menu.SetActive(false);
-        HighScore.SetActive(false);
-        AdsDelete.SetActive(false);
-        Game.SetActive(true);
 
         //ボタン初期化
         ButtonSave.SetActive(false);
@@ -237,10 +264,10 @@ public class GameController : MonoBehaviour
         StatGame.GetComponent<StatGame>().MarketCost1 = 0;
         StatGame.GetComponent<StatGame>().MarketCost2 = 0;
 
-        StatGame.GetComponent<StatGame>().PoliceCost1=0;
-        StatGame.GetComponent<StatGame>().PoliceReturn1=0;
+        StatGame.GetComponent<StatGame>().PoliceCost1 = 0;
+        StatGame.GetComponent<StatGame>().PoliceReturn1 = 0;
         StatGame.GetComponent<StatGame>().PoliceCost2 = 0;
-        StatGame.GetComponent<StatGame>().PoliceReturn2 = 0;    
+        StatGame.GetComponent<StatGame>().PoliceReturn2 = 0;
         StatGame.GetComponent<StatGame>().ChurchReturn1 = 0;
         StatGame.GetComponent<StatGame>().ChurchReturn2 = 0;
         StatGame.GetComponent<StatGame>().HomeReturn1 = 0;
@@ -623,7 +650,7 @@ public class GameController : MonoBehaviour
 
 
     //フェードアウトアニメーション画像
-    private IEnumerator FadeOutCoroutine(GameObject ChangeObject,float Time)
+    private IEnumerator FadeOutCoroutine(GameObject ChangeObject, float Time)
     {
         int Count = 0;
         Color NowColor;
@@ -636,7 +663,7 @@ public class GameController : MonoBehaviour
             yield return new WaitForSeconds(Time / FPS);//遅延
             Count++;
         }
-        ChangeObject.GetComponent<Image>().color = new Color(0,0,0,0);
+        ChangeObject.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         yield return null;
     }
     //色を変えるアニメーションテキスト
@@ -670,9 +697,9 @@ public class GameController : MonoBehaviour
         while (Count <= FPS * Time)
         {
             NowColor = ChangeObject.GetComponent<Image>().color;
-            NowColor.r += (GoColor.r-MotoColor.r) / (FPS * Time);
-            NowColor.g += (GoColor.g- MotoColor.g) / (FPS * Time);
-            NowColor.b += (GoColor.b- MotoColor.b) / (FPS * Time);
+            NowColor.r += (GoColor.r - MotoColor.r) / (FPS * Time);
+            NowColor.g += (GoColor.g - MotoColor.g) / (FPS * Time);
+            NowColor.b += (GoColor.b - MotoColor.b) / (FPS * Time);
             NowColor.a += (GoColor.a - MotoColor.a) / (FPS * Time);
             ChangeObject.GetComponent<Image>().color = NowColor;
 
@@ -684,7 +711,7 @@ public class GameController : MonoBehaviour
     }
 
     //XYで大きさを変えるアニメーション
-    private IEnumerator XYChangeCoroutine(GameObject ChangeObject, float GoX, float GoY,float Time)
+    private IEnumerator XYChangeCoroutine(GameObject ChangeObject, float GoX, float GoY, float Time)
     {
         int Count = 0;
         Vector2 NowSize;
@@ -694,8 +721,8 @@ public class GameController : MonoBehaviour
         {
 
             NowSize = ChangeObject.GetComponent<RectTransform>().sizeDelta;
-            NowSize.x +=  (GoX- MotoSizeX) / (FPS * Time);
-            NowSize.y += (GoY- MotoSizeY) / (FPS * Time);
+            NowSize.x += (GoX - MotoSizeX) / (FPS * Time);
+            NowSize.y += (GoY - MotoSizeY) / (FPS * Time);
             ChangeObject.GetComponent<RectTransform>().sizeDelta = NowSize;
 
             yield return new WaitForSeconds(Time / FPS);//遅延
@@ -705,8 +732,8 @@ public class GameController : MonoBehaviour
 
         yield return null;
     }
-//Feed演出
-public void GoAttack()
+    //Feed演出
+    public void GoAttack()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -812,7 +839,7 @@ public void GoAttack()
         //バンズはさむ
         iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5, "easeType", iTween.EaseType.linear));
         iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5, "easeType", iTween.EaseType.linear));
-      //  GetComponent<SoundController>().PlaySE("BansDon");
+        //  GetComponent<SoundController>().PlaySE("BansDon");
 
         yield return new WaitForSeconds(Time5);//遅延
 
@@ -854,13 +881,13 @@ public void GoAttack()
     }
 
     //点滅
-    private IEnumerator Blink(GameObject Customer,GameObject Base,Color GOColor,float DelayTime,int mode)
+    private IEnumerator Blink(GameObject Customer, GameObject Base, Color GOColor, float DelayTime, int mode)
     {
         yield return new WaitForSeconds(DelayTime);//遅延
         Customer.GetComponent<Image>().color = GOColor;
-        if (mode==0)
+        if (mode == 0)
         {
-            Base.GetComponent<Image>().color = new Color(0,0,0,0);
+            Base.GetComponent<Image>().color = new Color(0, 0, 0, 0);
         }
         else
         {
@@ -869,7 +896,7 @@ public void GoAttack()
         yield return null;
     }
     //Gの移動
-    private IEnumerator GMove(GameObject G,Vector3 GoPosition, float GoTime,float DelayTime)
+    private IEnumerator GMove(GameObject G, Vector3 GoPosition, float GoTime, float DelayTime)
     {
         yield return new WaitForSeconds(DelayTime);//遅延
         if (G != null) {
@@ -954,32 +981,32 @@ public void GoAttack()
             //Powerを比べる
             //勝利点算出
             VictoryPoint = GetComponent<LvDesignController>().VictoryCondition(UseItemPower, CustomerHp, RateColor);
-            HpPoint = VictoryPoint*-1f;
+            HpPoint = VictoryPoint * -1f;
             if (HpPoint < 0) { HpPoint = 0; }
 
-            
+
             //点滅演出
             FloatCount = (float)Count * 1.0f;
             //Baseを取得
             Base = Customers[Count].transform.Find("CustomerBase").gameObject;
 
 
-            if (VictoryPoint >= 0& VictoryPoint < 1.5f)
+            if (VictoryPoint >= 0 & VictoryPoint < 1.5f)
             {
 
-                StartCoroutine(Blink(Customers[Count], Base,new Color(0, 0, 0, 0), FloatCount / 16, 0));
-                StartCoroutine(Blink(Customers[Count], Base,CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
-               // Debug.Log("Blink1");
+                StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), FloatCount / 16, 0));
+                StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
+                // Debug.Log("Blink1");
 
             }
-            else if(VictoryPoint >= 1.5f&VictoryPoint<2.0f) {
+            else if (VictoryPoint >= 1.5f & VictoryPoint < 2.0f) {
                 StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
                 StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 2 / 8 + FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 3 / 6 + FloatCount / 16, 1));
-           // Debug.Log("Blink2");
-        }
-        else if (VictoryPoint > 2.0f)
+                // Debug.Log("Blink2");
+            }
+            else if (VictoryPoint > 2.0f)
             {
                 StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 1 / 6 + FloatCount / 16, 1));
@@ -987,10 +1014,10 @@ public void GoAttack()
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 3 / 6 + FloatCount / 16, 1));
                 StartCoroutine(Blink(Customers[Count], Base, new Color(0, 0, 0, 0), BlinkTime * 4 / 8 + FloatCount / 16, 0));
                 StartCoroutine(Blink(Customers[Count], Base, CustomColor, BlinkTime * 5 / 6 + FloatCount / 16, 1));
-           // Debug.Log("Blink3");
+                // Debug.Log("Blink3");
 
 
-        }
+            }
 
             //HP演出
             //生成
@@ -1007,13 +1034,13 @@ public void GoAttack()
             HPwaku.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 1);
             HPwaku.GetComponent<RectTransform>().localPosition = new Vector3(0, 87f, 0);
             //大きさ変更
-            
-                        iTween.ScaleTo(HPwaku, iTween.Hash(
-                            "x", 1,
-                            "y", 1,
-                            "time", 0,
-                            "delay", BlinkTime/2, "easeType", iTween.EaseType.linear
-                            ));
+
+            iTween.ScaleTo(HPwaku, iTween.Hash(
+                "x", 1,
+                "y", 1,
+                "time", 0,
+                "delay", BlinkTime / 2, "easeType", iTween.EaseType.linear
+                ));
             /*
             iTween.MoveTo(HPwaku, iTween.Hash(
                 "position", new Vector3(0, 87f, 0f),
@@ -1043,19 +1070,19 @@ public void GoAttack()
                 Heart.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
                 Heart.GetComponent<RectTransform>().localPosition = new Vector3(0, 77f, 0);
                 //大きさ変更
-                                iTween.ScaleTo(Heart, iTween.Hash(
-                                    "x", 5,
-                                    "y", 5,
-                                    "time", 0,
-                                    "delay",BlinkTime, "easeType", iTween.EaseType.linear
-                                    ));
-                
-                                iTween.MoveTo(Heart, iTween.Hash(
-                                    "position", new Vector3(0, 87f, 0f),
-                                    "time", HeartTime,
-                                    "delay", BlinkTime,
-                                    "isLocal", true, "easeType", iTween.EaseType.easeOutElastic
-                                    ));
+                iTween.ScaleTo(Heart, iTween.Hash(
+                    "x", 5,
+                    "y", 5,
+                    "time", 0,
+                    "delay", BlinkTime, "easeType", iTween.EaseType.linear
+                    ));
+
+                iTween.MoveTo(Heart, iTween.Hash(
+                    "position", new Vector3(0, 87f, 0f),
+                    "time", HeartTime,
+                    "delay", BlinkTime,
+                    "isLocal", true, "easeType", iTween.EaseType.easeOutElastic
+                    ));
 
 
                 //タグをつける
@@ -1069,22 +1096,22 @@ public void GoAttack()
 
                 //修正値による修正
                 FloatNowGetG = (float)NowGetG;
-                FloatNowGetG = FloatNowGetG * (StatGame.GetComponent<StatGame>().ModifyG + 100)/100;
+                FloatNowGetG = FloatNowGetG * (StatGame.GetComponent<StatGame>().ModifyG + 100) / 100;
                 NowGetG = Mathf.RoundToInt(FloatNowGetG);
 
                 GetG += NowGetG;
                 if (MaxG < NowGetG) { MaxG = NowGetG; }
                 FloatMaxG = (float)MaxG;
                 FloatNowGetG = (float)NowGetG;
-                
+
                 //exp獲得
                 GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
 
                 GCount = 0;
-                
-                while (GCount < FloatNowGetG / 10& GCount <10) {
+
+                while (GCount < FloatNowGetG / 10 & GCount < 10) {
                     //G生成
-                  //  Debug.Log("G!");
+                    //  Debug.Log("G!");
                     GameObject G = (GameObject)Instantiate(
                            GPrefab,
                            transform.position,
@@ -1099,7 +1126,7 @@ public void GoAttack()
                     StartCoroutine(GMove(G,
                         new Vector3(-200f, 500f, 0),
                         GTime / (FloatMaxG / 10),
-                        (GTime/(FloatMaxG / 10)) * GCount + BlinkTime + HeartTime + MaTime)
+                        (GTime / (FloatMaxG / 10)) * GCount + BlinkTime + HeartTime + MaTime)
                         );
 
 
@@ -1117,8 +1144,8 @@ public void GoAttack()
             Count++;
         }
 
-        MaxCustomerVictory+=VictoryNum;//うち魅了した客の数
-                                       //SE
+        MaxCustomerVictory += VictoryNum;//うち魅了した客の数
+                                         //SE
         GetComponent<SoundController>().PlaySE("Heart");
 
         //一人もつれなかったら演出のディレイ時間減らす
@@ -1135,25 +1162,25 @@ public void GoAttack()
         ResultGetSus = ResultGetSus * (StatGame.GetComponent<StatGame>().ModifySus + 100) / 100;
         ResultGetSus = Mathf.Round(ResultGetSus);
         //SE
-        yield return new WaitForSeconds(BlinkTime+HeartTime+MaTime+GTime * 3 / 10);//遅延
+        yield return new WaitForSeconds(BlinkTime + HeartTime + MaTime + GTime * 3 / 10);//遅延
         GetComponent<SoundController>().PlaySE("GGetOne");
 
         //合計賞金を加算
         GetComponent<StatGameController>().GUp(GetG);
 
-            //EXPを加算
-            GetComponent<StatGameController>().ExpUp(GetExp);
+        //EXPを加算
+        GetComponent<StatGameController>().ExpUp(GetExp);
 
-            //Susを加算
-            GetComponent<StatGameController>().SusUp(ResultGetSus);
+        //Susを加算
+        GetComponent<StatGameController>().SusUp(ResultGetSus);
 
-            MaxGetG += GetG;//かせいだ売上の総和
+        MaxGetG += GetG;//かせいだ売上の総和
 
-            //記録
+        //記録
 
-            StatGame.GetComponent<StatGame>().ResultGetG= GetG;
-            StatGame.GetComponent<StatGame>().ResultGetExp= GetExp;
-            StatGame.GetComponent<StatGame>().ResultGetSus= ResultGetSus;
+        StatGame.GetComponent<StatGame>().ResultGetG = GetG;
+        StatGame.GetComponent<StatGame>().ResultGetExp = GetExp;
+        StatGame.GetComponent<StatGame>().ResultGetSus = ResultGetSus;
 
         yield return new WaitForSeconds(GTime * 7 / 10 + MaTime2);//遅延
 
@@ -1252,17 +1279,19 @@ public void GoAttack()
         }
 
     }
-    //ゲームオーバー判定
+    //ゲームオーバー判定（カルマ）
     public void CheckGameOver()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
+
         GetComponent<StatGameController>().DrawExp();//レベルアップしていたら、Expを０に戻した状態で再描画
 
         if (StatGame.GetComponent<StatGame>().StatSus > 100) {
             TapBlock.SetActive(false);
             EventSystem.SetActive(true);
-            GameOver(); }
+            GameOver();
+        }
         else
         {
             TapBlock.SetActive(false);
@@ -1270,20 +1299,86 @@ public void GoAttack()
             Select(); }
     }
 
-    //ゲームオーバー時
-    public void GameOver()
+    //ゲームオーバーストーリー表示後のエンドカード
+    public void EndCard(string EndMassage)
     {
+        CustomerField.SetActive(false);
+        Button4Items.SetActive(false);
+        Hand.SetActive(false);
+        Message.SetActive(false);
+
+        PopupGameOverText.text = EndMassage;
         PopupGameOver.SetActive(true);
 
-        GetComponent<SoundController>().StopStoreBgm();
-
-
+        //スコア記録
         GetHighScore();
         StatPlayer.GetComponent<StatPlayer>().CheckHighScore();
         StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
 
     }
+    //ゲームオーバー時（カルマ）
+    public void GameOver()
+    {
+        //客破壊
+        CustomerDestroy();
+        DestroyG();
+        DestroyHeart();
 
+        Hand.SetActive(false);
+        CustomerField.SetActive(false);
+
+        GetComponent<SoundController>().StopStoreBgm();
+
+        if (StatGame.GetComponent<StatGame>().StatG >= 5000000) {
+            GetComponent<StoryController>().StartStory("EndingKarma2");
+        }
+        else {
+            GetComponent<StoryController>().StartStory("EndingKarma1");
+        }
+    }
+
+    //ゲームオーバー時罰金
+    public int GetEndFine(string NowStoryKey)
+    {
+        int Fine=0;
+        if (NowStoryKey == "EndingKarma1" | NowStoryKey == "SkipEndingKarma1") { Fine = StatGame.GetComponent<StatGame>().StatG; }
+        else if (NowStoryKey == "EndingKarma2" | NowStoryKey == "SkipEndingKarma2") { Fine = 5000000; }
+        else if (NowStoryKey == "Ending1" | NowStoryKey == "SkipEnding1") { Fine = StatGame.GetComponent<StatGame>().StatG; }
+        else if (NowStoryKey == "Ending2" | NowStoryKey == "SkipEnding2") { Fine = StatGame.GetComponent<StatGame>().StatG; }
+        else if (NowStoryKey == "Ending3" | NowStoryKey == "SkipEnding3") { Fine = 10000000-StatGame.GetComponent<StatGame>().StatG;}
+        else if (NowStoryKey == "Ending4" | NowStoryKey == "SkipEnding4") { Fine = 0; }
+        return Fine;
+    }
+
+    //ゲームオーバー時（日数）
+    public void DaysEnd()
+    {
+        Hand.SetActive(false);
+        CustomerField.SetActive(false);
+
+        GetComponent<SoundController>().StopStoreBgm();
+        GetHighScore();
+        StatPlayer.GetComponent<StatPlayer>().CheckHighScore();
+        StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
+
+        if (StatGame.GetComponent<StatGame>().StatG < 3000000)
+        {
+            GetComponent<StoryController>().StartStory("Ending1");
+        }
+        else if (StatGame.GetComponent<StatGame>().StatG >= 3000000& StatGame.GetComponent<StatGame>().StatG < 5000000)
+        {
+            GetComponent<StoryController>().StartStory("Ending2");
+        }
+        else if (StatGame.GetComponent<StatGame>().StatG >= 5000000 & StatGame.GetComponent<StatGame>().StatG < 10000000)
+        {
+            GetComponent<StoryController>().StartStory("Ending3");
+        }
+        else
+        {
+            GetComponent<StoryController>().StartStory("Ending4");
+        }
+
+    }
     //ハイスコアの記録
     public void GetHighScore()
     {
@@ -1449,10 +1544,8 @@ public void GoAttack()
         HandButton.SetActive(true);
     }
 
-    //選択ワクの初期化
-    public void SelectStart()
+    public void DestroyG()
     {
-
         //Gを破壊
         GameObject[] Gs = GameObject.FindGameObjectsWithTag("G");
         int Count = 0;
@@ -1462,10 +1555,12 @@ public void GoAttack()
             Destroy(Gs[Count]);
             Count++;
         }
-
+    }
+    public void DestroyHeart()
+    {
         //Heartを破壊
         GameObject[] Hearts = GameObject.FindGameObjectsWithTag("Heart");
-        Count = 0;
+        int Count = 0;
         int HeartLength = Hearts.GetLength(0);
         while (Count < HeartLength)
         {
@@ -1473,6 +1568,14 @@ public void GoAttack()
             Count++;
         }
 
+    }
+
+    //選択ワクの初期化
+    public void SelectStart()
+    {
+
+        DestroyG();
+        DestroyHeart();
 
         if (GameObject.FindGameObjectWithTag("Box1") != null) { Destroy(GameObject.FindGameObjectWithTag("Box1")); }
         if (GameObject.FindGameObjectWithTag("Box2") != null) { Destroy(GameObject.FindGameObjectWithTag("Box2")); }
@@ -2243,9 +2346,13 @@ public void SelectOK()
         }
         GetComponent<StatGameController>().DrawYoubi();
 
+
+        //70日になっていたら終了
+        if (StatGame.GetComponent<StatGame>().StatDays >= 70) { DaysEnd(); }
+        else { 
         //曜日振り分け
         int Youbi = StatGame.GetComponent<StatGame>().StatDays;
-        if (Youbi % 7 != 1)
+        if (Youbi % 7 != 0)
         {
          //   Debug.Log("平日");
             WorkingDay(Mode);
@@ -2256,6 +2363,7 @@ public void SelectOK()
             HolyDay(Mode);
         }
 
+        }
     }
     //休日の開始
     //mode=0　セーブなし開始
@@ -2379,7 +2487,7 @@ public void SelectOK()
 
         ActMessage.SetActive(true);
         GetComponent<StoryController>().ActionReadLine("なんの よう かね。\nいそがしいんだが…");
-        MessageDraw("タップ で わいろ");
+        MessageDraw("わいろコース を えらんでね");
 
     }
     public void ActionChurch()
@@ -2405,7 +2513,7 @@ public void SelectOK()
         ActMessage.SetActive(true);
         GetComponent<StoryController>().ActionReadLine("ようこそ。\nともに いのりましょう");
 
-        MessageDraw("タップ で いのる");
+        MessageDraw("いのりコース を えらんでね");
 
     }
     public void ActionHome()
@@ -2431,7 +2539,7 @@ public void SelectOK()
         ActMessage.SetActive(true);
         GetComponent<StoryController>().ActionReadLine("しこみでも しようか。");
 
-        MessageDraw("タップ で しこみ");
+        MessageDraw("しこみコース を えらんでね");
 
     }
     public void ActionMarket()
@@ -2457,7 +2565,7 @@ public void SelectOK()
 
         ActMessage.SetActive(true);
         GetComponent<StoryController>().ActionReadLine("らっしゃい…。\nいま あるのは これだけだ。");
-        MessageDraw("タップ で こうにゅう");
+        MessageDraw("しょうひん を えらんでね");
 
     }
 

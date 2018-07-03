@@ -55,6 +55,7 @@ public class CSVDataReader : MonoBehaviour
                 string[] readStrData = lines[i].Split(spliter, option);
                 //型変換
                 //                readToIntData[i, j] = int.Parse(readStrData[j]);
+                //Debug.Log(i + "-" + j+":" + readStrData[j]);
                 readToIntData[i, j] = readStrData[j];
             }
         }
@@ -100,6 +101,15 @@ public class CSVDataReader : MonoBehaviour
         string[,] LvDesignData = readCSVData(path);
 
         StatGame.GetComponent<StatGame>().LvDesignData = LvDesignData;
+
+        //ストーリーデータ
+        //データパスを設定
+        path = "StoryCSV";
+        //データを読み込む(引数：データパス)
+        string[,] StoryData = readCSVData(path);
+
+        StatGame.GetComponent<StatGame>().StoryData = StoryData;
+
 
 
         //        DebugLog.text = CustomerAllData[0, 0];

@@ -26,7 +26,12 @@ public class StatGame : MonoBehaviour
 
     //客のCSVデータ
     public string[,] CustomerAllData;
-//レベルごとに更新されるデータ
+
+    //ストーリーのCSVデータ
+    public string[,] StoryData;
+    
+    
+    //レベルごとに更新されるデータ
     public string[,] CustmerC;
     public string[,] CustmerUC;
     public string[,] CustmerR;
@@ -66,6 +71,9 @@ public class StatGame : MonoBehaviour
 
 
     //ハイスコア記録用、殺人数など
+
+
+
 
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;

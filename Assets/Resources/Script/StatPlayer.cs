@@ -33,6 +33,15 @@ public class StatPlayer : MonoBehaviour {
     public Text TextMaxLv5;
     public Text TextMaxDays5;
 
+    //チュートリアルやストーリーのフラグ
+    public int FlagStoryOP = 0;
+    public int FlagTutorial1 = 0;
+
+    //保存用の箱
+    public string FSOPKey = " FSOPKey";
+    public string FT1Key = "FT1Key";
+
+
     //セーブ中断しているかのフラグ
     //0=なし　1=あり Start内で代入
     //アリの場合開始時の初期設定に影響を及ぼす
@@ -254,6 +263,23 @@ public class StatPlayer : MonoBehaviour {
     public string MarketItem2ColorKey = " MarketItem2ColorKey";
     public string MarketItem2SusKey = " MarketItem2SusKey";
     public string MarketItem2CostKey = " MarketItem2CostKey";
+
+    //チュートリアルとストーリーの履歴フラグ
+    //表示したときすぐ保存
+    //別途、フラグを1に変える
+    public void SaveFlag()
+    {
+        PlayerPrefs.SetInt(FSOPKey, FlagStoryOP);
+        PlayerPrefs.SetInt(FT1Key, FlagTutorial1);
+
+    }
+    //デバッグ用　チュートリアルとストーリーフラグをすべて０に
+    public void ResetFlag()
+    {
+        FlagStoryOP = 0;
+        FlagTutorial1 = 0;
+        SaveFlag();
+    }
 
 
     //セーブ中断のセーブ処理部分
@@ -928,6 +954,9 @@ public void Load()
         MaxG5 = PlayerPrefs.GetInt(MaxG5Key, 0);
         MaxGetG5 = PlayerPrefs.GetInt(MaxGetG5Key, 0);
         CountPlay5 = PlayerPrefs.GetInt(CountPlay5Key, 0);
+
+        FlagStoryOP = PlayerPrefs.GetInt(FSOPKey, 0);
+        FlagTutorial1 = PlayerPrefs.GetInt(FT1Key, 0);
 
     }
 
