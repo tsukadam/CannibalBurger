@@ -10,11 +10,18 @@ public class SoundController : MonoBehaviour {
     public GameObject StatGame;
 
     public AudioSource BgmSource;
+    public GameObject BgmObj;
     public AudioSource SESource;
     public AudioMixer Mixer;
 
+    //メインbgmの切り替えフラグ
+    //0=再生してない　1=再生待ち　2=再生中
+    public int BgmFlag1=0;
+    public int BgmFlag2 = 0;
+
     //bgmに使うクリップ
     public AudioClip StoreBgm1;
+    public AudioClip StoreBgm2;
 
     //seに使うクリップ
     public AudioClip SEGGet;
@@ -81,8 +88,9 @@ public class SoundController : MonoBehaviour {
         AudioClip UseBgm = StoreBgm1;//宣言で入れるデフォ値、指定された番号のSEがないとこれが鳴ってしまう
 
         if (BgmName == "StoreBgm1") { UseBgm = StoreBgm1; }
-       
-        else { Debug.Log("指定された番号のSEはありません"); }
+        else if (BgmName == "StoreBgm2") { UseBgm = StoreBgm2; }
+
+        else { Debug.Log("指定された番号のBGMはありません"); }
 
         return UseBgm;
     }
@@ -142,6 +150,15 @@ public void StopStoreBgm()
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        // 拍に来たフレームで true になる
+
+        if (Music.IsJustChangedBar()&BgmFlag2==1)
+        {
+            BgmFlag2 = 2;
+                 PlayStoreBgm("StoreBgm2");
+        }
+
+
+
+    }
 }

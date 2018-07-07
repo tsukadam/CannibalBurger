@@ -588,6 +588,8 @@ public class GameController : MonoBehaviour
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
+//        GetComponent<SoundController>().BgmFlag2 = 1;//bgmの切り替え例文
+
         ButtonSave.SetActive(false);
         MessageDraw("");
         //Item4ボタン押せなくする
@@ -2936,6 +2938,8 @@ public void WorkingDay(int Mode)
     // Update is called once per frame
     void Update()
     {
+
+
         ITweenCount = iTween.Count();
     }
 }
