@@ -26,9 +26,9 @@ public class StoryController : MonoBehaviour {
     public GameObject StartButton;
     public GameObject NextButton;
     public GameObject SkipButton;
-    public string NowSerif;
+    public string NowSerif="";
 
-    public string ActionNowSerif;
+    public string ActionNowSerif="";
     public Text ActionMassage;
 
     public GameObject EndButton0;
@@ -64,6 +64,8 @@ public class StoryController : MonoBehaviour {
         EndFine = GetComponent<GameController>().GetEndFine(NowStoryKey);
 
         StoryData = StatGame.GetComponent<StatGame>().StoryData;
+        Massage.text = "";
+
 
         if (StoryKey == "Opening"| StoryKey == "SkipOpening") { ModeSetting(0); }
         else if (StoryKey == "EndingKarma1"|
@@ -80,7 +82,8 @@ public class StoryController : MonoBehaviour {
             StoryKey == "SkipEndingKarma2" 
             )
         { ModeSetting(1); }
-
+        else { Debug.Log("指定されたストーリーKeyはありません。モード１にします");
+            ModeSetting(1); }
 
         //今回使うストーリーのまとまりをkeyで抜き出す
         int StoryDataLength = StoryData.GetLength(0);
@@ -148,7 +151,19 @@ public class StoryController : MonoBehaviour {
 
         StoryAll.SetActive(true);
 
-        ButtonTrueSkip.SetActive(false);
+        ButtonTrueSkip.SetActive(true);
+
+        if (StoryKey.Contains("Skip"))
+        {
+            ButtonTrueSkip.SetActive(false);
+            Debug.Log("SKIP!!");
+        }
+        else
+        {
+            ButtonTrueSkip.SetActive(true);
+
+        }
+
         EndButton0.SetActive(false);
         EndButton1.SetActive(false);
         FukidashiL.SetActive(false);
@@ -161,14 +176,13 @@ public class StoryController : MonoBehaviour {
     }
     public void TrueSkip()
     {
-
+        ButtonTrueSkip.SetActive(false);
         string SkipKey = "Skip"+NowStoryKey;
         StartStory(SkipKey);
     }
 
     public void ReadLine()
     {
-        ButtonTrueSkip.SetActive(true);
 
         string PlacePath = UseStory[ReadCount, LowPlace];
         string Person1Path = UseStory[ReadCount, LowPerson1];
@@ -177,9 +191,10 @@ public class StoryController : MonoBehaviour {
         string Serif = UseStory[ReadCount, LowSerif];
 
 
+
         //特殊文字をステ内数字に変換
 
-        Serif=Serif.Replace("NowStatG", StatGame.GetComponent<StatGame>().StatG.ToString());
+        Serif = Serif.Replace("NowStatG", StatGame.GetComponent<StatGame>().StatG.ToString());
         Serif=Serif.Replace("EndUseG", EndFine.ToString());
 
 

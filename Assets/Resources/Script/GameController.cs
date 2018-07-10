@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
     public GameObject CustomerFieldCollider;
     public GameObject Status;
     public GameObject StoryAll;
+    public GameObject TutorialAll;
 
     //ボタン類
     public GameObject ButtonSave;
@@ -95,6 +96,7 @@ public class GameController : MonoBehaviour
     public Text PopupSaveSusName1;
     public Text PopupSaveSusName2;
     public Text PopupSaveSusValue;
+    public GameObject SaveSusOKButton;
 
     public GameObject PopupSelectAction;
     public GameObject PopupAction;
@@ -109,6 +111,11 @@ public class GameController : MonoBehaviour
     public GameObject ActButtonChurch;
     public GameObject ActButtonHome;
     public GameObject ActButtonMarket;
+
+    public GameObject ButtonPolice;
+    public GameObject ButtonChurch;
+    public GameObject ButtonHome;
+    public GameObject ButtonMarket;
 
     public Text PoliceCost1;
     public Text PoliceReturn1;
@@ -129,6 +136,8 @@ public class GameController : MonoBehaviour
     public GameObject PopupGetItem;
     public Text PopupGetText;
     public GameObject PopupLvUp;
+    public GameObject LvUpOKButton;
+
     public Text PopupLvUpText;
     public Text PopupLvUpSusText;
     public GameObject PopupGameOver;
@@ -178,6 +187,7 @@ public class GameController : MonoBehaviour
         Game.SetActive(true);
         Status.SetActive(false);
         StoryAll.SetActive(false);
+        TutorialAll.SetActive(false);
 
         if (StatPlayer.GetComponent<StatPlayer>().FlagStoryOP == 0)//オープニング見ていなければ表示
         {
@@ -199,6 +209,7 @@ public class GameController : MonoBehaviour
         //ゲーム画面への遷移
         Status.SetActive(true);
         StoryAll.SetActive(false);
+        TutorialAll.SetActive(false);
 
 
         TapBlock.SetActive(true);
@@ -576,6 +587,44 @@ public class GameController : MonoBehaviour
         //メッセージ表示
         MessageDraw("どれを つかいますか？");
 
+        //チュートリアル　初回Feed
+        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 0)//以前に見ていなければ表示
+        {
+            //ボタン押せなくする
+            ButtonSave.GetComponent<Button>().interactable = false;
+            Button4Items1.GetComponent<Button>().interactable = false;
+            Button4Items2.GetComponent<Button>().interactable = false;
+            Button4Items3.GetComponent<Button>().interactable = false;
+            Button4Items4.GetComponent<Button>().interactable = false;
+            GetComponent<TutorialController>().StartTutorial("FirstFeed");
+        }
+
+        //チュートリアル　二回目Feed
+        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1&
+            StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 0)//１を見て２がまだなら表示
+        {
+            ButtonSave.GetComponent<Button>().interactable = false;
+            Button4Items1.GetComponent<Button>().interactable = false;
+            Button4Items2.GetComponent<Button>().interactable = false;
+            Button4Items3.GetComponent<Button>().interactable = false;
+            Button4Items4.GetComponent<Button>().interactable = false;
+            GetComponent<TutorialController>().StartTutorial("SecondFeed");
+        }
+
+        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
+            StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 & 
+            StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare == 0&
+            StatGame.GetComponent<StatGame>().FlagGlowCustomer==1)
+        {
+            ButtonSave.GetComponent<Button>().interactable = false;
+            Button4Items1.GetComponent<Button>().interactable = false;
+            Button4Items2.GetComponent<Button>().interactable = false;
+            Button4Items3.GetComponent<Button>().interactable = false;
+            Button4Items4.GetComponent<Button>().interactable = false;
+            GetComponent<TutorialController>().StartTutorial("FirstRare");
+
+        }
+
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
@@ -737,13 +786,10 @@ public class GameController : MonoBehaviour
     //Feed演出
     public void GoAttack()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
+
 
         StartCoroutine("GoAttackCoroutine");
 
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
     }
 
     private IEnumerator GoAttackCoroutine()
@@ -1196,8 +1242,7 @@ public class GameController : MonoBehaviour
 
     public void PopupResultGPopPop()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
+
         TapButton.SetActive(false);
 
         //SE
@@ -1236,15 +1281,12 @@ public class GameController : MonoBehaviour
         PopupResultGTextExp.text = TextGetExp;
         PopupResultGTextSus.text = TextGetSus;
 
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
+
         //この直後、ゲームオーバー判定
     }
 
     public void LevelUp()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
 
         PopupResultG.SetActive(false);
         if (GetComponent<LvDesignController>().LvUpCondition())
@@ -1270,13 +1312,18 @@ public class GameController : MonoBehaviour
             int NowLv = StatGame.GetComponent<StatGame>().StatLv;
             GetComponent<CustomerController>().GetCustomerData(NowLv);
 
-            TapBlock.SetActive(false);
-            EventSystem.SetActive(true);
+            //チュートリアル 初レベルアップ
+        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstLvup == 0)
+            {
+                //ボタン押せなくする
+                LvUpOKButton.GetComponent<Button>().interactable = false;
+
+                GetComponent<TutorialController>().StartTutorial("FirstLvup");
+            }
 
         }
         else {
-            TapBlock.SetActive(false);
-            EventSystem.SetActive(true);
+
             CheckGameOver();
         }
 
@@ -1284,20 +1331,17 @@ public class GameController : MonoBehaviour
     //ゲームオーバー判定（カルマ）
     public void CheckGameOver()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
+
 
         GetComponent<StatGameController>().DrawExp();//レベルアップしていたら、Expを０に戻した状態で再描画
 
         if (StatGame.GetComponent<StatGame>().StatSus > 100) {
-            TapBlock.SetActive(false);
-            EventSystem.SetActive(true);
+
             GameOver();
         }
         else
         {
-            TapBlock.SetActive(false);
-            EventSystem.SetActive(true);
+
             Select(); }
     }
 
@@ -1401,8 +1445,7 @@ public class GameController : MonoBehaviour
     //取得アイテムがないときにアイテムを自動的に１つ得る
     public void GetPickUp()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
+
 
         string[] PickUpItem = GetComponent<LvDesignController>().GetPickUpItem();
 
@@ -1415,8 +1458,6 @@ public class GameController : MonoBehaviour
         PopupGetText.text = "だれも こなかったので、\nそのへんで" + PickUpItem[0] + "\n を ひろいました";
         GetComponent<StatGameController>().DrawGetItem(PickUpItem);
 
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
 
     }
 
@@ -1528,8 +1569,15 @@ public class GameController : MonoBehaviour
             SelectStart();//選択ワクの初期化
             SelectButtonOK.GetComponent<Button>().interactable = false;
         }
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
+
+        //チュートリアル 初選択
+        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSelect == 0)
+        {
+            HandButton.GetComponent<Button>().interactable = false;
+
+            GetComponent<TutorialController>().StartTutorial("FirstSelect");
+        }
+
 
     }
     //手持ち開く
@@ -1964,8 +2012,8 @@ public class GameController : MonoBehaviour
     //キルによってSaveSusがある時
     public void KillSaveSus(string HumanName1, string HumanName2, float SaveSus1, float SaveSus2)
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
+      
+
         if (SaveSus1 > 0 & SaveSus2 >0)
         {
             PopupSaveSusName1.text = HumanName1 + " と";
@@ -1995,8 +2043,15 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().SusUp((SaveSus1+SaveSus2)*-1.0f);
 
         PopupSaveSus.SetActive(true);
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
+
+        //チュートリアル 初Savesus
+        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSaveSus == 0)
+        {
+            //ボタン押せなくする
+            SaveSusOKButton.GetComponent<Button>().interactable = false;
+            GetComponent<TutorialController>().StartTutorial("FirstSaveSus");
+        }
+
     }
 
 
@@ -2199,11 +2254,7 @@ public class GameController : MonoBehaviour
 //捨てる画面
 public void SelectOK()
     {
-        TapBlock.SetActive(true);
-        EventSystem.SetActive(false);
-
         PopupSaveSus.SetActive(false);
-
 
         SelectStart();//選択ワクの初期化
         Destroy(GameObject.FindGameObjectWithTag("Top0"));
@@ -2219,9 +2270,19 @@ public void SelectOK()
 
         MessageDraw("どれ を すてますか？");
 
-        TapBlock.SetActive(false);
-        EventSystem.SetActive(true);
+        //チュートリアル 初捨てる
+        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstDispose == 0)
+        {
+            //ボタン押せなくする
+            Button6Items1.GetComponent<Button>().interactable = false;
+            Button6Items2.GetComponent<Button>().interactable = false;
+            Button6Items3.GetComponent<Button>().interactable = false;
+            Button6Items4.GetComponent<Button>().interactable = false;
+            Button6Items5.GetComponent<Button>().interactable = false;
+            Button6Items6.GetComponent<Button>().interactable = false;
 
+            GetComponent<TutorialController>().StartTutorial("FirstDispose");
+        }
     }
     //捨てる確認画面
     public void Dispose(int ItemNum)
@@ -2449,7 +2510,6 @@ public void SelectOK()
         ActionDispose.SetActive(false);
         ActionEndOK.SetActive(false);
 
-
         HolyDaySelect();
     }
 
@@ -2466,6 +2526,20 @@ public void SelectOK()
         ActButtonMarket.SetActive(false);
         PopupAction.SetActive(false);
         ActMessageText.text = "";
+
+        //チュートリアル 初休日
+        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstHolyday == 0)
+        {
+            //ボタン押せなくする
+            ButtonPolice.GetComponent<Button>().interactable = false;
+            ButtonChurch.GetComponent<Button>().interactable = false;
+            ButtonHome.GetComponent<Button>().interactable = false;
+            ButtonMarket.GetComponent<Button>().interactable = false;
+            HandButton.GetComponent<Button>().interactable = false;
+
+            GetComponent<TutorialController>().StartTutorial("FirstHolyday");
+        }
+
     }
 
     public void ActionPolice()
@@ -2808,16 +2882,19 @@ public void WorkingDay(int Mode)
         if (Mode==0)
         {
             //初期客の生成
+            StatGame.GetComponent<StatGame>().FlagGlowCustomer = 0;
             GetComponent<LvDesignController>().MakeCustomerFirst();
         }
         else if(Mode==1)
         {
             //セーブ客の生成
+            StatGame.GetComponent<StatGame>().FlagGlowCustomer = 0;
             GetComponent<LvDesignController>().MakeSavedCustomer();
         }
         else
         {
             //通常客の生成
+            StatGame.GetComponent<StatGame>().FlagGlowCustomer = 0;
             GetComponent<LvDesignController>().MakeCustomerNormal();
         }
 

@@ -68,6 +68,8 @@ public class StatGame : MonoBehaviour
     public string[] MarketItem2 = { "Name", "PictuePath", "Power", "Color", "Sus" };
     public int MarketCost1;
     public int MarketCost2;
+    //今光る客がいるかどうか
+    public int FlagGlowCustomer=0;
 
 
     //ハイスコア記録用、殺人数など

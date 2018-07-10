@@ -35,11 +35,25 @@ public class StatPlayer : MonoBehaviour {
 
     //チュートリアルやストーリーのフラグ
     public int FlagStoryOP = 0;
-    public int FlagTutorial1 = 0;
+    public int FlagTutorialFirstFeed = 0;
+    public int FlagTutorialSecondFeed = 0;
+    public int FlagTutorialFirstSelect = 0;
+    public int FlagTutorialFirstRare = 0;
+    public int FlagTutorialFirstSaveSus = 0;
+    public int FlagTutorialFirstDispose = 0;
+    public int FlagTutorialFirstHolyday = 0;
+    public int FlagTutorialFirstLvup = 0;
 
     //保存用の箱
     public string FSOPKey = " FSOPKey";
-    public string FT1Key = "FT1Key";
+    public string FT1FeedKey = "FT1FeedKey";
+    public string FT2FeedKey = "FT2FeedKey";
+    public string FT1SelectKey = "FT1SelectKey";
+    public string FT1RareKey = "FT1RareKey";
+    public string FT1SaveSusKey = "FT1SaveSusKey";
+    public string FT1DisposeKey = "FT1DisposeKey";
+    public string FT1HolydayKey = "FT1HolydayKey";
+    public string FT1LvupKey = "FT1LvupKey";
 
 
     //セーブ中断しているかのフラグ
@@ -270,14 +284,33 @@ public class StatPlayer : MonoBehaviour {
     public void SaveFlag()
     {
         PlayerPrefs.SetInt(FSOPKey, FlagStoryOP);
-        PlayerPrefs.SetInt(FT1Key, FlagTutorial1);
+        PlayerPrefs.SetInt(FT1FeedKey, FlagTutorialFirstFeed);
+        PlayerPrefs.SetInt(FT2FeedKey, FlagTutorialSecondFeed);
+        PlayerPrefs.SetInt(FT1SelectKey, FlagTutorialFirstSelect);
+        PlayerPrefs.SetInt(FT1RareKey, FlagTutorialFirstRare);
+        PlayerPrefs.SetInt(FT1SaveSusKey, FlagTutorialFirstSaveSus);
+        PlayerPrefs.SetInt(FT1DisposeKey, FlagTutorialFirstDispose);
+        PlayerPrefs.SetInt(FT1HolydayKey, FlagTutorialFirstHolyday);
+        PlayerPrefs.SetInt(FT1LvupKey, FlagTutorialFirstLvup);
 
-    }
-    //デバッグ用　チュートリアルとストーリーフラグをすべて０に
-    public void ResetFlag()
+
+
+
+}
+//デバッグ用　チュートリアルとストーリーフラグをすべて０に
+public void ResetFlag()
     {
         FlagStoryOP = 0;
-        FlagTutorial1 = 0;
+  FlagTutorialFirstFeed = 0;
+FlagTutorialSecondFeed = 0;
+    FlagTutorialFirstSelect = 0;
+    FlagTutorialFirstRare = 0;
+    FlagTutorialFirstSaveSus = 0;
+ FlagTutorialFirstDispose = 0;
+     FlagTutorialFirstHolyday = 0;
+   FlagTutorialFirstLvup = 0;
+
+
         SaveFlag();
     }
 
@@ -956,7 +989,14 @@ public void Load()
         CountPlay5 = PlayerPrefs.GetInt(CountPlay5Key, 0);
 
         FlagStoryOP = PlayerPrefs.GetInt(FSOPKey, 0);
-        FlagTutorial1 = PlayerPrefs.GetInt(FT1Key, 0);
+        FlagTutorialFirstFeed = PlayerPrefs.GetInt(FT1FeedKey, 0);
+        FlagTutorialSecondFeed = PlayerPrefs.GetInt(FT2FeedKey, 0);
+        FlagTutorialFirstLvup = PlayerPrefs.GetInt(FT1LvupKey, 0);
+        FlagTutorialFirstSaveSus = PlayerPrefs.GetInt(FT1SaveSusKey, 0);
+        FlagTutorialFirstSelect = PlayerPrefs.GetInt(FT1SelectKey, 0);
+        FlagTutorialFirstDispose = PlayerPrefs.GetInt(FT1DisposeKey, 0);
+        FlagTutorialFirstRare = PlayerPrefs.GetInt(FT1RareKey, 0);
+        FlagTutorialFirstHolyday = PlayerPrefs.GetInt(FT1HolydayKey, 0);
 
     }
 

@@ -302,8 +302,11 @@ GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
         if (Rarerity == "R")
         {
             Customer.GetComponent<StatCustomer>().Glow();
+            StatGame.GetComponent<StatGame>().FlagGlowCustomer = 1;
+         //   Debug.Log("GLOW!");
         }
-
+        else {
+        }
         //タグをつける
         Customer.tag = "Customer";
 //アイテム選択時用のボタンを不活性にする

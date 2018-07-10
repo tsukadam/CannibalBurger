@@ -204,11 +204,11 @@ public class LvDesignController : MonoBehaviour
         int Count = 1;
         int Count2 = 0;
         string[] UseCustomer = new string[CustomerLowLength];
-        Debug.Log("id:"+Id);
+       // Debug.Log("id:"+Id);
 
         while (Count < CustomerLength)
         {
-            Debug.Log(Count);
+           // Debug.Log(Count);
             if (CustomerAllData[Count,LowId] == IdString)
             {
                 Count2 = 0;
