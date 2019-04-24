@@ -2410,8 +2410,8 @@ public void SelectOK()
         GetComponent<StatGameController>().DrawYoubi();
 
 
-        //70日になっていたら終了
-        if (StatGame.GetComponent<StatGame>().StatDays >= 70) { DaysEnd(); }
+        //30日になっていたら終了
+        if (StatGame.GetComponent<StatGame>().StatDays >=31) { DaysEnd(); }
         else { 
         //曜日振り分け
         int Youbi = StatGame.GetComponent<StatGame>().StatDays;

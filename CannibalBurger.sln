@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannibalBurger", "CannibalBurger.csproj", "{00EB2CAF-CE30-A5A7-1163-CA9F84D8BB32}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CannibalBurger.Plugins", "CannibalBurger.Plugins.csproj", "{A5D7AE33-B2E0-2D6E-38FE-0ADD13288600}"
