@@ -15,27 +15,45 @@ public class Blinker : MonoBehaviour
     public float ColB;
     public float ColA;
     public Color BlinkCol;
+    int count = 0;
+
     // Use this for initialization
     void Start()
     {
-        nextTime = Time.time;
 
     }
+
+    void OnEnable()
+    {
+        nextTime = Time.time + 1.0f;
+    }
+
 
     // Update is called once per frame
     void Update()
     {
-        TargetCol = Target.GetComponent<Image>().color;
-        ColR = TargetCol.r;
-        ColG = TargetCol.g;
-        ColB = TargetCol.b;
-
-        if (Time.time > nextTime)
+        count++;
+        if (count % 10 == 0)
         {
+            TargetCol = Target.GetComponent<Image>().color;
+            ColR = TargetCol.r;
+            ColG = TargetCol.g;
+            ColB = TargetCol.b;
 
-            if (Target.GetComponent<Image>().color== new Color(ColR, ColG, ColB, 1.0f)) { Target.GetComponent<Image>().color = new Color(ColR, ColG, ColB, 0); }
-            else { Target.GetComponent<Image>().color = new Color(ColR, ColG, ColB, 1.0f); }
-            nextTime += interval;
+
+            if (Time.time > nextTime)
+            {
+
+                if (Target.GetComponent<Image>().color == new Color(ColR, ColG, ColB, 1.0f))
+                {
+                    Target.GetComponent<Image>().color = new Color(ColR, ColG, ColB, 0);
+                }
+                else
+                {
+                    Target.GetComponent<Image>().color = new Color(ColR, ColG, ColB, 1.0f);
+                }
+                nextTime += interval;
+            }
         }
     }
 }

@@ -101,6 +101,7 @@ public class SoundController : MonoBehaviour {
         SESource.volume = SEVolume;
         AudioClip UseSE = GetNameSE(SEName);
         SESource.PlayOneShot(UseSE);
+        Debug.Log("Sound-"+SEName);
     }
 
     //フェードイン・アウトでSE

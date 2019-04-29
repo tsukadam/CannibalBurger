@@ -310,6 +310,7 @@
     <Compile Include="Assets\Resources\Script\CSVDataReader.cs" />
     <Compile Include="Assets\Resources\Script\CustomerController.cs" />
     <Compile Include="Assets\Resources\Script\DebugController.cs" />
+    <Compile Include="Assets\Resources\Script\Floater.cs" />
     <Compile Include="Assets\Resources\Script\GameController.cs" />
     <Compile Include="Assets\Resources\Script\Glower.cs" />
     <Compile Include="Assets\Resources\Script\GlowImage.cs" />

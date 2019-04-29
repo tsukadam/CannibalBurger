@@ -54,6 +54,7 @@ public class GameController : MonoBehaviour
     public GameObject Buns1;
     public GameObject Buns2;
     public GameObject ParticleFeed;
+    public GameObject ParticleGas;
 
     public GameObject PopupHand;
 
@@ -216,7 +217,7 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(false);
 
         //BGM
-        GetComponent<SoundController>().PlayStoreBgm("StoreBgm1");
+        //GetComponent<SoundController>().PlayStoreBgm("StoreBgm1");
 
 
         //ボタン初期化
@@ -245,6 +246,8 @@ public class GameController : MonoBehaviour
 
         Buns1.SetActive(false);
         Buns2.SetActive(false);
+   
+
 
         Button6Items5.SetActive(false);
         Button6Items6.SetActive(false);
@@ -295,6 +298,7 @@ public class GameController : MonoBehaviour
 
         //ロード前の描画リセット
         GetComponent<StatGameController>().DrawSus();
+        GetComponent<StatGameController>().DrawSusNum();
         GetComponent<StatGameController>().DrawG();
         GetComponent<StatGameController>().DrawLv();
         GetComponent<StatGameController>().DrawDays();
@@ -487,6 +491,7 @@ public class GameController : MonoBehaviour
 
         Buns1.SetActive(false);
         Buns2.SetActive(false);
+ 
 
         PopupGetItem.SetActive(false);
         PopupLvUp.SetActive(false);
@@ -552,8 +557,6 @@ public class GameController : MonoBehaviour
         ButtonSave.SetActive(true);
 
 
-        //ゲーム開始演出
-        iTween.MoveTo(CustomerFieldBack, iTween.Hash("position", new Vector3(0f, 300f, 0f), "time", 1.0f, "easeType", iTween.EaseType.linear));
 
         //SE
         GetComponent<SoundController>().PlaySE("DoorOpen");
@@ -805,8 +808,8 @@ public class GameController : MonoBehaviour
         float Time2 = 0.3f;//具の色が変わる時間
         float Time4 = 0;//間の時間
         float Time5 = 0.8f;//バンズが挟む時間
-        float Time6 = 0.8f;//間の時間
-        float Time7 = 0.4f;//効果が広がっていく時間
+        float Time6 = 0.4f;//間の時間
+        float Time7 = 1.0f;//効果が広がっていく時間
 
         string UseItemColor = UseItem[3];
         Color UseColor = GetComponent<ColorGetter>().ToColor(UseItemColor);
@@ -877,7 +880,7 @@ public class GameController : MonoBehaviour
         UseWaku.transform.Find("Mask/AllColor").GetComponent<Image>().color = UseColor;
 
         StartCoroutine(XYChangeCoroutine(UseWaku, GoX, GoY, Time2));
-        StartCoroutine(XYChangeCoroutine(Mask, GoX, GoY, Time2));
+//        StartCoroutine(XYChangeCoroutine(Mask, GoX, GoY, Time2));
         StartCoroutine(XYChangeCoroutine(AllColor, GoX, GoY, Time2));
         StartCoroutine(ColorChangeCoroutine(UseWaku, UseColor, Time2));
         GetComponent<SoundController>().PlaySE("Bans");
@@ -885,26 +888,42 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(Time4);//遅延
 
         //バンズはさむ
-        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5, "easeType", iTween.EaseType.linear));
-        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5, "easeType", iTween.EaseType.linear));
+        iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5, "easeType", iTween.EaseType.easeOutBack));
+        iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5, "easeType", iTween.EaseType.easeOutBack));
         //  GetComponent<SoundController>().PlaySE("BansDon");
 
         yield return new WaitForSeconds(Time5);//遅延
 
-        //パーティクル発動
-        ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
-        color.mode = ParticleSystemGradientMode.Color;
-        color.color = UseColor;
-        ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
-        main.startColor = color;
-
-        ParticleFeed.GetComponent<ParticleSystem>().Play();
-        //SE
-        GetComponent<SoundController>().PlaySE("Burger");
+        ParticleGas.GetComponent<ParticleSystem>().Play();
 
         yield return new WaitForSeconds(Time6 / 4);//遅延
 
+        //SE
+        GetComponent<SoundController>().PlaySE("Burger");
+
+
+    //パーティクル発動
+     ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
+     color.mode = ParticleSystemGradientMode.Color;
+     color.color = UseColor;
+     ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
+        main.startColor = color;
+        main.maxParticles = GetComponent<LvDesignController>().CustomerNum*2;
+
         ParticleFeed.GetComponent<ParticleSystem>().Play();
+
+
+
+        /*
+                Effect.GetComponent<Image>().color = UseColor;
+                Effect.SetActive(true);
+                */
+        //        StartCoroutine(XYChangeCoroutine(Effect, 144, 500, Time7));
+
+
+
+        //             iTween.MoveTo(Effect, iTween.Hash("position", new Vector3(0, 700f, 0f), "time", Time7, "easeType", iTween.EaseType.easeInQuad));
+
 
         yield return new WaitForSeconds(Time6 + Time7);//遅延
 
@@ -979,7 +998,16 @@ public class GameController : MonoBehaviour
         int MaxG = 0;
         float FloatMaxG = 0;
         float GCount = 0;
+        float GCount2 = 0;
+        int G10 = 0;
+        int G12 = 0;
+        int G14 = 0;
+        int G16 = 0;
+        int G18 = 0;
+
         float FloatNowGetG = 0;
+        float GAmount=0;
+
         int GetExp = 0;
         float GetSus = 0;
         float VictoryPoint = 0;
@@ -1155,27 +1183,109 @@ public class GameController : MonoBehaviour
                 //exp獲得
                 GetExp += GetComponent<LvDesignController>().VictoryDropExp(CustomerDropG, VictoryPoint);//Exp基数=Gと同じ
 
-                GCount = 0;
 
-                while (GCount < FloatNowGetG / 10 & GCount < 10) {
+                //0～50Gは、50Gごとに小さいG一つ（500Gまで表現）
+                //500Gで1.2倍G一つ（5000Gまで表現）
+                //5000Gで1.4倍G一つ（50000Gまで表現）
+                //50000Gで1.6倍G一つ（500000Gまで表現）
+                //500000Gで1.8倍G一つ（5000000Gまで表現）
+
+                G10 = 0;
+                G12 = 0;
+                G14 = 0;
+                G16 = 0;
+                G18 = 0;
+                GCount = 0;
+                GCount2 = 0;
+                GAmount = FloatNowGetG;
+                //何回Ｇを出すか計算
+                while (GAmount > 0 & GCount<=10){
+                    if (GAmount >= 500000) {
+                        GCount++;
+                        G18++;
+                        GAmount = GAmount - 500000;
+                            }
+                    else if (GAmount >= 50000 & GAmount < 500000)
+                    {
+                        GCount++;
+                        G16++;
+                        GAmount = GAmount - 50000;
+                    }
+                    else if (GAmount >= 5000 & GAmount < 50000)
+                    {
+                        GCount++;
+                        G14++;
+                        GAmount = GAmount - 5000;
+                    }
+                    else if (GAmount >= 500 & GAmount < 5000)
+                    {
+                        GCount++;
+                        G12++;
+                        GAmount = GAmount - 500;
+                    }
+                    else if (GAmount < 500)
+                    {
+                        GCount++;
+                        G10++;
+                        GAmount = GAmount - 50;
+
+                    }
+                }
+
+                GCount2 = GCount;
+                GCount = 0;
+                while (GCount < GCount2) {
                     //G生成
                     //  Debug.Log("G!");
                     GameObject G = (GameObject)Instantiate(
                            GPrefab,
                            transform.position,
                            Quaternion.identity);
-                    G.GetComponent<Image>().color = GYellow;
                     G.transform.SetParent(Customers[Count].transform);
                     //位置決定
                     G.transform.localPosition = new Vector3(0, 30, 1);
                     G.GetComponent<RectTransform>().localScale = new Vector3(0, 0, 0);
+                    G.GetComponent<Image>().color = GYellow;
+
+                    if (G18 > 0) {
+                        G.GetComponent<RectTransform>().sizeDelta = new Vector2(25*1.8f, 35*1.8f);
+                        G18--;
+                    }
+                    else {
+                        if (G16 > 0)
+                        {
+                            G.GetComponent<RectTransform>().sizeDelta = new Vector2(25*1.6f, 35*1.6f);
+                            G16--;
+                        }
+                        else
+                        {
+                            if (G14 > 0)
+                            {
+                                G.GetComponent<RectTransform>().sizeDelta = new Vector2(25*1.4f, 35*1.4f);
+                                G14--;
+                            }
+                            else
+                            {
+                                if (G12 > 0)
+                                {
+                                    G.GetComponent<RectTransform>().sizeDelta = new Vector2(25*1.2f, 35*1.2f);
+                                    G12--;
+                                }
+                                else
+                                {
+                                    G.GetComponent<RectTransform>().sizeDelta = new Vector2(25, 35);
+                                }
+
+                            }
+                        }
+                    }
 
                     //移動
                     StartCoroutine(GMove(G,
                         new Vector3(-200f, 500f, 0),
-                        GTime / (FloatMaxG / 10),
-                        (GTime / (FloatMaxG / 10)) * GCount + BlinkTime + HeartTime + MaTime)
-                        );
+                        GTime / GCount2,
+                        GTime / GCount2* GCount + BlinkTime + HeartTime + MaTime
+                        ));
 
 
                     GCount++;
@@ -1208,7 +1318,7 @@ public class GameController : MonoBehaviour
         float ResultGetSus = GetComponent<LvDesignController>().FeedGetSus(GetSus);
         //修正値による修正
         ResultGetSus = ResultGetSus * (StatGame.GetComponent<StatGame>().ModifySus + 100) / 100;
-        ResultGetSus = Mathf.Round(ResultGetSus);
+        ResultGetSus = Mathf.Ceil(ResultGetSus);
         //SE
         yield return new WaitForSeconds(BlinkTime + HeartTime + MaTime + GTime * 3 / 10);//遅延
         GetComponent<SoundController>().PlaySE("GGetOne");
@@ -1335,7 +1445,7 @@ public class GameController : MonoBehaviour
 
         GetComponent<StatGameController>().DrawExp();//レベルアップしていたら、Expを０に戻した状態で再描画
 
-        if (StatGame.GetComponent<StatGame>().StatSus > 100) {
+        if (StatGame.GetComponent<StatGame>().StatSus >= 100) {
 
             GameOver();
         }
@@ -1375,7 +1485,7 @@ public class GameController : MonoBehaviour
 
         GetComponent<SoundController>().StopStoreBgm();
 
-        if (StatGame.GetComponent<StatGame>().StatG >= 5000000) {
+        if (StatGame.GetComponent<StatGame>().StatG >= StatGame.GetComponent<StatGame>().Wairo) {
             GetComponent<StoryController>().StartStory("EndingKarma2");
         }
         else {
@@ -1388,7 +1498,7 @@ public class GameController : MonoBehaviour
     {
         int Fine=0;
         if (NowStoryKey == "EndingKarma1" | NowStoryKey == "SkipEndingKarma1") { Fine = StatGame.GetComponent<StatGame>().StatG; }
-        else if (NowStoryKey == "EndingKarma2" | NowStoryKey == "SkipEndingKarma2") { Fine = 5000000; }
+        else if (NowStoryKey == "EndingKarma2" | NowStoryKey == "SkipEndingKarma2") { Fine = StatGame.GetComponent<StatGame>().Wairo; }
         else if (NowStoryKey == "Ending1" | NowStoryKey == "SkipEnding1") { Fine = StatGame.GetComponent<StatGame>().StatG; }
         else if (NowStoryKey == "Ending2" | NowStoryKey == "SkipEnding2") { Fine = StatGame.GetComponent<StatGame>().StatG; }
         else if (NowStoryKey == "Ending3" | NowStoryKey == "SkipEnding3") { Fine = 10000000-StatGame.GetComponent<StatGame>().StatG;}
@@ -1437,8 +1547,14 @@ public class GameController : MonoBehaviour
 
         StatPlayer.GetComponent<StatPlayer>().MaxG = StatGame.GetComponent<StatGame>().StatG;
         StatPlayer.GetComponent<StatPlayer>().MaxLv = StatGame.GetComponent<StatGame>().StatLv;
-        StatPlayer.GetComponent<StatPlayer>().MaxDays = StatGame.GetComponent<StatGame>().StatDays;
-
+        if (StatGame.GetComponent<StatGame>().StatDays > StatGame.GetComponent<StatGame>().MaxDays)
+        {
+            StatPlayer.GetComponent<StatPlayer>().MaxDays = StatGame.GetComponent<StatGame>().MaxDays;
+        }
+        else
+        {
+            StatPlayer.GetComponent<StatPlayer>().MaxDays = StatGame.GetComponent<StatGame>().StatDays;
+        }
 
     }
 
@@ -2132,8 +2248,9 @@ public class GameController : MonoBehaviour
         //パーティクル発動
         GameObject Blood1 = Image.transform.Find("ParticleBlood").gameObject;
         GameObject Blood2 = Image.transform.Find("ParticleBloodBack").gameObject;
+        GameObject Blood3 = Image.transform.Find("ParticleBloodGas").gameObject;
 
-      
+
 
         ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
         color.mode = ParticleSystemGradientMode.Color;
@@ -2143,9 +2260,12 @@ public class GameController : MonoBehaviour
         main1.startColor = color;
         ParticleSystem.MainModule main2 = Blood2.GetComponent<ParticleSystem>().main;
         main2.startColor = color;
+        ParticleSystem.MainModule main3 = Blood3.GetComponent<ParticleSystem>().main;
+        main3.startColor = color;
 
         Blood1.GetComponent<ParticleSystem>().Play();
         Blood2.GetComponent<ParticleSystem>().Play();
+        Blood3.GetComponent<ParticleSystem>().Play();
 
 
         StartCoroutine(FadeOutCoroutine(Image, Time3));
@@ -2388,6 +2508,7 @@ public void SelectOK()
     public void RoundEnd()
     {
         PopupAction.SetActive(false);
+        PopupGetItem.SetActive(false);
 
         //アニメで動いたものを元に戻す
         BeforeStartAnim();
@@ -2411,11 +2532,11 @@ public void SelectOK()
 
 
         //30日になっていたら終了
-        if (StatGame.GetComponent<StatGame>().StatDays >=31) { DaysEnd(); }
+        if (StatGame.GetComponent<StatGame>().StatDays > StatGame.GetComponent<StatGame>().MaxDays) { DaysEnd(); }
         else { 
         //曜日振り分け
         int Youbi = StatGame.GetComponent<StatGame>().StatDays;
-        if (Youbi % 7 != 0)
+        if (Youbi % 7 != 1)
         {
          //   Debug.Log("平日");
             WorkingDay(Mode);
@@ -2878,6 +2999,10 @@ public void SelectOK()
 public void WorkingDay(int Mode)
     {
 
+        //ゲーム開始演出
+        iTween.MoveTo(CustomerFieldBack, iTween.Hash("position", new Vector3(0f, 300f, 0f), "time", 1.0f, "easeType", iTween.EaseType.linear));
+
+
         //客の生成
         if (Mode==0)
         {
@@ -2928,6 +3053,7 @@ public void WorkingDay(int Mode)
     {
         //スタート演出で動くものを上によせておく
         //開始時とメニューに戻った時に呼ぶ
+
 
         CustomerFieldBack.GetComponent<RectTransform>().localPosition = new Vector3(0f, 1000f, 0f);
         Button4Items1.GetComponent<RectTransform>().localPosition = new Vector3(-175f, -325f, 0f);

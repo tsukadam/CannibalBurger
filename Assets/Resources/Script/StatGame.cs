@@ -75,6 +75,11 @@ public class StatGame : MonoBehaviour
     //ハイスコア記録用、殺人数など
 
 
+    //時間制限
+    public int MaxDays = 30;
+    //逮捕時クリアになるわいろ額
+    public int Wairo = 5000000;
+
 
 
     //イベントシステムの取得（処理中に切る場合がある）

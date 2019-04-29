@@ -246,12 +246,12 @@ public class CustomerController : MonoBehaviour
 GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
 
         //位置決定
-        int PositionY = Random.Range(-200, 200);
+        int PositionY = 400;
         int PositionX = Random.Range(-200, 200);
         Customer.transform.position = new Vector3(PositionX, PositionY, 0);
-        int ForceY = Random.Range(-1, 1);
-        int ForceX = Random.Range(-1, 1);
-        int ForcePower = Random.Range(5000, 50000);
+        float ForceY = -2;
+        float ForceX = Random.Range(-2.5f, 2.5f);
+        int ForcePower = Random.Range(0, 50000);
 
         Customer.GetComponent<Rigidbody2D>().AddForce(new Vector2(ForceX, ForceY) * ForcePower);
 

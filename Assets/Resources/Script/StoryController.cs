@@ -34,6 +34,7 @@ public class StoryController : MonoBehaviour {
     public GameObject EndButton0;
     public GameObject EndButton1;
 
+    public GameObject Suuzi;
 
     //テスト用ストーリー
     public string[,] StoryData;
@@ -163,6 +164,7 @@ public class StoryController : MonoBehaviour {
             ButtonTrueSkip.SetActive(true);
 
         }
+        Suuzi.SetActive(false);
 
         EndButton0.SetActive(false);
         EndButton1.SetActive(false);
@@ -189,13 +191,65 @@ public class StoryController : MonoBehaviour {
         string Person2Path = UseStory[ReadCount, LowPerson2];
         string Fukidashi = UseStory[ReadCount, LowFukidashi];
         string Serif = UseStory[ReadCount, LowSerif];
+        Suuzi.SetActive(false);
 
 
 
         //特殊文字をステ内数字に変換
+        //ステ内数字に該当数字を入れる
+        //ステ内数字の表示位置を指定
+        Suuzi.GetComponent<Text>().text = "";
 
-        Serif = Serif.Replace("NowStatG", StatGame.GetComponent<StatGame>().StatG.ToString());
-        Serif=Serif.Replace("EndUseG", EndFine.ToString());
+        string NowStatG = StatGame.GetComponent<StatGame>().StatG.ToString();
+        string EndUseG = EndFine.ToString();
+        string MaxDays = StatGame.GetComponent<StatGame>().MaxDays.ToString();
+        string Wairo = StatGame.GetComponent<StatGame>().Wairo.ToString();
+
+        if (Serif.Contains("NowStatG"))
+        {
+            Serif = Serif.Replace("NowStatG", "");
+            Suuzi.GetComponent<Text>().text = NowStatG;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); ;
+        }
+        else if(Serif.Contains("EndUSeG"))
+        {
+            Serif = Serif.Replace("EndUseG", "");
+            Suuzi.GetComponent<Text>().text = EndUseG;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); ;
+        }
+        else if (Serif.Contains("MaxDays1"))
+        {
+            Serif = Serif.Replace("MaxDays1", "　　 ");
+            Suuzi.GetComponent<Text>().text = MaxDays;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(140, 72, 0); ;
+        }
+        else if (Serif.Contains("MaxDays2"))
+        {
+            Serif = Serif.Replace("MaxDays2", "　　 ");
+            Suuzi.GetComponent<Text>().text = MaxDays;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 72, 0); ;
+        }
+        else if (Serif.Contains("MaxDays3"))
+        {
+            Serif = Serif.Replace("MaxDays3", "　　　");
+            Suuzi.GetComponent<Text>().text = MaxDays;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(194, 72, 0); ;
+        }
+        else if (Serif.Contains("MaxDays4"))
+        {
+            Serif = Serif.Replace("MaxDays4", "　　　");
+            Suuzi.GetComponent<Text>().text = MaxDays;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); ;
+        }
+        else if (Serif.Contains("Wairo"))
+        {
+            Serif = Serif.Replace("Wairo", "      　　　　　");
+            Suuzi.GetComponent<Text>().text = Wairo;
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 72, 0); 
+        }
+        else
+        {
+        }
 
 
         //改行文字を改行に変換
@@ -273,6 +327,10 @@ public class StoryController : MonoBehaviour {
             NowGriff = Serif.Substring(Count, 1);
             ReadingSerif += NowGriff;
             Massage.text = ReadingSerif;
+            if(NowGriff == "　")
+            {
+                Suuzi.SetActive(true);
+            }
             yield return new WaitForSeconds(0.02f);
             Count++;
         }
@@ -290,6 +348,10 @@ public class StoryController : MonoBehaviour {
     {
         StopCoroutine("MassageCoroutine");
         Massage.text = NowSerif;
+        if (Suuzi.GetComponent<Text>().text != "")
+        {
+            Suuzi.SetActive(true);
+        }
         if (ReadCount >= ReadCountMax)
         {
             StoryEnd();

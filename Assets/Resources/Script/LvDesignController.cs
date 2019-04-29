@@ -52,10 +52,11 @@ public class LvDesignController : MonoBehaviour
     public int LvDesignDataGetCount=0;
 
     public int LvDesignLowNumber;
+    
 
-    //そのレベルの情報を保持する、レベルアップ時に走る
-    //初回は列番号のデータを取得
-    public void GetLvDesignData()
+        //そのレベルの情報を保持する、レベルアップ時に走る
+        //初回は列番号のデータを取得
+        public void GetLvDesignData()
     {
         string[,] LvDesignData = StatGame.GetComponent<StatGame>().LvDesignData;
 
@@ -392,6 +393,14 @@ public class LvDesignController : MonoBehaviour
     //通常客の生成
     public void MakeCustomerNormal()
     {
+
+        StartCoroutine("MakeCustomerNormalCoroutine");
+    }
+    IEnumerator MakeCustomerNormalCoroutine()
+    {
+
+//        yield return new WaitForSeconds(1.0f);//遅延時間
+
         int GameLv = StatGame.GetComponent<StatGame>().StatLv;
 
         string SelectedId;
@@ -519,6 +528,7 @@ public class LvDesignController : MonoBehaviour
 
 
             //Hp,G,Power,Susのランダム化
+            //パワー、ＳＵＳ９９以上は９９にする
             SelectedHpFloat = float.Parse(SelectedHp);
             SelectedHpFloat = Random.Range(SelectedHpFloat * RandomBottom, SelectedHpFloat * RandomTop);
             SelectedHpInt = Mathf.RoundToInt(SelectedHpFloat);
@@ -530,22 +540,29 @@ public class LvDesignController : MonoBehaviour
             SelectedMeatPowerFloat = float.Parse(SelectedMeatPower);
             SelectedMeatPowerFloat = Random.Range(SelectedMeatPowerFloat * RandomBottom, SelectedMeatPowerFloat * RandomTop);
             SelectedMeatPowerInt = Mathf.RoundToInt(SelectedMeatPowerFloat);
+            if (SelectedMeatPowerInt > 99) { SelectedMeatPowerInt = 99;}
             SelectedMeatPower = SelectedMeatPowerInt.ToString();
 
             SelectedMeatSusFloat = float.Parse(SelectedMeatSus);
             SelectedMeatSusFloat = Random.Range(SelectedMeatSusFloat * RandomBottom, SelectedMeatSusFloat * RandomTop);
             SelectedMeatSusInt = Mathf.RoundToInt(SelectedMeatSusFloat);
+            if (SelectedMeatSusInt > 99) { SelectedMeatSusInt = 99; }
             SelectedMeatSus = SelectedMeatSusInt.ToString();
 
             SelectedDropPowerFloat = float.Parse(SelectedDropPower);
             SelectedDropPowerFloat = Random.Range(SelectedDropPowerFloat * RandomBottom, SelectedDropPowerFloat * RandomTop);
             SelectedDropPowerInt = Mathf.RoundToInt(SelectedDropPowerFloat);
+            if (SelectedDropPowerInt > 99) { SelectedDropPowerInt = 99; }
             SelectedDropPower = SelectedDropPowerInt.ToString();
 
             SelectedDropSusFloat = float.Parse(SelectedDropSus);
             SelectedDropSusFloat = Random.Range(SelectedDropSusFloat * RandomBottom, SelectedDropSusFloat * RandomTop);
             SelectedDropSusInt = Mathf.RoundToInt(SelectedDropSusFloat);
+            if (SelectedDropSusInt > 99) { SelectedDropSusInt = 99; }
             SelectedDropSus = SelectedDropSusInt.ToString();
+
+
+
 
             GetComponent<CustomerController>().MakeCustomer(
                 SelectedIdInt,
@@ -561,9 +578,10 @@ public class LvDesignController : MonoBehaviour
                  SelectedRare,
                  SelectedPopLvInt,
                  SelectedDisLvInt);
+            yield return new WaitForSeconds(0.1f);//遅延時間
             count++;
         }
-
+        yield return null;
     }
 
     //レベルアップ判定
@@ -741,14 +759,14 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         int RandomCount = 0;
         if (type == 0) {
 
-            RandomCount = Random.Range(4, 7);
-            //レベル×4～7倍％取得カルマを下げる
-            ReturnValue = StatGame.GetComponent<StatGame>().StatLv * RandomCount;
+            RandomCount = Random.Range(4, 8);
+            //レベル/2×4～8倍％取得カルマを下げる
+            ReturnValue = StatGame.GetComponent<StatGame>().StatLv / 2 * RandomCount;
 
         }
         else {
-            RandomCount = Random.Range(7, 15);
-            //レベル×7～15倍％取得Ｇを上げる
+            RandomCount = Random.Range(2, 7);
+            //レベル×2～7倍％取得Ｇを上げる
             ReturnValue = StatGame.GetComponent<StatGame>().StatLv * RandomCount;
 
         }
@@ -766,14 +784,14 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         if (type == 0)
         {
 
-            RandomCount = Random.Range(10, 40);
-            //10～40％取得カルマを下げる
+            RandomCount = Random.Range(70, 100);
+            //70～100％取得カルマを下げる
             ReturnValue = RandomCount;
 
         }
         else {
-            RandomCount = Random.Range(20, 50);
-            //20～50％パワーを上げる
+            RandomCount = Random.Range(40, 70);
+            //40～70％パワーを上げる
             ReturnValue = RandomCount;
 
         }

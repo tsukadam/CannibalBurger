@@ -41,6 +41,7 @@ public class StatGameController : MonoBehaviour
     public Text TextG;
     public Text TextLv;
     public Text TextDays;
+    public Text TextSus;
 
     public GameObject Item4_1Image;
     public Text Item4_1Text;
@@ -123,8 +124,8 @@ public class StatGameController : MonoBehaviour
     public Text MarketCost2;
 
     public GameObject Modify;
-    public GameObject ModifyYa;
-    public GameObject ModifyLine;
+    public GameObject ModifyYaSus;
+    public GameObject ModifyYaG;
     public GameObject Youbi;
 
     //イベントシステムの取得（処理中に切る場合がある）
@@ -490,6 +491,7 @@ public class StatGameController : MonoBehaviour
     //Sus増減
     public void SusUp(float Count)
     {
+
         StartCoroutine("SusUpCoroutine", Count);
     }
     IEnumerator SusUpCoroutine(float Count)
@@ -524,10 +526,12 @@ public class StatGameController : MonoBehaviour
             if (AnimeSus < 0) { AnimeSus = 0; break; }
             if (AnimeSus > 100) { AnimeSus = 100; break; }
             DrawSus2(AnimeSus);
+            DrawSusNum();
             yield return new WaitForSeconds(0.05f);//描画一回にかける遅延時間
         }
         StatGame.GetComponent<StatGame>().StatSus = Goal;
         DrawSus();
+        DrawSusNum();
         //       Debug.Log("StatSus: " + Moto + " → " + Goal);
         TapBlockSus.SetActive(false);
         EventSystem.SetActive(true);
@@ -639,6 +643,15 @@ public class StatGameController : MonoBehaviour
         TextG.color = GCol;
         TextG.text = StatGText;
     }
+    //Sus数字描画
+    public void DrawSusNum()
+    {
+        float StatSus = StatGame.GetComponent<StatGame>().StatSus;//所持金
+        StatSus=Mathf.FloorToInt(StatSus);
+        string StatSusText = StatSus.ToString();
+        TextSus.text = StatSusText;
+
+    }
     //Sus描画
     public void DrawSus()
     {
@@ -683,40 +696,25 @@ public class StatGameController : MonoBehaviour
     {
         int ModifyGValue = StatGame.GetComponent<StatGame>().ModifyG;
         int ModifySusValue = StatGame.GetComponent<StatGame>().ModifySus;
-        string ImagePathYa;
-        Sprite SpriteImageYa;
-        string ImagePathLine;
-        Sprite SpriteImageLine;
-if(ModifyGValue != 0& ModifySusValue != 0) { Debug.Log("SusとG両方修正は出来ません　両方表示しません"); }
+        ModifyYaG.GetComponent<Image>().color = GetComponent<GameController>().GYellow;
+        ModifyYaSus.GetComponent<Image>().color = GetComponent<GameController>().ExpBlue;
+
+        if (ModifyGValue != 0& ModifySusValue != 0) { Debug.Log("SusとG両方修正は出来ません　両方表示しません"); }
         else if (ModifyGValue != 0 & ModifySusValue == 0)
         {
-            Modify.SetActive(true);
-            ImagePathYa = "Stat/" + "Pict_ModiYaAge";
-            SpriteImageYa = Resources.Load<Sprite>(ImagePathYa);
-            ModifyYa.GetComponent<Image>().sprite = SpriteImageYa;
-            ModifyYa.GetComponent<Image>().color = GetComponent<GameController>().GYellow;
-
-            ImagePathLine = "Stat/" + "Pict_ModiLineG";
-            SpriteImageLine = Resources.Load<Sprite>(ImagePathLine);
-            ModifyLine.GetComponent<Image>().sprite = SpriteImageLine;
+            ModifyYaG.SetActive(true);
+            ModifyYaSus.SetActive(false);
         }
         else if (ModifySusValue != 0 & ModifyGValue == 0)
         {
-            Modify.SetActive(true);
-            ImagePathYa = "Stat/" + "Pict_ModiYaSage";
-            SpriteImageYa = Resources.Load<Sprite>(ImagePathYa);
-            ModifyYa.GetComponent<Image>().sprite = SpriteImageYa;
-            ModifyYa.GetComponent<Image>().color = GetComponent<GameController>().ExpBlue;
-
-            ImagePathLine = "Stat/" + "Pict_ModiLineK";
-            SpriteImageLine = Resources.Load<Sprite>(ImagePathLine);
-            ModifyLine.GetComponent<Image>().sprite = SpriteImageLine;
-
-
+            ModifyYaSus.SetActive(true);
+            ModifyYaG.SetActive(false);
+        
         }
         else
         {
-            Modify.SetActive(false);
+            ModifyYaSus.SetActive(false);
+            ModifyYaG.SetActive(false);
 
         }
     }
