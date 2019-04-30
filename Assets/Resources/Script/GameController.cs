@@ -3143,7 +3143,7 @@ public void WorkingDay(int Mode)
     {
 
 
-        ITweenCount = iTween.Count();
+        
     }
 }
 
