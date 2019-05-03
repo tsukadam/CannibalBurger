@@ -32,6 +32,7 @@ public class StatCustomer : MonoBehaviour
     
     public Color CusCol;
     public float ColorChangeSpan = 0.4f;
+    public GameObject ParticleG;
 
     //グローの光りをオンにする
     public void Glow()

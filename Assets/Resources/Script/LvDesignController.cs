@@ -117,8 +117,8 @@ public class LvDesignController : MonoBehaviour
     public void MakeItemFirst()
     {
         StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "3", "#dd6645", "0" };
-        StatGame.GetComponent<StatGame>().Item2 = new string[] { "レタス", "Retasu", "1", "#88cc66", "100" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "1", "#dddd77", "0" };
+        StatGame.GetComponent<StatGame>().Item2 = new string[] { "レタス", "Retasu", "1", "#88cc66", "0" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "99", "#dddd77", "0" };
         StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "0" };
     }
 
@@ -891,6 +891,9 @@ public int VictoryDropG(int GetG,float VictoryPoint)
 
         int CostInt = Mathf.RoundToInt(Cost);
         //Debug.Log("IntCost:" + Cost);
+
+        if (PowerInt > 99) { PowerInt = 99; }
+        if (SusInt > 99) { SusInt = 99; }
 
         ReturnItem[0] = GetItem[0];
         ReturnItem[1] = GetItem[1];

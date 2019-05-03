@@ -307,8 +307,63 @@ public class StoryController : MonoBehaviour {
 
         NextButton.SetActive(false);
         SkipButton.SetActive(true);
+        string Voice="";
 
-        StartCoroutine("MassageCoroutine", Serif);
+        if (Fukidashi == "L") {
+            if (Person1Path == "Morrel")
+            {
+                Voice = "SEVoiceMan";
+            }
+            else if (Person1Path == "Morrel2")
+            {
+                Voice = "SEVoiceMan";
+            }
+            else if(Person1Path == "Miyako") {
+                Voice = "SEVoiceWoman";
+            }
+            else if (Person1Path == "Death") {
+                Voice = "SEVoiceOld";
+            }
+            else if (Person1Path == "Police") {
+                Voice = "SEVoiceMan";
+            }
+            else
+            {
+                Voice = "SEVoiceNone";
+            }
+        }
+        else if (Fukidashi == "R") {
+            if (Person2Path == "Morrel")
+            {
+                Voice = "SEVoiceMan";
+            }
+            else if (Person2Path == "Morrel2")
+            {
+                Voice = "SEVoiceMan";
+            }
+            else if (Person2Path == "Miyako")
+            {
+                Voice = "SEVoiceWoman";
+            }
+            else if (Person2Path == "Death")
+            {
+                Voice = "SEVoiceOld";
+            }
+            else if (Person2Path == "Police")
+            {
+                Voice = "SEVoiceMan";
+            }
+            else
+            {
+                Voice = "SEVoiceNone";
+            }
+        }
+        else
+        {
+            Voice = "SEVoiceNone";
+        }
+
+        StartCoroutine(MassageCoroutine(Serif,Voice));
 
         ReadCount++;
 
@@ -316,7 +371,7 @@ public class StoryController : MonoBehaviour {
 
     }
 
-    IEnumerator MassageCoroutine(string Serif)
+    IEnumerator MassageCoroutine(string Serif, string Voice)
 {
         int Count = 0;
         string ReadingSerif="";
@@ -331,7 +386,11 @@ public class StoryController : MonoBehaviour {
             {
                 Suuzi.SetActive(true);
             }
-            yield return new WaitForSeconds(0.02f);
+            if (Count==0|NowGriff == "　" | NowGriff == "\n" | NowGriff == " " | NowGriff == "。" | NowGriff == "！" | NowGriff == "？")
+            {
+                GetComponent<SoundController>().PlaySE(Voice);
+            }
+            yield return new WaitForSeconds(0.01f);
             Count++;
         }
         NextButton.SetActive(true);
@@ -414,12 +473,12 @@ public class StoryController : MonoBehaviour {
     }
 
     //休日アクションの中の、演出だけの文字送り
-    public void ActionReadLine(string Serif)
+    public void ActionReadLine(string Serif,string Voice)
     {
-        StartCoroutine("ActionMassageCoroutine", Serif);
+        StartCoroutine(ActionMassageCoroutine(Serif, Voice));
     }
 
-    IEnumerator ActionMassageCoroutine(string Serif)
+    IEnumerator ActionMassageCoroutine(string Serif,string Voice)
     {
         int Count = 0;
         string ReadingSerif = "";
@@ -430,7 +489,11 @@ public class StoryController : MonoBehaviour {
             NowGriff = Serif.Substring(Count, 1);
             ReadingSerif += NowGriff;
             ActionMassage.text = ReadingSerif;
-            yield return new WaitForSeconds(0.02f);
+            if (Count == 0 | NowGriff == "　" | NowGriff == "\n" | NowGriff == " " | NowGriff == "。" | NowGriff == "！" | NowGriff == "？")
+                {
+            GetComponent<SoundController>().PlaySE(Voice);
+        }
+            yield return new WaitForSeconds(0.01f);
             Count++;
         }
 

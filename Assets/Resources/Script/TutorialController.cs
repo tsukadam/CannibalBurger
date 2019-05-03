@@ -115,6 +115,7 @@ public class TutorialController : MonoBehaviour {
     IEnumerator BeforeStartCoroutine()
     {
         yield return new WaitForSeconds(WaitTime);
+        GetComponent<SoundController>().PlaySE("TapButtonDai");
         Window.SetActive(true);
         SkipButton.SetActive(true);
       //  Sankaku.SetActive(true);
@@ -268,7 +269,7 @@ public class TutorialController : MonoBehaviour {
         new string[]{
         "４つの しょくざいから" +"\n"+"１つ えらんで " +"\n"+"バーガーを つくるよ",
         "しろい すうじが パワー" +"\n"+"あかい すうじが カルマ",
-        "カルマ が たまると" +"\n"+"ゲームオーバーだよ"
+        "カルマ が まんたん に なると" +"\n"+"ゲームオーバーだよ"
     };
     TutorialSecondFeed =
         new string[]{
@@ -297,7 +298,7 @@ public class TutorialController : MonoBehaviour {
         "まんぞくした おきゃくさま だけが" +"\n"+"しょくざい を くれるよ",
         "ほしい しょくざい を" +"\n"+"２つ タップして えらぼう",
         "もういちど タップ で キャンセル",
-        "おきゃくさま も えらべるよ"
+        "おきゃくさま ほんにん も えらべるよ"
     };
     TutorialFirstDispose =
     new string[]{
