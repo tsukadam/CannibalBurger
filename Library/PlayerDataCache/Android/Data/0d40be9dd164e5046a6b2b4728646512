@@ -92,7 +92,7 @@ Ending1,Morrel2,Death,L,Home,まだです。
 Ending1,Morrel2,Death,R,Home,それは ざんねんだ。
 Ending1,Morrel2,Death,R,Home,むすめ と みせ は／もらっていくぞ！
 Ending1,Miyako,Death,L,Home,しかたありませんね…。／いっしょに まいります。
-Ending1,Miyako,Death,L,Home,あ、でも。いま／NowStatG／ほど　あるんですが…
+Ending1,Miyako,Death,L,Home,あ、でも。いま／NowStatG／えん　あるんですが…
 Ending1,Miyako,Death,L,Home,これで もうすこし／まってもらえない ですか？
 Ending1,Miyako,Death,R,Home,だめだね。／さあ、いくぞ。
 Ending1,Miyako,Death,L,Home,だめかぁ…。／しかたないね。
@@ -105,7 +105,7 @@ Ending2,Morrel2,Death,L,Home,まだです。
 Ending2,Morrel2,Death,R,Home,それは ざんねんだ。
 Ending2,Morrel2,Death,R,Home,むすめ と みせ は／もらっていくぞ！
 Ending2,Miyako,Death,L,Home,しかたありませんね…。／いっしょに まいります。
-Ending2,Miyako,Death,L,Home,あ、でも。いま／NowStatG／ほど　あるんですが…
+Ending2,Miyako,Death,L,Home,あ、でも。いま／NowStatG／えん　あるんですが…
 Ending2,Miyako,Death,L,Home,これで もうすこし／まってもらえない ですか？
 Ending2,Miyako,Death,R,Home,だめだね。／…と いいたい ところだが。
 Ending2,Miyako,Death,R,Home,すこしは かせいだね。／それすら むり だと／おもっていた。
@@ -127,7 +127,7 @@ Ending3,Morrel2,Death,L,Home,まだです。
 Ending3,Morrel2,Death,R,Home,それは ざんねんだ。
 Ending3,Morrel2,Death,R,Home,むすめ と みせ は／もらっていくぞ！
 Ending3,Miyako,Death,L,Home,しかたありませんね…。／いっしょに まいります。
-Ending3,Miyako,Death,L,Home,あ、でも。いま／NowStatG／ほど　あるんですが…
+Ending3,Miyako,Death,L,Home,あ、でも。いま／NowStatG／えん　あるんですが…
 Ending3,Miyako,Death,L,Home,これで もうすこし／まってもらえない ですか？
 Ending3,Miyako,Death,R,Home,む、そんなに あるの？
 Ending3,Miyako,Death,R,Home,おもったより かせいだね。／やるじゃん。

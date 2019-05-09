@@ -51,6 +51,9 @@ public class StoryController : MonoBehaviour {
     public int EndFine=0;
     public string NowStoryKey="";
 
+    //コルーチン
+    public IEnumerator Routine;
+
     //Mode=0 オープニング　終了後はゲームスタートに遷移
     //Mode=1 エンディング　終了後はゲームオーバー画面に遷移
     public void ModeSetting(int Mode)
@@ -207,45 +210,45 @@ public class StoryController : MonoBehaviour {
 
         if (Serif.Contains("NowStatG"))
         {
-            Serif = Serif.Replace("NowStatG", "");
+            Serif = Serif.Replace("NowStatG", "＠");
             Suuzi.GetComponent<Text>().text = NowStatG;
             Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); ;
         }
-        else if(Serif.Contains("EndUSeG"))
+        else if(Serif.Contains("EndUseG"))
         {
-            Serif = Serif.Replace("EndUseG", "");
+            Serif = Serif.Replace("EndUseG", "＠");
             Suuzi.GetComponent<Text>().text = EndUseG;
             Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); ;
         }
         else if (Serif.Contains("MaxDays1"))
         {
-            Serif = Serif.Replace("MaxDays1", "　　 ");
+            Serif = Serif.Replace("MaxDays1", "＠　　 ");
             Suuzi.GetComponent<Text>().text = MaxDays;
             Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(140, 72, 0); ;
         }
         else if (Serif.Contains("MaxDays2"))
         {
-            Serif = Serif.Replace("MaxDays2", "　　 ");
+            Serif = Serif.Replace("MaxDays2", "＠　　 ");
             Suuzi.GetComponent<Text>().text = MaxDays;
             Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 72, 0); ;
         }
         else if (Serif.Contains("MaxDays3"))
         {
-            Serif = Serif.Replace("MaxDays3", "　　　");
+            Serif = Serif.Replace("MaxDays3", "＠　　　");
             Suuzi.GetComponent<Text>().text = MaxDays;
             Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(194, 72, 0); ;
         }
         else if (Serif.Contains("MaxDays4"))
         {
-            Serif = Serif.Replace("MaxDays4", "　　　");
+            Serif = Serif.Replace("MaxDays4", "＠　　　");
             Suuzi.GetComponent<Text>().text = MaxDays;
             Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); ;
         }
         else if (Serif.Contains("Wairo"))
         {
-            Serif = Serif.Replace("Wairo", "      　　　　　");
+            Serif = Serif.Replace("Wairo", "＠      　　　　　");
             Suuzi.GetComponent<Text>().text = Wairo;
-            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 72, 0); 
+            Suuzi.GetComponent<RectTransform>().localPosition = new Vector3(12, 6, 0); 
         }
         else
         {
@@ -254,7 +257,7 @@ public class StoryController : MonoBehaviour {
 
         //改行文字を改行に変換
         string[] SplitSerif = Serif.Split("／"[0]);
-        Debug.Log(SplitSerif.Length);
+        //Debug.Log(SplitSerif.Length);
         if (SplitSerif.Length == 1) {}
         else
         {
@@ -363,7 +366,9 @@ public class StoryController : MonoBehaviour {
             Voice = "SEVoiceNone";
         }
 
-        StartCoroutine(MassageCoroutine(Serif,Voice));
+        Routine = null;
+        Routine= MassageCoroutine(Serif, Voice);
+        StartCoroutine(Routine);
 
         ReadCount++;
 
@@ -380,16 +385,18 @@ public class StoryController : MonoBehaviour {
         while(Count< SerifLength)
         {
             NowGriff = Serif.Substring(Count, 1);
-            ReadingSerif += NowGriff;
-            Massage.text = ReadingSerif;
-            if(NowGriff == "　")
+            if(NowGriff == "＠")
             {
+                NowGriff = "";
                 Suuzi.SetActive(true);
             }
             if (Count==0|NowGriff == "　" | NowGriff == "\n" | NowGriff == " " | NowGriff == "。" | NowGriff == "！" | NowGriff == "？")
             {
                 GetComponent<SoundController>().PlaySE(Voice);
             }
+            ReadingSerif += NowGriff;
+            Massage.text = ReadingSerif;
+
             yield return new WaitForSeconds(0.01f);
             Count++;
         }
@@ -405,12 +412,12 @@ public class StoryController : MonoBehaviour {
 
     public void SkipReadLine()
     {
-        StopCoroutine("MassageCoroutine");
+
+        StopCoroutine(Routine);
+
+        NowSerif = NowSerif.Replace("＠","");
         Massage.text = NowSerif;
-        if (Suuzi.GetComponent<Text>().text != "")
-        {
-            Suuzi.SetActive(true);
-        }
+ 
         if (ReadCount >= ReadCountMax)
         {
             StoryEnd();
@@ -456,19 +463,32 @@ public class StoryController : MonoBehaviour {
     {
         StoryAll.SetActive(false);
         string EndMassage="";
-
-        if (NowStoryKey == "EndingKarma1"| NowStoryKey == "SkipEndingKarma1") { EndMassage = "ゲームオーバー！"; }
-        else if (NowStoryKey == "EndingKarma2"| NowStoryKey == "SkipEndingKarma2") { EndMassage = "ゲームクリア…？"; }
-        else if (NowStoryKey == "Ending1" | NowStoryKey == "SkipEnding1") { EndMassage = "ゲームオーバー！"; }
-        else if (NowStoryKey == "Ending2" | NowStoryKey == "SkipEnding2") { EndMassage = "スコア０クリア！"; }
-        else if (NowStoryKey == "Ending3"| NowStoryKey == "SkipEnding3") { EndMassage = "ゲームクリア！"; }
-        else if (NowStoryKey == "Ending4"| NowStoryKey == "SkipEnding4") { EndMassage = "パーフェクトクリア！"; }
+        int BadEndFlag = 0;
+        if (NowStoryKey == "EndingKarma1"| NowStoryKey == "SkipEndingKarma1") { EndMassage = "ゲームオーバー！";
+            GetComponent<SoundController>().PlaySE("SEBadEnd");
+            BadEndFlag = 1;
+        }
+        else if (NowStoryKey == "EndingKarma2"| NowStoryKey == "SkipEndingKarma2") { EndMassage = "ゲームクリア…？";
+            GetComponent<SoundController>().PlaySE("SEBadEnd");
+        }
+        else if (NowStoryKey == "Ending1" | NowStoryKey == "SkipEnding1") { EndMassage = "ゲームオーバー！";
+            GetComponent<SoundController>().PlaySE("SEBadEnd");
+            BadEndFlag = 1;
+        }
+        else if (NowStoryKey == "Ending2" | NowStoryKey == "SkipEnding2") { EndMassage = "スコア０クリア！";
+            GetComponent<SoundController>().PlaySE("SEGoodEnd");
+        }
+        else if (NowStoryKey == "Ending3"| NowStoryKey == "SkipEnding3") { EndMassage = "ゲームクリア！";
+            GetComponent<SoundController>().PlaySE("SEGoodEnd");
+        }
+        else if (NowStoryKey == "Ending4"| NowStoryKey == "SkipEnding4") { EndMassage = "パーフェクトクリア！";
+            GetComponent<SoundController>().PlaySE("SEGoodEnd");
+        }
 
         EndFine = GetComponent<GameController>().GetEndFine(NowStoryKey);
         GetComponent<StatGameController>().GUp(EndFine * -1);
-
-
-        GetComponent<GameController>().EndCard(EndMassage);
+        Debug.Log("G:"+StatGame.GetComponent<StatGame>().StatG);
+        GetComponent<GameController>().EndCard(EndMassage, BadEndFlag);
 
     }
 

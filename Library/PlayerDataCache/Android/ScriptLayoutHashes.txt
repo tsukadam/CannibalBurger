@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Build/test2019050302.apk
+D:/Build/test2019050903.apk
 SceneListBegin?
 Assets/SceneMain.unity
 SceneListEnd?
@@ -18,7 +18,7 @@ e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 e1bbf0ab858085e38fae6b12ebbdcd35 UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 201e3fde670b00545944bb3db215c80a UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
-12440a17737dd99f0a4d780da49666f2 Assembly-CSharp.dll:.GameController
+430c7c42434f76dc30f69b2a6767564f Assembly-CSharp.dll:.GameController
 e7a73f5f78ba6445195ec23b74a1ce2d Unity.TextMeshPro.dll:TMPro.TMP_ScrollbarEventHandler
 7d3bf44b3b255def8f1ca2cceb91904d Assembly-CSharp.dll:Coffee.UIExtensions.UIEffect
 8d606df7129835bf2c8eb08e6691c2ac Assembly-CSharp.dll:.BlinkChild
@@ -185,7 +185,7 @@ c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 fdef7b2a9751edf7d16118494274cb53 Assembly-CSharp.dll:.StoryController
-407cc98c3e7c119a1d479ed45fa959cd Assembly-CSharp.dll:.SoundController
+2e06359963f2c26cf89cd7b2bdd68243 Assembly-CSharp.dll:.SoundController
 7f730c4f72cc4785d3f0327556cac41a Assembly-CSharp.dll:.DebugController
 94881f00fac8c776bcda443b095a1b03 Assembly-CSharp.dll:Coffee.UIExtensions.UIEffectCapturedImage
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.PixelBase

@@ -128,6 +128,8 @@ public class StatGameController : MonoBehaviour
     public GameObject ModifyYaG;
     public GameObject Youbi;
 
+    private int SusGlowCount = 0;
+
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
@@ -501,15 +503,16 @@ public class StatGameController : MonoBehaviour
         float StatSus = StatGame.GetComponent<StatGame>().StatSus;
         float AnimeSus = StatGame.GetComponent<StatGame>().StatSus;
 
-        float BarSize = 325;//バー全体の長さ
+        float BarSize = 320;//バー全体の長さ
         float MemoriSize = 10;//１目盛りの長さ
         float Moto = StatSus;//元のステータス値
         float Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
-        else if (Goal > 100) { Goal = 101.0f; Count = 100 - Moto; }//結果が１００以上なら１００
+//        else if (Goal > 100) { Goal = 101.0f; Count = 100 - Moto; }//結果が１００以上なら１００
         float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
         float iCount = Mathf.Abs(Count / Memori);
-        float Start = Moto - Moto % Memori;//開始地点を丸める
+                float Start = Moto - Moto % Memori;//開始地点を丸める
+
 
         AnimeSus = Start;
         int i;
@@ -523,10 +526,10 @@ public class StatGameController : MonoBehaviour
             else {
                 AnimeSus -= Memori;
             }
-            if (AnimeSus < 0) { AnimeSus = 0; break; }
-            if (AnimeSus > 100) { AnimeSus = 100; break; }
             DrawSus2(AnimeSus);
             DrawSusNum();
+            if (AnimeSus < 0) { AnimeSus = 0; break; }
+            if (AnimeSus > 100) { AnimeSus = 100; break; }
             yield return new WaitForSeconds(0.05f);//描画一回にかける遅延時間
         }
         StatGame.GetComponent<StatGame>().StatSus = Goal;
@@ -571,11 +574,11 @@ public class StatGameController : MonoBehaviour
             else {
                 AnimeSus -= Memori;
             }
+            DrawExp2(AnimeSus);
             if (AnimeSus < 0) { AnimeSus = 0; break; }
             if (AnimeSus > 100) { AnimeSus = 100; break; }
-            DrawExp2(AnimeSus);
 
-            yield return new WaitForSeconds(1.0f / iCount);//描画一回にかける遅延時間
+            yield return new WaitForSeconds(0.5f / iCount);//描画一回にかける遅延時間
         }
         StatGame.GetComponent<StatGame>().StatExp = Goal;
         DrawExp();
@@ -646,7 +649,7 @@ public class StatGameController : MonoBehaviour
     //Sus数字描画
     public void DrawSusNum()
     {
-        float StatSus = StatGame.GetComponent<StatGame>().StatSus;//所持金
+        float StatSus = StatGame.GetComponent<StatGame>().StatSus;
         StatSus=Mathf.FloorToInt(StatSus);
         string StatSusText = StatSus.ToString();
         TextSus.text = StatSusText;
@@ -655,13 +658,37 @@ public class StatGameController : MonoBehaviour
     //Sus描画
     public void DrawSus()
     {
-        float StatSus = StatGame.GetComponent<StatGame>().StatSus;
-        BarSus.sizeDelta = new Vector2(325 * StatSus / 100, 70);
+
+ float StatSus = StatGame.GetComponent<StatGame>().StatSus;
+        float BarSize = 320;
+        float MemoriSize = 10;//１目盛りの長さ
+        float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
+        float End = StatSus-StatSus % Memori;//終了地点を丸める
+
+        float iCount = Mathf.Ceil(End / Memori);
+
+ 
+        if (End > 100)
+        {
+            BarSus.sizeDelta = new Vector2(320, 70);
+
+        }
+        else if (End <= 0)
+        {
+            BarSus.sizeDelta = new Vector2(0, 70);
+
+        }
+        else {
+            BarSus.sizeDelta = new Vector2(10 * iCount, 70);
+        }
+
+
+
     }
     //Sus描画（アニメーション用）
     public void DrawSus2(float AnimeSus)
     {
-        BarSus.sizeDelta = new Vector2(325 * AnimeSus / 100, 70);
+        BarSus.sizeDelta = new Vector2(320 * AnimeSus / 100, 70);
     }
 
     //Exp描画（アニメーション用）
@@ -723,7 +750,32 @@ public class StatGameController : MonoBehaviour
     {
         int StatExp = StatGame.GetComponent<StatGame>().StatExp;
         BarExpOb.GetComponent<Image>().color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-        BarExp.sizeDelta = new Vector2(720 * StatExp / 100, 25);
+
+
+        float BarSize = 720;
+        float MemoriSize = 10;//１目盛りの長さ
+        float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
+        float End = StatExp - StatExp % Memori;//終了地点を丸める
+
+        float iCount = Mathf.Ceil(End / Memori);
+
+        if (End > 100)
+        {
+            BarExp.sizeDelta = new Vector2(720, 25);
+
+        }
+        else if (End <= 0)
+        {
+            BarExp.sizeDelta = new Vector2(0, 25);
+
+        }
+        else
+        {
+
+            BarExp.sizeDelta = new Vector2(10 * iCount, 25);
+        }
+
+
     }
 
     //レベル描画
@@ -809,23 +861,27 @@ public class StatGameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if (StatGame.GetComponent<StatGame>().StatSus > 90)
+        SusGlowCount++;
+        if (SusGlowCount >0)
         {
-            ObjectSus.GetComponent<Image>().color = new Color(1f,0,0,1f);
-            SusCol = new Color(1f, 0, 0, 1f);
-            if (SusGlowFlag == 0)
+            if (StatGame.GetComponent<StatGame>().StatSus > 90)
             {
-                SusGlow();
+                ObjectSus.GetComponent<Image>().color = new Color(1f, 0, 0, 1f);
+                SusCol = new Color(1f, 0, 0, 1f);
+                if (SusGlowFlag == 0)
+                {
+                    SusGlow();
+                }
             }
-        }
-        else {
-            if (SusGlowFlag == 1)
+            else
             {
-                StartCoroutine("SusGlowStop");
+                if (SusGlowFlag == 1)
+                {
+                    StartCoroutine("SusGlowStop");
+                }
+                ObjectSus.GetComponent<Image>().color = GetComponent<GameController>().SusGreen;
+                SusCol = GetComponent<GameController>().SusGreen;
             }
-            ObjectSus.GetComponent<Image>().color = GetComponent<GameController>().SusGreen;
-            SusCol = GetComponent<GameController>().SusGreen;
         }
     }
 }

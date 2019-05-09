@@ -29,6 +29,8 @@ public class SoundController : MonoBehaviour {
     public AudioClip SECustomerVoice;
     public AudioClip SEKill;
     public AudioClip SETapButton;
+    public AudioClip SETapButtonHigh1;
+    public AudioClip SETapButtonHigh2;
     public AudioClip SETapButtonDai;
     public AudioClip SECustomerSelect;
     public AudioClip SEGGetOne;
@@ -39,11 +41,18 @@ public class SoundController : MonoBehaviour {
     public AudioClip SEBans;
     public AudioClip SEBansSteam;
     public AudioClip SEMahou;
+    public AudioClip SEMahouHoly;
+    public AudioClip SEBadEnd;
+    public AudioClip SEGoodEnd;
 
     public AudioClip SEVoiceMan;
     public AudioClip SEVoiceMan2;
     public AudioClip SEVoiceWoman;
     public AudioClip SEVoiceOld;
+    public AudioClip SENoVoice;
+    public AudioClip SEKachi;
+
+    public AudioClip SEWaku;
 
     //フェードインアウト設定
     public float SEVolume = 1;
@@ -54,19 +63,29 @@ public class SoundController : MonoBehaviour {
     public void ButtonMenuSE()    {        PlaySE("TapButtonDai");    }
     public void Button4ItemSE()    {        PlaySE("TapButton");    }
     public void Button6ItemSE()    {        PlaySE("TapButton");    }
-    public void ButtonSelectOKSE()    {        PlaySE("TapButton");    }
-    public void ButtonSelectWakuSE()    {        PlaySE("TapButton");    }
+    public void ButtonSaveSusOKSE() { PlaySE("TapButtonHigh1"); }
+    public void ButtonSelectOKSE()    {        PlaySE("TapButtonHigh1");    }
+    public void ButtonSelectWakuSE()    {        PlaySE("SEWaku");    }
     public void ButtonHiroiItemOKSE()    {        PlaySE("TapButton");    }
-    public void ButtonDisposeOKSE()    {        PlaySE("TapButton");    }
+    public void ButtonDisposeOKSE()    {        PlaySE("TapButtonHigh1");    }
     public void ButtonCancelSE()   {        PlaySE("TapButton");    }
     public void ButtonResultOKSE()    {        PlaySE("TapButton");    }
     public void ButtonNoSaveSE()    {        PlaySE("TapButton");    }
-    public void ButtonSaveSE()    {        PlaySE("TapButton");    }
-    public void ButtonLvUpOKSE()    {        PlaySE("TapButton");    }
-    public void ButtonGameOverOKSE()    {        PlaySE("TapButton");    }
-    public void ButtonGoResultSE()    {        PlaySE("TapButton");    }
-    public void ButtonLoadSE()    {        PlaySE("TapButton");    }
+    public void ButtonSaveSE()    {        PlaySE("TapButtonDai");    }
+    public void ButtonLvUpOKSE()    {        PlaySE("TapButtonHigh1");    }
+    public void ButtonGameOverOKSE()    {        PlaySE("TapButtonDai");    }
+    public void ButtonGoResultSE()    {        PlaySE("TapButtonHigh1");    }
+    public void ButtonLoadSE()    {        PlaySE("TapButtonDai");    }
     public void ButtonNoLoadSE()    {        PlaySE("TapButton");    }
+    public void ButtonPlaceSE() { PlaySE("TapButton"); }
+    public void ButtonActionSE() { PlaySE("TapButtonHigh1"); }
+    public void ButtonStoryReadSE() { PlaySE("TapButton"); }
+    public void ButtonStoryEndSE() { PlaySE("TapButtonHigh1"); }
+    public void Buttontyuudan() { PlaySE("TapButton"); }
+    public void ButtonScoreBack() { PlaySE("TapButton"); }
+    public void ButtonHand() { PlaySE("SEKachi"); }
+    public void ButtonTutorialRead() { PlaySE("TapButtonHigh1"); }
+    public void ButtonRankIn() { PlaySE("TapButtonHigh1"); }
 
 
 
@@ -81,6 +100,8 @@ public class SoundController : MonoBehaviour {
         else if (SEName == "Kill") { UseSE = SEKill; }
         else if (SEName == "TapButton") { UseSE = SETapButton; }
         else if (SEName == "TapButtonDai") { UseSE = SETapButtonDai; }
+        else if (SEName == "TapButtonHigh1") { UseSE = SETapButtonHigh1; }
+        else if (SEName == "TapButtonHigh2") { UseSE = SETapButtonHigh2; }
         else if (SEName == "CustomerSelect") { UseSE = SECustomerSelect; }
         else if (SEName == "GGetOne") { UseSE = SEGGetOne; }
         else if (SEName == "LvUp") { UseSE = SELvUp; }
@@ -94,51 +115,16 @@ public class SoundController : MonoBehaviour {
         else if (SEName == "SEVoiceWoman") { UseSE = SEVoiceWoman; }
         else if (SEName == "SEVoiceOld") { UseSE = SEVoiceOld; }
         else if (SEName == "SEMahou") { UseSE = SEMahou; }
-        else if (SEName == "SEVoiceNone") { UseSE = SEVoiceMan2; }
+        else if (SEName == "SEMahouHoly") { UseSE = SEMahouHoly; }
+        else if (SEName == "SEGoodEnd") { UseSE = SEGoodEnd; }
+        else if (SEName == "SEBadEnd") { UseSE = SEBadEnd; }
+        else if (SEName == "SEWaku") { UseSE = SEWaku; }
+        else if (SEName == "SEVoiceNone") { UseSE = SENoVoice; }
+        else if (SEName == "SEKachi") { UseSE = SEKachi; }
         else { Debug.Log("指定された番号のSEはありません"); }
 
         return UseSE;
     }
-
-    //キーを送ると音量とピッチを返す
-    public float[] GetVol(string SEName)
-    {
-        float UseVol = 1.0f;//宣言で入れるデフォ値、指定された番号のSEがないとこれが鳴ってしまう
-        float UsePitch = 1.0f;//宣言で入れるデフォ値、指定された番号のSEがないとこれが鳴ってしまう
-
-        float VolBig = 1.0f;
-        float VolSmall = 0.1f;
-
-
-        if (SEName == "GGet") { UseVol = VolSmall; }
-        else if (SEName == "DoorOpen") { UseVol = VolSmall; }
-        else if (SEName == "CustomerVoice") { UseVol = VolSmall; }
-        else if (SEName == "Kill") { UseVol = VolBig; }
-        else if (SEName == "TapButton") { UseVol = VolBig; }
-        else if (SEName == "TapButtonDai") { UseVol = VolBig; }
-        else if (SEName == "CustomerSelect") { UseVol = VolBig; }
-        else if (SEName == "GGetOne") { UseVol = VolSmall; }
-        else if (SEName == "LvUp") { UseVol = VolBig; }
-        else if (SEName == "Heart") { UseVol = VolBig; }
-        else if (SEName == "BansDon") { UseVol = VolSmall; }
-        else if (SEName == "Burger") { UseVol = VolBig; }
-        else if (SEName == "Bans") { UseVol = VolSmall; }
-        else if (SEName == "BansSteam") { UseVol = VolBig; }
-        else if (SEName == "SEVoiceMan") { UseVol = VolBig; }
-        else if (SEName == "SEVoiceMan2") { UseVol = VolBig; }
-        else if (SEName == "SEVoiceWoman") { UseVol = VolBig; }
-        else if (SEName == "SEVoiceOld") { UseVol = VolBig; }
-        else if (SEName == "SEMahou") { UseVol = VolBig;}
-        else if (SEName == "SEVoiceNone") { UseVol = 0; }
-        else { Debug.Log("指定された番号のSEはありません"); }
-
-        float[] ReturnVol = new float[2];
-        ReturnVol[0] = UseVol;
-        ReturnVol[1] = UsePitch;
-
-        return ReturnVol;
-    }
-
 
 
     public AudioClip GetNameBgm(string BgmName)
@@ -156,9 +142,7 @@ public class SoundController : MonoBehaviour {
     //通常音量でSE
     public void PlaySE(string SEName)
     {
-        float[] UseStat = GetVol(SEName);
-        SESource.volume = UseStat[0];
-        //SESource.pitch = UseStat[1];
+        SESource.volume = 1.0f;
         AudioClip UseSE = GetNameSE(SEName);
 
         SESource.PlayOneShot(UseSE);

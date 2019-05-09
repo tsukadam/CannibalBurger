@@ -278,7 +278,7 @@ public class TutorialController : MonoBehaviour {
     };
     TutorialFirstSaveSus =
         new string[]{
-        "たんてい や けいかん を もてなすと" +"\n"+"カルマ を へらせるよ"
+        "たんてい や けいかん を えらぶと" +"\n"+"カルマ を へらせるよ"
     };
     TutorialFirstLvup =
         new string[]{

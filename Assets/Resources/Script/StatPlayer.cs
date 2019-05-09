@@ -622,9 +622,10 @@ public void Load()
     }
 
     //ハイスコアの順位確認
-    public void CheckHighScore()
+    public int CheckHighScore()
     {
-        //過去のスコアにまさっているかどうか確認
+        int result = 1;
+        //過去のスコアにまさっているかどうか確認し、まさっていれば挿入してスコアを更新
         if (MaxG > MaxG1)
         {
             MaxLv5 = MaxLv4;
@@ -773,9 +774,9 @@ public void Load()
             MaxGetG5 = MaxGetG;
             CountPlay5 = TotalCountPlay;
         }
-        else { }
+        else { result = 0; }
 
-
+        return result;
     }
     //ハイスコアの記録
     public void WriteHighScore()

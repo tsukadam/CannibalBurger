@@ -9,9 +9,9 @@ Opening,Morrel2,Death,L,Home,それが かえせなくて。
 Opening,Morrel2,Death,L,Home,しばらく まって／もらえない でしょうか？
 Opening,Morrel2,Death,R,Home,もう まてんよ。／いますぐ かえしてもらう。
 Opening,Morrel2,Death,L,Home,むすめ を たんぽ に／さしだします。
-Opening,Morrel2,Death,R,Home,それなら 30にちだけ／まっても よい。
+Opening,Morrel2,Death,R,Home,それなら MaxDays1にちだけ／まっても よい。
 Opening,Morrel2,Death,L,Home,しめた。
-Opening,Morrel2,Death,R,Home,30にち たったら／むすめ と みせ は／もらっていくぞ。
+Opening,Morrel2,Death,R,Home,MaxDays2にち たったら／むすめ と みせ は／もらっていくぞ。
 Opening,Morrel2,Death,L,Home,はい。
 Opening,Morrel2,None,L,Home,……
 Opening,Morrel2,None,L,Home,さて どうしたものかな。
@@ -44,7 +44,7 @@ Opening,Miyako,Morrel,R,Home,なるほど。
 Opening,Miyako,Morrel,L,Home,しょくひん えいせいほう には／はんするけどね。
 Opening,Miyako,Morrel,R,Home,やむをえまい。
 Opening,Miyako,Morrel,R,Home,うむ。／そのプランで いこう！
-Opening,Miyako,Morrel,R,Home,あたって くだけろだよ！
+Opening,Miyako,Morrel,L,Home,あたって くだけろだよ！
 Opening,Miyako,Morrel,R,Home,よっしゃ！
 Opening,None,None,None,Home,こうして ふたりの／じてんしゃそうぎょう が／はじまった。
 EndingKarma1,Miyako,Morrel,R,Home,きょうも いちにち／がんばったなあ。
@@ -72,7 +72,7 @@ EndingKarma2,Morrel2,Police,L,Home,トホホ。／これまでか…。
 EndingKarma2,Miyako,Police,L,Home,……。
 EndingKarma2,Miyako,Police,L,Home,あのー／みのがして もらえません？
 EndingKarma2,Miyako,Police,R,Home,だめだ。
-EndingKarma2,Miyako,Police,L,Home,ここに 500まんえん あります。
+EndingKarma2,Miyako,Police,L,Home,ここに／Wairoえん／あります。
 EndingKarma2,Miyako,Police,R,Home,みのがそう。
 EndingKarma2,Morrel2,Police,L,Home,しめた！
 EndingKarma2,Miyako,Police,R,Home,だが このまちからは／でていったほうが いい。
@@ -87,12 +87,12 @@ EndingKarma2,Miyako,Morrel,R,Home,それもそうだ。
 EndingKarma2,Miyako,Morrel,L,Home,さあ、いきましょ！
 Ending1,Morrel2,Death,R,Home,やあ モレルさん。
 Ending1,Morrel2,Death,L,Home,あっ こうりかし さん。
-Ending1,Morrel2,Death,R,Home,やくそく の 30にちめだ。／いっせんまんえん は／できたかね？
+Ending1,Morrel2,Death,R,Home,やくそく の MaxDays3にちめだ。／いっせんまんえん は／できたかね？
 Ending1,Morrel2,Death,L,Home,まだです。
 Ending1,Morrel2,Death,R,Home,それは ざんねんだ。
 Ending1,Morrel2,Death,R,Home,むすめ と みせ は／もらっていくぞ！
 Ending1,Miyako,Death,L,Home,しかたありませんね…。／いっしょに まいります。
-Ending1,Miyako,Death,L,Home,あ、でも。／いま  NowStatG えん／あるんですが…
+Ending1,Miyako,Death,L,Home,あ、でも。いま／NowStatG／ほど　あるんですが…
 Ending1,Miyako,Death,L,Home,これで もうすこし／まってもらえない ですか？
 Ending1,Miyako,Death,R,Home,だめだね。／さあ、いくぞ。
 Ending1,Miyako,Death,L,Home,だめかぁ…。／しかたないね。
@@ -100,12 +100,12 @@ Ending1,Miyako,Death,L,Home,さよなら、パパ。／げんきでね。
 Ending1,Miyako,Morrel,R,Home,トホホ…。
 Ending2,Morrel2,Death,R,Home,やあ モレルさん。
 Ending2,Morrel2,Death,L,Home,あっ こうりかし さん。
-Ending2,Morrel2,Death,R,Home,やくそく の 30にちめだ。／いっせんまんえん は／できたかね？
+Ending2,Morrel2,Death,R,Home,やくそく の MaxDays3にちめだ。／いっせんまんえん は／できたかね？
 Ending2,Morrel2,Death,L,Home,まだです。
 Ending2,Morrel2,Death,R,Home,それは ざんねんだ。
 Ending2,Morrel2,Death,R,Home,むすめ と みせ は／もらっていくぞ！
 Ending2,Miyako,Death,L,Home,しかたありませんね…。／いっしょに まいります。
-Ending2,Miyako,Death,L,Home,あ、でも。／いま  NowStatG えん／あるんですが…
+Ending2,Miyako,Death,L,Home,あ、でも。いま／NowStatG／ほど　あるんですが…
 Ending2,Miyako,Death,L,Home,これで もうすこし／まってもらえない ですか？
 Ending2,Miyako,Death,R,Home,だめだね。／…と いいたい ところだが。
 Ending2,Miyako,Death,R,Home,すこしは かせいだね。／それすら むり だと／おもっていた。
@@ -122,12 +122,12 @@ Ending2,Miyako,Morrel,R,Home,そうだな。
 Ending2,Miyako,Morrel,L,Home,さあ、いきましょ！
 Ending3,Morrel2,Death,R,Home,やあ モレルさん。
 Ending3,Morrel2,Death,L,Home,あっ こうりかし さん。
-Ending3,Morrel2,Death,R,Home,やくそく の 30にちめだ。／いっせんまんえん は／できたかね？
+Ending3,Morrel2,Death,R,Home,やくそく の MaxDays3にちめだ。／いっせんまんえん は／できたかね？
 Ending3,Morrel2,Death,L,Home,まだです。
 Ending3,Morrel2,Death,R,Home,それは ざんねんだ。
 Ending3,Morrel2,Death,R,Home,むすめ と みせ は／もらっていくぞ！
 Ending3,Miyako,Death,L,Home,しかたありませんね…。／いっしょに まいります。
-Ending3,Miyako,Death,L,Home,あ、でも。／いま  NowStatG えん／あるんですが…
+Ending3,Miyako,Death,L,Home,あ、でも。いま／NowStatG／ほど　あるんですが…
 Ending3,Miyako,Death,L,Home,これで もうすこし／まってもらえない ですか？
 Ending3,Miyako,Death,R,Home,む、そんなに あるの？
 Ending3,Miyako,Death,R,Home,おもったより かせいだね。／やるじゃん。
@@ -136,13 +136,13 @@ Ending3,Miyako,Death,R,Home,わたしは りえきが／でればよい。／そ
 Ending3,Miyako,Death,R,Home,もうすこし まつ／ことにしよう。
 Ending3,Miyako,Death,R,Home,りそく は つんで／もらうがな。
 Ending3,Miyako,Death,L,Home,ありがとうございます！
-Ending3,Miyako,Death,R,Home,とりあえず きょうは／ EndUseG えん／もらっていく。
+Ending3,Miyako,Death,R,Home,とりあえず きょうは／EndUseG／ばかり もらっていく。
 Ending3,Miyako,Death,L,Home,どうぞ。
 Ending3,Morrel2,Death,R,Home,モレルさん。／むすめに かんしゃ するんだな。
 Ending3,Morrel2,Death,L,Home,はい……！
 Ending4,Morrel2,Death,R,Home,やあ モレルさん。
 Ending4,Morrel2,Death,L,Home,あっ こうりかし さん。
-Ending4,Morrel2,Death,R,Home,やくそく の 30にちめだ。／いっせんまんえん は／できたかね？
+Ending4,Morrel2,Death,R,Home,やくそく の MaxDays3にちめだ。／いっせんまんえん は／できたかね？
 Ending4,Morrel2,Death,L,Home,できました。
 Ending4,Morrel2,Death,R,Home,なにそれ すごい。
 Ending4,Morrel2,Death,R,Home,ぜったい むりだと／おもってたけど…。
@@ -158,10 +158,10 @@ Ending4,Morrel2,Death,R,Home,では おいとま するよ。
 Ending4,Miyako,Death,L,Home,あれ、もう／おかえりですか？
 Ending4,Miyako,Death,L,Home,こんど おみせにも／たべに きて くださいね。／サービス しますよ。
 Ending4,Miyako,Death,R,Home,それは たのしみだ。
-SkipOpening,Miyako,Morrel,None,Home,（バーガーを うって／30日 で いっせんまんえん／かせごう！）
+SkipOpening,Miyako,Morrel,None,Home,（バーガーを うって／MaxDays4日 で いっせんまんえん／かせごう！）
 SkipEndingKarma1,Morrel2,Police,None,Home,（はんざいが ばれ／たいほされて しまった）
-SkipEndingKarma2,Morrel2,Police,None,Home,（500まんえん はらって／たいほ は まぬがれた。／よにげ するしか ない…）
+SkipEndingKarma2,Morrel2,Police,None,Home,（わいろ を はらって／たいほ は まぬがれた。／よにげ するしか ない…）
 SkipEnding1,Miyako,Death,None,Home,（みせを うしない／むすめは つれさられて／しまった……）
 SkipEnding2,Morrel2,Death,None,Home,（みせは うしなったが／むすめは かんべんして／もらった）
-SkipEnding3,Morrel2,Death,None,Home,（ EndUseG えん はらって／ゆうよを もらった。／たたかいは これからだ！）
+SkipEnding3,Morrel2,Death,None,Home,（いちぶ はらって／ゆうよを もらった。／たたかいは これからだ！）
 SkipEnding4,Morrel2,Death,None,Home,（やくそくを まもり／みせ と むすめ を／まもりきった！）

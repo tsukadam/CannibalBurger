@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
     public int MaxCustomer;//さばいた客の数
     public int MaxCustomerVictory;//うち魅了した客の数
     public int MaxGetG;//かせいだ売上の総和
+    private int BadEndFlag;
 
     //各画面
     public GameObject Menu;
@@ -145,6 +146,8 @@ public class GameController : MonoBehaviour
     public Text PopupGameOverText;
     public GameObject ButtonActionBack;
 
+    public GameObject PopupRankIn;
+
     //メッセージ欄
     public GameObject Message;
     public Text MessageText;
@@ -239,6 +242,7 @@ public class GameController : MonoBehaviour
         PopupSaveSus.SetActive(false);
         PopupAction.SetActive(false);
         PopupSelectAction.SetActive(false);
+        PopupRankIn.SetActive(false);
 
         PopupHand.SetActive(true);
         Hand.SetActive(false);
@@ -246,8 +250,6 @@ public class GameController : MonoBehaviour
 
         Buns1.SetActive(false);
         Buns2.SetActive(false);
-   
-
 
         Button6Items5.SetActive(false);
         Button6Items6.SetActive(false);
@@ -262,6 +264,9 @@ public class GameController : MonoBehaviour
         Button4Items3.GetComponent<Button>().interactable = true;
         Button4Items4.GetComponent<Button>().interactable = true;
 
+        //ステータスリセット
+        StatGame.GetComponent<StatGame>().StatG = 0;
+        StatGame.GetComponent<StatGame>().StatSus = 0;
 
         //所持アイテムのリセット
         StatGame.GetComponent<StatGame>().Item1 = new string[] { "", "None", "None", "None", "None" };
@@ -353,6 +358,7 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawLv();
         GetComponent<StatGameController>().DrawDays();
         GetComponent<StatGameController>().DrawExp();
+        GetComponent<StatGameController>().DrawSusNum();
 
         RoundStart(1);
 
@@ -399,6 +405,7 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawLv();
         GetComponent<StatGameController>().DrawDays();
         GetComponent<StatGameController>().DrawExp();
+        GetComponent<StatGameController>().DrawSusNum();
 
         RoundStart(0);
 
@@ -491,7 +498,7 @@ public class GameController : MonoBehaviour
 
         Buns1.SetActive(false);
         Buns2.SetActive(false);
- 
+
 
         PopupGetItem.SetActive(false);
         PopupLvUp.SetActive(false);
@@ -503,6 +510,7 @@ public class GameController : MonoBehaviour
         PopupSaveSus.SetActive(false);
         PopupAction.SetActive(false);
         PopupSelectAction.SetActive(false);
+        PopupRankIn.SetActive(false);
 
         Button6Items5.SetActive(false);
         Button6Items6.SetActive(false);
@@ -603,7 +611,7 @@ public class GameController : MonoBehaviour
         }
 
         //チュートリアル　二回目Feed
-        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1&
+        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 0)//１を見て２がまだなら表示
         {
             ButtonSave.GetComponent<Button>().interactable = false;
@@ -615,9 +623,9 @@ public class GameController : MonoBehaviour
         }
 
         else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
-            StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 & 
-            StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare == 0&
-            StatGame.GetComponent<StatGame>().FlagGlowCustomer==1)
+            StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
+            StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare == 0 &
+            StatGame.GetComponent<StatGame>().FlagGlowCustomer == 1)
         {
             ButtonSave.GetComponent<Button>().interactable = false;
             Button4Items1.GetComponent<Button>().interactable = false;
@@ -640,7 +648,7 @@ public class GameController : MonoBehaviour
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
 
-//        GetComponent<SoundController>().BgmFlag2 = 1;//bgmの切り替え例文
+        //        GetComponent<SoundController>().BgmFlag2 = 1;//bgmの切り替え例文
 
         ButtonSave.SetActive(false);
         MessageDraw("");
@@ -880,10 +888,10 @@ public class GameController : MonoBehaviour
         UseWaku.transform.Find("Mask/AllColor").GetComponent<Image>().color = UseColor;
 
         StartCoroutine(XYChangeCoroutine(UseWaku, GoX, GoY, Time2));
-//        StartCoroutine(XYChangeCoroutine(Mask, GoX, GoY, Time2));
+        //        StartCoroutine(XYChangeCoroutine(Mask, GoX, GoY, Time2));
         StartCoroutine(XYChangeCoroutine(AllColor, GoX, GoY, Time2));
         StartCoroutine(ColorChangeCoroutine(UseWaku, UseColor, Time2));
-//        GetComponent<SoundController>().PlaySE("Bans");
+        //        GetComponent<SoundController>().PlaySE("Bans");
 
         yield return new WaitForSeconds(Time4);//遅延
 
@@ -905,11 +913,11 @@ public class GameController : MonoBehaviour
 
         //パーティクル発動
         ParticleSystem.MinMaxGradient color = new ParticleSystem.MinMaxGradient();
-     color.mode = ParticleSystemGradientMode.Color;
-     color.color = UseColor;
-     ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
+        color.mode = ParticleSystemGradientMode.Color;
+        color.color = UseColor;
+        ParticleSystem.MainModule main = ParticleFeed.GetComponent<ParticleSystem>().main;
         main.startColor = color;
-        main.maxParticles = GetComponent<LvDesignController>().CustomerNum*2;
+        main.maxParticles = GetComponent<LvDesignController>().CustomerNum * 2;
 
         ParticleFeed.GetComponent<ParticleSystem>().Play();
 
@@ -1174,10 +1182,10 @@ public class GameController : MonoBehaviour
 
                 //Gパーティクル表示
                 ParticleG = Customers[Count].GetComponent<StatCustomer>().ParticleG;
-                ParticleSystem ps= ParticleG.GetComponent<ParticleSystem>();
+                ParticleSystem ps = ParticleG.GetComponent<ParticleSystem>();
                 var em = ps.emission;
                 var main = ps.main;
-                em.rateOverTime =2;
+                em.rateOverTime = 2;
                 main.duration = 6;
                 main.maxParticles = 0;
                 main.startSize = 35;
@@ -1193,13 +1201,13 @@ public class GameController : MonoBehaviour
                 //500000Gで1.6倍金G一つ（5000000Gまで表現）
                 if (NowGetG <= 500)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG*1.0f/50);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50);
 
                     em.rateOverTime = 2;
                     main.duration = 6;
                     color.color = new Color(191f / 255, 125f / 255, 102f / 255, 1.0f);
                 }
-                else if (NowGetG > 500& NowGetG <= 5000)
+                else if (NowGetG > 500 & NowGetG <= 5000)
                 {
                     main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500f);
 
@@ -1215,9 +1223,9 @@ public class GameController : MonoBehaviour
                     main.duration = 6;
                     color.color = GYellow;
                 }
-                else if (NowGetG > 50000 &NowGetG <= 500000)
+                else if (NowGetG > 50000 & NowGetG <= 500000)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50000*3/2);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50000 * 3 / 2);
 
                     em.rateOverTime = 3;
                     main.duration = 6;
@@ -1225,7 +1233,7 @@ public class GameController : MonoBehaviour
                 }
                 else if (NowGetG > 500000)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500000*2);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500000 * 2);
 
                     em.rateOverTime = 3;
                     main.duration = 8;
@@ -1236,7 +1244,7 @@ public class GameController : MonoBehaviour
 
                 ParticleG.GetComponent<ParticleSystem>().Play();
 
-           
+
 
             }
             //客の勝利
@@ -1251,7 +1259,7 @@ public class GameController : MonoBehaviour
 
         MaxCustomerVictory += VictoryNum;//うち魅了した客の数
                                          //SE
-  //      GetComponent<SoundController>().PlaySE("Burger");
+                                         //      GetComponent<SoundController>().PlaySE("Burger");
         GetComponent<SoundController>().PlaySE("Heart");
 
         //一人もつれなかったら演出のディレイ時間減らす
@@ -1275,7 +1283,10 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().GUp(GetG);
 
         //EXPを加算
-        GetComponent<StatGameController>().ExpUp(GetExp);
+        if (StatGame.GetComponent<StatGame>().StatLv <= 15)
+        {
+            GetComponent<StatGameController>().ExpUp(GetExp);
+        }
 
         //Susを加算
         GetComponent<StatGameController>().SusUp(ResultGetSus);
@@ -1371,7 +1382,7 @@ public class GameController : MonoBehaviour
             GetComponent<CustomerController>().GetCustomerData(NowLv);
 
             //チュートリアル 初レベルアップ
-        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstLvup == 0)
+            if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstLvup == 0)
             {
                 //ボタン押せなくする
                 LvUpOKButton.GetComponent<Button>().interactable = false;
@@ -1389,6 +1400,8 @@ public class GameController : MonoBehaviour
     //ゲームオーバー判定（カルマ）
     public void CheckGameOver()
     {
+        //レベルアップから来た場合のレベルアップポップアップを消す
+        PopupLvUp.SetActive(false);
 
 
         GetComponent<StatGameController>().DrawExp();//レベルアップしていたら、Expを０に戻した状態で再描画
@@ -1397,6 +1410,10 @@ public class GameController : MonoBehaviour
 
             GameOver();
         }
+        else if(StatGame.GetComponent<StatGame>().StatDays>= StatGame.GetComponent<StatGame>().MaxDays)//最後の日はアイテム選択せず終了
+        {
+            RoundEnd();
+        }
         else
         {
 
@@ -1404,7 +1421,7 @@ public class GameController : MonoBehaviour
     }
 
     //ゲームオーバーストーリー表示後のエンドカード
-    public void EndCard(string EndMassage)
+    public void EndCard(string EndMassage,int BDFlag)
     {
         CustomerField.SetActive(false);
         Button4Items.SetActive(false);
@@ -1413,13 +1430,36 @@ public class GameController : MonoBehaviour
 
         PopupGameOverText.text = EndMassage;
         PopupGameOver.SetActive(true);
-
+        BadEndFlag = BDFlag;
+    }
+    public void RankInOrNot()
+    {
+        int ScoreFlag = 0;
         //スコア記録
         GetHighScore();
-        StatPlayer.GetComponent<StatPlayer>().CheckHighScore();
-        StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
+        if (StatPlayer.GetComponent<StatPlayer>().CheckHighScore() == 1)
+        {
+            StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
+            if (BadEndFlag ==0)
+            {
+                ScoreFlag = 1;
+            }
+        }
 
+        if (ScoreFlag == 1) { OpenRankIn(); }
+        else { GoMenu(); }
     }
+    public void OpenRankIn()
+    {
+        CustomerField.SetActive(false);
+        Button4Items.SetActive(false);
+        Hand.SetActive(false);
+        Message.SetActive(false);
+        PopupGameOver.SetActive(false);
+        PopupRankIn.SetActive(true);
+        GetComponent<SoundController>().PlaySE("SEGoodEnd");
+    }
+
     //ゲームオーバー時（カルマ）
     public void GameOver()
     {
@@ -1461,9 +1501,6 @@ public class GameController : MonoBehaviour
         CustomerField.SetActive(false);
 
         GetComponent<SoundController>().StopStoreBgm();
-        GetHighScore();
-        StatPlayer.GetComponent<StatPlayer>().CheckHighScore();
-        StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
 
         if (StatGame.GetComponent<StatGame>().StatG < 3000000)
         {
@@ -1503,7 +1540,7 @@ public class GameController : MonoBehaviour
         {
             StatPlayer.GetComponent<StatPlayer>().MaxDays = StatGame.GetComponent<StatGame>().StatDays;
         }
-
+        Debug.Log("Score-MaxG:"+StatPlayer.GetComponent<StatPlayer>().MaxG);
     }
 
     //取得アイテムがないときにアイテムを自動的に１つ得る
@@ -1535,6 +1572,8 @@ public class GameController : MonoBehaviour
         //手持ちボタン表示
         Hand.SetActive(false);
         HandButton.SetActive(true);
+
+        int SaveSusFlag = 0;
 
 
         int Count = 0;
@@ -1598,6 +1637,7 @@ public class GameController : MonoBehaviour
             int PositionX = 0;
             while (Count < CustomerLength)
             {
+                if (LoserTop[Count].GetComponent<StatCustomer>().SaveSus != 0) { SaveSusFlag = 1; }
                 PositionY = 125;
                 PositionX = (150 * Count) - 220;
                 LoserTop[Count].transform.position = new Vector3(PositionX, PositionY, 0);
@@ -1641,7 +1681,15 @@ public class GameController : MonoBehaviour
 
             GetComponent<TutorialController>().StartTutorial("FirstSelect");
         }
+        else {
+            //SaveSusをもつキャラがいたらSaveSusチュートリアル
+            if (SaveSusFlag!=0& StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSaveSus == 0)
+            {
+                    HandButton.GetComponent<Button>().interactable = false;
+                    GetComponent<TutorialController>().StartTutorial("FirstSaveSus");
+            }
 
+        }
 
     }
     //手持ち開く
@@ -1742,7 +1790,7 @@ public class GameController : MonoBehaviour
         else {
 
             //SE
-            GetComponent<SoundController>().PlaySE("CustomerSelect");
+            GetComponent<SoundController>().PlaySE("SEWaku");
             GameObject SelectedItem = GameObject.FindGameObjectWithTag(TagName);
 
             string Name;
@@ -2105,17 +2153,11 @@ public class GameController : MonoBehaviour
 
         //SUS減発動
         GetComponent<StatGameController>().SusUp((SaveSus1+SaveSus2)*-1.0f);
-        GetComponent<SoundController>().PlaySE("SEMahou");
+        GetComponent<SoundController>().PlaySE("SEMahouHoly");
 
         PopupSaveSus.SetActive(true);
 
-        //チュートリアル 初Savesus
-        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSaveSus == 0)
-        {
-            //ボタン押せなくする
-            SaveSusOKButton.GetComponent<Button>().interactable = false;
-            GetComponent<TutorialController>().StartTutorial("FirstSaveSus");
-        }
+
 
     }
 
@@ -2473,18 +2515,21 @@ public void SelectOK()
     //mode=2　道中
     public void RoundStart(int Mode)
     {
-        if (Mode != 1) { 
+        if (StatGame.GetComponent<StatGame>().StatDays >= StatGame.GetComponent<StatGame>().MaxDays)
+        {
+            DaysEnd();
+        }
+        else { 
+            if (Mode != 1) { 
             //日付を経過させる
             GetComponent<StatGameController>().DaysUp(1);
         }
         GetComponent<StatGameController>().DrawYoubi();
 
 
-        //30日になっていたら終了
-        if (StatGame.GetComponent<StatGame>().StatDays > StatGame.GetComponent<StatGame>().MaxDays) { DaysEnd(); }
-        else { 
         //曜日振り分け
         int Youbi = StatGame.GetComponent<StatGame>().StatDays;
+
         if (Youbi % 7 != 0)
         {
          //   Debug.Log("平日");
@@ -2498,6 +2543,7 @@ public void SelectOK()
 
         }
     }
+
     //休日の開始
     //mode=0　セーブなし開始
     //mode=1 セーブあり開始
@@ -2737,7 +2783,7 @@ public void SelectOK()
         GetComponent<StatGameController>().GUp(Cost*-1);
         GetComponent<StatGameController>().SusUp(Return*-1);
         ActButtonPolice.SetActive(false);
-        GetComponent<SoundController>().PlaySE("SEMahou");
+        GetComponent<SoundController>().PlaySE("SEMahouHoly");
 
         GetComponent<StoryController>().ActionReadLine("オヤ おとしもの だね？\nあずかって おこう", "SEVoiceMan");
         ActionEndOK.SetActive(true);
@@ -2772,7 +2818,7 @@ public void SelectOK()
         else {
             GetComponent<StoryController>().ActionReadLine("あなたの うりあげ が\nふえます ように…", "SEVoiceWoman");
         }
-        GetComponent<SoundController>().PlaySE("SEMahou");
+        GetComponent<SoundController>().PlaySE("SEMahouHoly");
 
         GetComponent<StatGameController>().DrawModify();
 
@@ -2891,7 +2937,7 @@ public void SelectOK()
         else {
             GetComponent<StoryController>().ActionReadLine("おいしく なれ。\nおいしく なれ。", "SEVoiceMan");
         }
-        GetComponent<SoundController>().PlaySE("SEMahou");
+        GetComponent<SoundController>().PlaySE("SEMahouHoly");
         ActionEndOK.SetActive(true);
         //手持ちボタン非表示
         Hand.SetActive(false);
@@ -3056,6 +3102,7 @@ public void WorkingDay(int Mode)
         SelectItem2.GetComponent<RectTransform>().localPosition = new Vector3(175f, -305, 0f);
         SelectItemImage1.GetComponent<RectTransform>().localPosition = new Vector3(0, 5f, 0f);
         SelectItemImage2.GetComponent<RectTransform>().localPosition = new Vector3(0, 5f, 0f);
+        PopupRankIn.SetActive(false);
 
 
         //アイテム選択のＯＫボタンを切る
