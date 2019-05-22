@@ -19,14 +19,13 @@ public class GameController : MonoBehaviour
     public int MaxCustomer;//さばいた客の数
     public int MaxCustomerVictory;//うち魅了した客の数
     public int MaxGetG;//かせいだ売上の総和
-    private int BadEndFlag;
+    public int BadEndFlag;
 
     //各画面
     public GameObject Menu;
     public GameObject Game;
     public GameObject HighScore;
     public GameObject AdsDelete;
-
 
     //各パーツ
     public GameObject CustomerField;
@@ -81,9 +80,6 @@ public class GameController : MonoBehaviour
     public GameObject ButtonGoResult;
 
     public GameObject TapButton;
-
-
-
 
     //ポップアップ類
     public GameObject PopupResultG;
@@ -692,7 +688,7 @@ public class GameController : MonoBehaviour
     }
 
     //フェードアウトアニメーションテキスト
-    private IEnumerator TextFadeOutCoroutine(GameObject ChangeObject, float Time)
+    public IEnumerator TextFadeOutCoroutine(GameObject ChangeObject, float Time)
     {
         int Count = 0;
         Color NowColor;
@@ -712,7 +708,7 @@ public class GameController : MonoBehaviour
 
 
     //フェードアウトアニメーション画像
-    private IEnumerator FadeOutCoroutine(GameObject ChangeObject, float Time)
+    public IEnumerator FadeOutCoroutine(GameObject ChangeObject, float Time)
     {
         int Count = 0;
         Color NowColor;
@@ -729,7 +725,7 @@ public class GameController : MonoBehaviour
         yield return null;
     }
     //色を変えるアニメーションテキスト
-    private IEnumerator TextColorChangeCoroutine(GameObject ChangeObject, Color GoColor, float Time)
+    public IEnumerator TextColorChangeCoroutine(GameObject ChangeObject, Color GoColor, float Time)
     {
         int Count = 0;
         Color MotoColor = ChangeObject.GetComponent<Text>().color;
@@ -751,7 +747,7 @@ public class GameController : MonoBehaviour
         yield return null;
     }
     //色を変えるアニメーション
-    private IEnumerator ColorChangeCoroutine(GameObject ChangeObject, Color GoColor, float Time)
+    public IEnumerator ColorChangeCoroutine(GameObject ChangeObject, Color GoColor, float Time)
     {
         int Count = 0;
         Color MotoColor = ChangeObject.GetComponent<Image>().color;
@@ -773,7 +769,7 @@ public class GameController : MonoBehaviour
     }
 
     //XYで大きさを変えるアニメーション
-    private IEnumerator XYChangeCoroutine(GameObject ChangeObject, float GoX, float GoY, float Time)
+    public IEnumerator XYChangeCoroutine(GameObject ChangeObject, float GoX, float GoY, float Time)
     {
         int Count = 0;
         Vector2 NowSize;
@@ -803,7 +799,7 @@ public class GameController : MonoBehaviour
 
     }
 
-    private IEnumerator GoAttackCoroutine()
+    public IEnumerator GoAttackCoroutine()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -957,7 +953,7 @@ public class GameController : MonoBehaviour
     }
 
     //点滅
-    private IEnumerator Blink(GameObject Customer, GameObject Base, Color GOColor, float DelayTime, int mode)
+    public IEnumerator Blink(GameObject Customer, GameObject Base, Color GOColor, float DelayTime, int mode)
     {
         yield return new WaitForSeconds(DelayTime);//遅延
         Customer.GetComponent<Image>().color = GOColor;
@@ -972,7 +968,7 @@ public class GameController : MonoBehaviour
         yield return null;
     }
     //Gの移動
-    private IEnumerator GMove(GameObject G, Vector3 GoPosition, float GoTime, float DelayTime)
+    public IEnumerator GMove(GameObject G, Vector3 GoPosition, float GoTime, float DelayTime)
     {
         yield return new WaitForSeconds(DelayTime);//遅延
         if (G != null) {
@@ -986,7 +982,7 @@ public class GameController : MonoBehaviour
         yield return null;
     }
     //勝敗処理
-    private IEnumerator AttackCoroutine()
+    public IEnumerator AttackCoroutine()
     {
         int ItemNum = StatGame.GetComponent<StatGame>().UseItemNum;
         string[] UseItem = StatGame.GetComponent<StatGame>().UseItemData;
@@ -1185,7 +1181,7 @@ public class GameController : MonoBehaviour
                 ParticleSystem ps = ParticleG.GetComponent<ParticleSystem>();
                 var em = ps.emission;
                 var main = ps.main;
-                em.rateOverTime = 2;
+                em.rateOverTime = 1;
                 main.duration = 6;
                 main.maxParticles = 0;
                 main.startSize = 35;
@@ -1203,7 +1199,7 @@ public class GameController : MonoBehaviour
                 {
                     main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50);
 
-                    em.rateOverTime = 2;
+                    em.rateOverTime = 1;
                     main.duration = 6;
                     color.color = new Color(191f / 255, 125f / 255, 102f / 255, 1.0f);
                 }
@@ -1211,7 +1207,7 @@ public class GameController : MonoBehaviour
                 {
                     main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500f);
 
-                    em.rateOverTime = 2;
+                    em.rateOverTime = 1;
                     main.duration = 6;
                     color.color = new Color(216f / 255, 216f / 255, 216f / 255, 1.0f);
                 }
@@ -1219,7 +1215,7 @@ public class GameController : MonoBehaviour
                 {
                     main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 5000);
 
-                    em.rateOverTime = 2;
+                    em.rateOverTime = 1;
                     main.duration = 6;
                     color.color = GYellow;
                 }
@@ -1227,7 +1223,7 @@ public class GameController : MonoBehaviour
                 {
                     main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50000 * 3 / 2);
 
-                    em.rateOverTime = 3;
+                    em.rateOverTime = 2;
                     main.duration = 6;
                     color.color = GYellow;
                 }
@@ -1235,7 +1231,7 @@ public class GameController : MonoBehaviour
                 {
                     main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500000 * 2);
 
-                    em.rateOverTime = 3;
+                    em.rateOverTime = 2;
                     main.duration = 8;
                     color.color = GYellow;
                 }
@@ -2013,7 +2009,7 @@ public class GameController : MonoBehaviour
     {
         StartCoroutine ("GoSelectOKCoroutine");
     }
-    private IEnumerator GoSelectOKCoroutine()
+    public IEnumerator GoSelectOKCoroutine()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -2097,7 +2093,7 @@ public class GameController : MonoBehaviour
 
 
     //キルによってSaveSusがある時とない時の判定のタイミング
-    private IEnumerator KillSaveSusOrNot()
+    public IEnumerator KillSaveSusOrNot()
     {
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
@@ -2167,7 +2163,7 @@ public class GameController : MonoBehaviour
     {
         StartCoroutine(AfterCustomerKillCoroutine(mode));
     }
-    private IEnumerator AfterCustomerKillCoroutine(int mode)
+    public IEnumerator AfterCustomerKillCoroutine(int mode)
     {
         //mode=0 通常 =1 SaveSusでＯＫをタップしての遷移
         //        メモ変数から動作Time読み取る、ただしSaveSusがあった時は別の値を入れる
@@ -2223,7 +2219,7 @@ public class GameController : MonoBehaviour
 
 
     //キル演出の共有部分
-    private IEnumerator CustomerKill(GameObject Image, GameObject Name, GameObject Power, GameObject Sus,float Time2, float Time3, float Time4)
+    public IEnumerator CustomerKill(GameObject Image, GameObject Name, GameObject Power, GameObject Sus,float Time2, float Time3, float Time4)
     {
 
         string ImagePath;

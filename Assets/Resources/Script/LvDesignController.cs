@@ -589,7 +589,7 @@ public class LvDesignController : MonoBehaviour
     {
         int Exp = StatGame.GetComponent<StatGame>().StatExp;
         bool LvUpBool;
-        if (Exp >= 100& StatGame.GetComponent<StatGame>().StatLv<=15) { LvUpBool = true; }
+        if (Exp >= 100& StatGame.GetComponent<StatGame>().StatLv<15) { LvUpBool = true; }
         else { LvUpBool = false; }
 
         return LvUpBool;
