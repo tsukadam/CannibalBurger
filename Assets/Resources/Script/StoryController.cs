@@ -33,6 +33,7 @@ public class StoryController : MonoBehaviour {
 
     public GameObject EndButton0;
     public GameObject EndButton1;
+    public GameObject EndButton2;
 
     public GameObject Suuzi;
 
@@ -54,20 +55,35 @@ public class StoryController : MonoBehaviour {
     //コルーチン
     public IEnumerator Routine;
 
+
+    //ランダムでエンドヒントを１つ再生
+    public void RandomEndHint()
+    {
+        string StoryKey;
+        int n = Random.Range(0, 2);
+        if (n == 0) { StoryKey = "Hint1"; }
+        else if (n == 0) { StoryKey = "Hint2"; }
+        else { StoryKey = "Hint3"; }
+        StartStory(StoryKey);
+    }
+
+
     //Mode=0 オープニング　終了後はゲームスタートに遷移
     //Mode=1 エンディング　終了後はゲームオーバー画面に遷移
+    //Mode=2 エンドヒント　終了後はメニュー画面に遷移
     public void ModeSetting(int Mode)
     {
         NowMode = Mode;
 
     }
-    public void StartStory(string StoryKey)
+
+
+        public void StartStory(string StoryKey)
     {
 
         NowStoryKey = StoryKey;
         EndFine = GetComponent<GameController>().GetEndFine(NowStoryKey);
 
-        StoryData = StatGame.GetComponent<StatGame>().StoryData;
         Massage.text = "";
 
 
@@ -86,8 +102,25 @@ public class StoryController : MonoBehaviour {
             StoryKey == "SkipEndingKarma2" 
             )
         { ModeSetting(1); }
-        else { Debug.Log("指定されたストーリーKeyはありません。モード１にします");
+        else if (StoryKey == "Hint1" |
+            StoryKey == "Hint2" |
+            StoryKey == "Hint3" )
+        { ModeSetting(2); }
+        else
+        { Debug.Log("指定されたストーリーKeyはありません。モード１にします");
             ModeSetting(1); }
+
+        if (NowMode == 1|NowMode==0) { 
+        StoryData = StatGame.GetComponent<StatGame>().StoryData;
+        }
+        else if (NowMode == 2)
+        {
+            StoryData = StatGame.GetComponent<StatGame>().EndHintData;
+        }
+        else
+        {
+            StoryData = StatGame.GetComponent<StatGame>().StoryData;
+        }
 
         //今回使うストーリーのまとまりをkeyで抜き出す
         int StoryDataLength = StoryData.GetLength(0);
@@ -153,14 +186,17 @@ public class StoryController : MonoBehaviour {
         UseStory = ThisStory;
 
 
+        ButtonTrueSkip.SetActive(false);
         StoryAll.SetActive(true);
-
-        ButtonTrueSkip.SetActive(true);
 
         if (StoryKey.Contains("Skip"))
         {
             ButtonTrueSkip.SetActive(false);
-            Debug.Log("SKIP!!");
+            // Debug.Log("SKIP!!");
+        }
+        else if (NowMode == 2)
+        {
+            ButtonTrueSkip.SetActive(false);
         }
         else
         {
@@ -171,6 +207,7 @@ public class StoryController : MonoBehaviour {
 
         EndButton0.SetActive(false);
         EndButton1.SetActive(false);
+        EndButton2.SetActive(false);
         FukidashiL.SetActive(false);
         FukidashiL.SetActive(false);
         NextButton.SetActive(true);
@@ -330,6 +367,14 @@ public class StoryController : MonoBehaviour {
             else if (Person1Path == "Police") {
                 Voice = "SEVoiceMan";
             }
+            else if (Person1Path == "HintMan")
+            {
+                Voice = "SEVoiceOld";
+            }
+            else if (Person1Path == "HintGirl")
+            {
+                Voice = "SEVoiceWoman";
+            }
             else
             {
                 Voice = "SEVoiceNone";
@@ -355,6 +400,14 @@ public class StoryController : MonoBehaviour {
             else if (Person2Path == "Police")
             {
                 Voice = "SEVoiceMan";
+            }
+            else if (Person2Path == "HintMan")
+            {
+                Voice = "SEVoiceOld";
+            }
+            else if (Person2Path == "HintGirl")
+            {
+                Voice = "SEVoiceWoman";
             }
             else
             {
@@ -449,6 +502,11 @@ public class StoryController : MonoBehaviour {
             Debug.Log("ストーリー終了 Mode1");
             EndButton1.SetActive(true);
         }
+        else if (NowMode == 2)
+        {
+            Debug.Log("ストーリー終了 Mode2");
+            EndButton2.SetActive(true);
+        }
 
     }
 
@@ -487,15 +545,23 @@ public class StoryController : MonoBehaviour {
 
         EndFine = GetComponent<GameController>().GetEndFine(NowStoryKey);
         GetComponent<StatGameController>().GUp(EndFine * -1);
-        Debug.Log("G:"+StatGame.GetComponent<StatGame>().StatG);
+      //  Debug.Log("G:"+StatGame.GetComponent<StatGame>().StatG);
         GetComponent<GameController>().EndCard(EndMassage, BadEndFlag);
+
+    }
+    public void End2()
+    {
+        StoryAll.SetActive(false);
+        GetComponent<GameController>().GoMenu();
 
     }
 
     //休日アクションの中の、演出だけの文字送り
     public void ActionReadLine(string Serif,string Voice)
     {
-        StartCoroutine(ActionMassageCoroutine(Serif, Voice));
+        Routine = null;
+        Routine = ActionMassageCoroutine(Serif, Voice);
+        StartCoroutine(Routine);
     }
 
     IEnumerator ActionMassageCoroutine(string Serif,string Voice)
@@ -521,7 +587,7 @@ public class StoryController : MonoBehaviour {
     }
     public void SkipActionReadLine()
     {
-        StopCoroutine("ActionMassageCoroutine");
+        StopCoroutine(Routine);
         Massage.text = "";
     }
     // Use this for initialization

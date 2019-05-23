@@ -133,6 +133,9 @@ public class StatGameController : MonoBehaviour
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
+    //コルーチン
+    public IEnumerator Routine;
+
     //ここから描写処理
 
     //アイテム描写
@@ -540,10 +543,28 @@ public class StatGameController : MonoBehaviour
         EventSystem.SetActive(true);
     }
 
-    //Exp増減
-    public void ExpUp(int Count)
+    //Exp描画飛ばし
+    public void ExpSkip(int PlusExp, int BeforeExp)
     {
-        StartCoroutine("ExpUpCoroutine", Count);
+        //LvMAXでない時のみ作動
+        if (StatGame.GetComponent<StatGame>().StatLv < 15)
+        {
+            StopCoroutine(Routine);//Expの動きを止める
+            StatGame.GetComponent<StatGame>().StatExp = PlusExp+BeforeExp;
+
+            DrawExp();
+            TapBlockExp.SetActive(false);
+            EventSystem.SetActive(true);
+            //レベルアップ判定に飛ばす
+           GetComponent<GameController>().LevelUp();
+        }
+    }
+        //Exp増減
+        public void ExpUp(int Count)
+    {
+        Routine = null;
+        Routine = ExpUpCoroutine(Count);
+        StartCoroutine(Routine);
     }
     IEnumerator ExpUpCoroutine(int Count)
     {
@@ -577,8 +598,9 @@ public class StatGameController : MonoBehaviour
             DrawExp2(AnimeSus);
             if (AnimeSus < 0) { AnimeSus = 0; break; }
             if (AnimeSus > 100) { AnimeSus = 100; break; }
+                        //yield return new WaitForSeconds(0.5f);//描画一回にかける遅延時間
 
-            yield return new WaitForSeconds(0.5f / iCount);//描画一回にかける遅延時間
+                        yield return new WaitForSeconds(0.5f / iCount);//描画一回にかける遅延時間
         }
         StatGame.GetComponent<StatGame>().StatExp = Goal;
         DrawExp();

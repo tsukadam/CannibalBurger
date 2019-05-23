@@ -144,6 +144,11 @@ public class GameController : MonoBehaviour
 
     public GameObject PopupRankIn;
 
+    //Exp飛ばし処理用
+    public int BeforeExp = 0;
+    public int NowGetExp=0;
+    public int ExpDrawingFlag = 0;
+
     //メッセージ欄
     public GameObject Message;
     public Text MessageText;
@@ -417,15 +422,15 @@ public class GameController : MonoBehaviour
         iTween.tweens.Clear();
 
         //前周の客を破壊
-        if (GameObject.FindGameObjectWithTag("Top0") != null) { Destroy(GameObject.FindGameObjectWithTag("Top0")); }
-        if (GameObject.FindGameObjectWithTag("Top1") != null) { Destroy(GameObject.FindGameObjectWithTag("Top1")); }
-        if (GameObject.FindGameObjectWithTag("Top2") != null) { Destroy(GameObject.FindGameObjectWithTag("Top2")); }
-        if (GameObject.FindGameObjectWithTag("Top3") != null) { Destroy(GameObject.FindGameObjectWithTag("Top3")); }
+        if (GameObject.FindGameObjectWithTag("Top0") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Top0")); }
+        if (GameObject.FindGameObjectWithTag("Top1") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Top1")); }
+        if (GameObject.FindGameObjectWithTag("Top2") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Top2")); }
+        if (GameObject.FindGameObjectWithTag("Top3") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Top3")); }
 
-        if (GameObject.FindGameObjectWithTag("Item0") != null) { Destroy(GameObject.FindGameObjectWithTag("Item0")); }
-        if (GameObject.FindGameObjectWithTag("Item1") != null) { Destroy(GameObject.FindGameObjectWithTag("Item1")); }
-        if (GameObject.FindGameObjectWithTag("Item2") != null) { Destroy(GameObject.FindGameObjectWithTag("Item2")); }
-        if (GameObject.FindGameObjectWithTag("Item3") != null) { Destroy(GameObject.FindGameObjectWithTag("Item3")); }
+        if (GameObject.FindGameObjectWithTag("Item0") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Item0")); }
+        if (GameObject.FindGameObjectWithTag("Item1") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Item1")); }
+        if (GameObject.FindGameObjectWithTag("Item2") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Item2")); }
+        if (GameObject.FindGameObjectWithTag("Item3") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Item3")); }
 
         int Count;
         int CustomerLength;
@@ -436,9 +441,9 @@ public class GameController : MonoBehaviour
             CustomerLength = NormalCustomer.GetLength(0);
             while (Count < CustomerLength)
             {
-                Destroy(NormalCustomer[Count]);
+                DestroyImmediate(NormalCustomer[Count]);
                 Count++;
-                Debug.Log("Destroy");
+               // Debug.Log("Destroy");
             }
         }
 
@@ -449,7 +454,7 @@ public class GameController : MonoBehaviour
             CustomerLength = LoserNotTop.GetLength(0);
             while (Count < CustomerLength)
             {
-                Destroy(LoserNotTop[Count]);
+                DestroyImmediate(LoserNotTop[Count]);
                 Count++;
             }
         }
@@ -460,7 +465,7 @@ public class GameController : MonoBehaviour
             CustomerLength = Winner.GetLength(0);
             while (Count < CustomerLength)
             {
-                Destroy(Winner[Count]);
+                DestroyImmediate(Winner[Count]);
                 Count++;
             }
         }
@@ -1279,9 +1284,13 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().GUp(GetG);
 
         //EXPを加算
-        if (StatGame.GetComponent<StatGame>().StatLv <= 15)
+        if (StatGame.GetComponent<StatGame>().StatLv < 15)
         {
+            NowGetExp = GetExp;//今取得中のExpを記録
+            BeforeExp = StatGame.GetComponent<StatGame>().StatExp;//加算前のExpを記録
+         //   Debug.Log("BeforeExp:" + BeforeExp + "  PlusExp:" + NowGetExp);
             GetComponent<StatGameController>().ExpUp(GetExp);
+            ExpDrawingFlag = 1;
         }
 
         //Susを加算
@@ -1304,8 +1313,18 @@ public class GameController : MonoBehaviour
         yield return null;
 
     }
-
-    public void PopupResultGPopPop()
+    //Expバーの描画とばし
+    public void SkipExpDraw()
+    {
+        if (ExpDrawingFlag == 1)//Exp描画中のみ機能
+        {
+            GetComponent<StatGameController>().ExpSkip(NowGetExp, BeforeExp);
+            //SE
+            //GetComponent<SoundController>().PlaySE("TapButton");
+            Debug.Log("ExpSkip");
+        }
+    }
+        public void PopupResultGPopPop()
     {
 
         TapButton.SetActive(false);
@@ -1352,6 +1371,7 @@ public class GameController : MonoBehaviour
 
     public void LevelUp()
     {
+        ExpDrawingFlag = 0;//Exp処理終了
 
         PopupResultG.SetActive(false);
         if (GetComponent<LvDesignController>().LvUpCondition())
@@ -1436,14 +1456,15 @@ public class GameController : MonoBehaviour
         if (StatPlayer.GetComponent<StatPlayer>().CheckHighScore() == 1)
         {
             StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
-            if (BadEndFlag ==0)
+            if (BadEndFlag ==0)//バッドエンドでない時のみランクインを知らせる
             {
                 ScoreFlag = 1;
             }
         }
 
         if (ScoreFlag == 1) { OpenRankIn(); }
-        else { GoMenu(); }
+        else { GetComponent<StoryController>().RandomEndHint();//バッドエンド時とランクイン時以外はエンドヒントを出す→終わったらメニューへ遷移
+        }
     }
     public void OpenRankIn()
     {
@@ -1536,7 +1557,7 @@ public class GameController : MonoBehaviour
         {
             StatPlayer.GetComponent<StatPlayer>().MaxDays = StatGame.GetComponent<StatGame>().StatDays;
         }
-        Debug.Log("Score-MaxG:"+StatPlayer.GetComponent<StatPlayer>().MaxG);
+       // Debug.Log("Score-MaxG:"+StatPlayer.GetComponent<StatPlayer>().MaxG);
     }
 
     //取得アイテムがないときにアイテムを自動的に１つ得る
@@ -1580,7 +1601,7 @@ public class GameController : MonoBehaviour
         CustomerLength = Winner.GetLength(0);
         while (Count < CustomerLength)
         {
-            Destroy(Winner[Count]);
+            DestroyImmediate(Winner[Count]);
             Count++;
         }
         //Loserタグの客をソート
@@ -1613,7 +1634,7 @@ public class GameController : MonoBehaviour
             CustomerLength = LoserNotTop.GetLength(0);
             while (Count < CustomerLength)
             {
-                Destroy(LoserNotTop[Count]);
+                DestroyImmediate(LoserNotTop[Count]);
                 Count++;
             }
 
@@ -1710,7 +1731,7 @@ public class GameController : MonoBehaviour
         int GLength = Gs.GetLength(0);
         while (Count < GLength)
         {
-            Destroy(Gs[Count]);
+            DestroyImmediate(Gs[Count]);
             Count++;
         }
     }
@@ -1722,7 +1743,7 @@ public class GameController : MonoBehaviour
         int HeartLength = Hearts.GetLength(0);
         while (Count < HeartLength)
         {
-            Destroy(Hearts[Count]);
+            DestroyImmediate(Hearts[Count]);
             Count++;
         }
 
@@ -1735,8 +1756,8 @@ public class GameController : MonoBehaviour
         DestroyG();
         DestroyHeart();
 
-        if (GameObject.FindGameObjectWithTag("Box1") != null) { Destroy(GameObject.FindGameObjectWithTag("Box1")); }
-        if (GameObject.FindGameObjectWithTag("Box2") != null) { Destroy(GameObject.FindGameObjectWithTag("Box2")); }
+        if (GameObject.FindGameObjectWithTag("Box1") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Box1")); }
+        if (GameObject.FindGameObjectWithTag("Box2") != null) { DestroyImmediate(GameObject.FindGameObjectWithTag("Box2")); }
 
         SelectItemImage1.GetComponent<Image>().sprite = null;
         SelectItemImage1Base.GetComponent<Image>().sprite = null;
@@ -1961,7 +1982,7 @@ public class GameController : MonoBehaviour
         if (TagName == "Box1")
         {
             UseBox = SelectItemImage1;
-            Destroy(GameObject.FindGameObjectWithTag("Box1"));
+            DestroyImmediate(GameObject.FindGameObjectWithTag("Box1"));
 
             SelectItemImage1Base.GetComponent<Image>().sprite = null;
             SelectItemImage1Base.SetActive(false);
@@ -1977,7 +1998,7 @@ public class GameController : MonoBehaviour
         else
         {
             UseBox = SelectItemImage2;
-            Destroy(GameObject.FindGameObjectWithTag("Box2"));
+            DestroyImmediate(GameObject.FindGameObjectWithTag("Box2"));
 
             SelectItemImage2Base.GetComponent<Image>().sprite = null;
             SelectItemImage2Base.SetActive(false);
@@ -2364,14 +2385,14 @@ public void SelectOK()
         PopupSaveSus.SetActive(false);
 
         SelectStart();//選択ワクの初期化
-        Destroy(GameObject.FindGameObjectWithTag("Top0"));
-        Destroy(GameObject.FindGameObjectWithTag("Top1"));
-        Destroy(GameObject.FindGameObjectWithTag("Top2"));
-        Destroy(GameObject.FindGameObjectWithTag("Top3"));
-        Destroy(GameObject.FindGameObjectWithTag("Item0"));
-        Destroy(GameObject.FindGameObjectWithTag("Item1"));
-        Destroy(GameObject.FindGameObjectWithTag("Item2"));
-        Destroy(GameObject.FindGameObjectWithTag("Item3"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Top0"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Top1"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Top2"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Top3"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Item0"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Item1"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Item2"));
+        DestroyImmediate(GameObject.FindGameObjectWithTag("Item3"));
         SelectItemImage1.tag = "Untagged";
         SelectItemImage2.tag = "Untagged";
 
@@ -3103,6 +3124,14 @@ public void WorkingDay(int Mode)
 
         //アイテム選択のＯＫボタンを切る
 
+    }
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_STANDALONE
+    UnityEngine.Application.Quit();
+#endif
     }
     // Use this for initialization
     void Start()

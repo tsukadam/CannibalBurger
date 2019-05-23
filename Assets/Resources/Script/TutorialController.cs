@@ -45,7 +45,8 @@ public class TutorialController : MonoBehaviour {
     public string[] TutorialFirstDispose;
     public string[] TutorialReigai;
 
-
+    //コルーチン
+    public IEnumerator Routine;
 
 
     public string[] UseStory;
@@ -160,7 +161,9 @@ public class TutorialController : MonoBehaviour {
         NextButton.SetActive(false);
         SkipButton.SetActive(true);
 
-        StartCoroutine("MassageCoroutine", Serif);
+        Routine = null;
+        Routine = MassageCoroutine(Serif);
+        StartCoroutine(Routine);
 
         ReadCount++;
 
@@ -193,7 +196,7 @@ public class TutorialController : MonoBehaviour {
 
     public void SkipReadLine()
     {
-        StopCoroutine("MassageCoroutine");
+        StopCoroutine(Routine);
         Massage.text = NowSerif;
         if (ReadCount >= ReadCountMax)
         {

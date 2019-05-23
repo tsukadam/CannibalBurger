@@ -29,8 +29,10 @@ public class StatGame : MonoBehaviour
 
     //ストーリーのCSVデータ
     public string[,] StoryData;
-    
-    
+
+    //エンドヒントのCSVデータ
+    public string[,] EndHintData;
+
     //レベルごとに更新されるデータ
     public string[,] CustmerC;
     public string[,] CustmerUC;

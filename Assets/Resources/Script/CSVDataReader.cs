@@ -110,6 +110,14 @@ public class CSVDataReader : MonoBehaviour
 
         StatGame.GetComponent<StatGame>().StoryData = StoryData;
 
+        //エンドヒントデータ
+        //データパスを設定
+        path = "EndHintCSV";
+        //データを読み込む(引数：データパス)
+        string[,] EndHintData = readCSVData(path);
+
+        StatGame.GetComponent<StatGame>().EndHintData = EndHintData;
+
 
 
         //        DebugLog.text = CustomerAllData[0, 0];
