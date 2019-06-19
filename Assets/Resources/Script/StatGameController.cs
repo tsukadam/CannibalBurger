@@ -549,14 +549,14 @@ public class StatGameController : MonoBehaviour
         //LvMAXでない時のみ作動
         if (StatGame.GetComponent<StatGame>().StatLv < 15)
         {
-            StopCoroutine(Routine);//Expの動きを止める
+            if (Routine != null) { StopCoroutine(Routine); }//Expの動きを止める
             StatGame.GetComponent<StatGame>().StatExp = PlusExp+BeforeExp;
 
             DrawExp();
             TapBlockExp.SetActive(false);
             EventSystem.SetActive(true);
             //レベルアップ判定に飛ばす
-           GetComponent<GameController>().LevelUp();
+          // GetComponent<GameController>().LevelUp();
         }
     }
         //Exp増減
@@ -598,7 +598,7 @@ public class StatGameController : MonoBehaviour
             DrawExp2(AnimeSus);
             if (AnimeSus < 0) { AnimeSus = 0; break; }
             if (AnimeSus > 100) { AnimeSus = 100; break; }
-                        //yield return new WaitForSeconds(0.5f);//描画一回にかける遅延時間
+                        //yield return new WaitForSeconds(0.5f);//描画一回にかける遅延時間（デバッグ用）
 
                         yield return new WaitForSeconds(0.5f / iCount);//描画一回にかける遅延時間
         }

@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Build/test2019052303.apk
+D:/Build/test2019062001.apk
 SceneListBegin?
 Assets/SceneMain.unity
 SceneListEnd?

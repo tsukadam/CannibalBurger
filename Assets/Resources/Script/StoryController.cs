@@ -466,7 +466,7 @@ public class StoryController : MonoBehaviour {
     public void SkipReadLine()
     {
 
-        StopCoroutine(Routine);
+        if (Routine != null) { StopCoroutine(Routine); }
 
         NowSerif = NowSerif.Replace("＠","");
         Massage.text = NowSerif;
@@ -587,7 +587,7 @@ public class StoryController : MonoBehaviour {
     }
     public void SkipActionReadLine()
     {
-        StopCoroutine(Routine);
+        if (Routine != null) { StopCoroutine(Routine); }
         Massage.text = "";
     }
     // Use this for initialization

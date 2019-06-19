@@ -109,7 +109,9 @@ public class TutorialController : MonoBehaviour {
         ReadCount = 0;
         ReadCountMax = UseStory.Length;
 
-        StartCoroutine("BeforeStartCoroutine");
+        Routine = null;
+        Routine = BeforeStartCoroutine();
+        StartCoroutine(Routine);
 
     }
 
@@ -196,7 +198,7 @@ public class TutorialController : MonoBehaviour {
 
     public void SkipReadLine()
     {
-        StopCoroutine(Routine);
+        if (Routine != null) {StopCoroutine(Routine); }
         Massage.text = NowSerif;
         if (ReadCount >= ReadCountMax)
         {

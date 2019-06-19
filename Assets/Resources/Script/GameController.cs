@@ -1288,9 +1288,9 @@ public class GameController : MonoBehaviour
         {
             NowGetExp = GetExp;//今取得中のExpを記録
             BeforeExp = StatGame.GetComponent<StatGame>().StatExp;//加算前のExpを記録
-         //   Debug.Log("BeforeExp:" + BeforeExp + "  PlusExp:" + NowGetExp);
-            GetComponent<StatGameController>().ExpUp(GetExp);
+                                                                  //   Debug.Log("BeforeExp:" + BeforeExp + "  PlusExp:" + NowGetExp);
             ExpDrawingFlag = 1;
+            GetComponent<StatGameController>().ExpUp(GetExp);
         }
 
         //Susを加算
@@ -3131,7 +3131,12 @@ public void WorkingDay(int Mode)
         UnityEditor.EditorApplication.isPlaying = false;
 #elif UNITY_STANDALONE
     UnityEngine.Application.Quit();
+#elif UNITY_ANDROID
+            // アプリ終了
+            Application.runInBackground = false;
+            Application.Quit();
 #endif
+
     }
     // Use this for initialization
     void Start()
