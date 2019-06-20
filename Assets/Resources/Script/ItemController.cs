@@ -24,7 +24,8 @@ public class ItemController : MonoBehaviour
         Item.transform.SetParent(CustomerField.transform);
 
         //位置決定
-        Item.transform.position = new Vector3(PositionX, PositionY, 0);
+        Item.transform.localPosition = new Vector3(PositionX, PositionY, 0);
+        Item.transform.localScale = new Vector3(1, 1, 1);
 
         //画像決定
         string ImagePath = "Item/" + Image;

@@ -53,16 +53,19 @@ public class Glower : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (GlowFlag == 0& Myself.GetComponent<Button>().interactable == true)
+        if (Myself != null)
         {
+            if (GlowFlag == 0 & Myself.GetComponent<Button>().interactable == true)
+            {
 
-            Glow();
+                Glow();
 
-        }
-        if (Myself.GetComponent<Button>().interactable == false)
-        {
-            GlowStop();
+            }
+            if (Myself.GetComponent<Button>().interactable == false)
+            {
+                GlowStop();
 
+            }
         }
 	}
 }

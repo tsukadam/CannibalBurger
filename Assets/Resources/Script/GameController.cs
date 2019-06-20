@@ -22,6 +22,7 @@ public class GameController : MonoBehaviour
     public int BadEndFlag;
 
     //各画面
+    public GameObject CanvasMain;
     public GameObject Menu;
     public GameObject Game;
     public GameObject HighScore;
@@ -622,6 +623,18 @@ public class GameController : MonoBehaviour
             Button4Items4.GetComponent<Button>().interactable = false;
             GetComponent<TutorialController>().StartTutorial("SecondFeed");
         }
+        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
+StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
+StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を見て３がまだなら表示
+        {
+            ButtonSave.GetComponent<Button>().interactable = false;
+            Button4Items1.GetComponent<Button>().interactable = false;
+            Button4Items2.GetComponent<Button>().interactable = false;
+            Button4Items3.GetComponent<Button>().interactable = false;
+            Button4Items4.GetComponent<Button>().interactable = false;
+            GetComponent<TutorialController>().StartTutorial("ThirdFeed");
+        }
+
 
         else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
@@ -1573,7 +1586,7 @@ public class GameController : MonoBehaviour
         else { StatGame.GetComponent<StatGame>().Item4 = PickUpItem; }
 
         PopupGetItem.SetActive(true);
-        PopupGetText.text = "だれも こなかったので、\nそのへんで" + PickUpItem[0] + "\n を ひろいました";
+        PopupGetText.text = "だれも まんぞく しなかったので、\nそのへんで" + PickUpItem[0] + "\n を ひろいました";
         GetComponent<StatGameController>().DrawGetItem(PickUpItem);
 
 
@@ -1655,10 +1668,12 @@ public class GameController : MonoBehaviour
             while (Count < CustomerLength)
             {
                 if (LoserTop[Count].GetComponent<StatCustomer>().SaveSus != 0) { SaveSusFlag = 1; }
-                PositionY = 125;
-                PositionX = (150 * Count) - 220;
-                LoserTop[Count].transform.position = new Vector3(PositionX, PositionY, 0);
-                LoserTop[Count].GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+                LoserTop[Count].transform.localScale = new Vector3(1,1,1);
+                PositionY = 130;
+                PositionX = (170 * Count) - 255;
+                LoserTop[Count].transform.localPosition = new Vector3(PositionX, PositionY, 0);
+                LoserTop[Count].GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+                LoserTop[Count].GetComponent<BoxCollider2D>().enabled = false;
                 LoserTop[Count].GetComponent<Button>().interactable = true;
 
 
@@ -1686,7 +1701,7 @@ public class GameController : MonoBehaviour
 
                 Count++;
             }
-            MessageDraw(" ２つえらんでＯＫ  （ わくタップでキャンセル ）");
+            MessageDraw(" ２つえらんでＯＫ  わくタップでキャンセル");
             SelectStart();//選択ワクの初期化
             SelectButtonOK.GetComponent<Button>().interactable = false;
         }
@@ -1802,6 +1817,7 @@ public class GameController : MonoBehaviour
         EventSystem.SetActive(false);
         if (GameObject.FindGameObjectWithTag("Box1") != null & GameObject.FindGameObjectWithTag("Box2") != null)
         {
+            GetComponent<SoundController>().PlaySE("TapButton");
             //枠が両方とも使われている場合は何も起こらない
         }
         else {
@@ -1828,7 +1844,6 @@ public class GameController : MonoBehaviour
                        transform.position,
                        Quaternion.identity);
             SelectBox.transform.SetParent(SelectedItem.transform);
-
 
             if (TagName == "Item0" | TagName == "Item1" | TagName == "Item2" | TagName == "Item3")
             {
@@ -1880,9 +1895,10 @@ public class GameController : MonoBehaviour
                 UseBox.GetComponent<StatItem>().HumanName = "";
 
                 //ワクの位置と大きさ
+                SelectBox.transform.localScale = new Vector3(1, 1, 1);
                 SelectBox.transform.localPosition = new Vector3(0, 15, 0);
-                SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(140, 160);
-                SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(140, 160);
+                SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(150, 160);
+                SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(150, 160);
 
                 UseBox.GetComponent<RectTransform>().sizeDelta = new Vector2(130, 65);
                 UseBox.GetComponent<RectTransform>().localPosition = new Vector3(0, 25, 0);
@@ -1947,9 +1963,10 @@ public class GameController : MonoBehaviour
 
 
                 //ワクの位置と大きさ
+                SelectBox.transform.localScale = new Vector3(1, 1, 1);
                 SelectBox.transform.localPosition = new Vector3(0, 0, 0);
-                SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(140, 200);
-                SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(140, 200);
+                SelectBox.GetComponent<RectTransform>().sizeDelta = new Vector2(150, 200);
+                SelectBox.GetComponent<BoxCollider2D>().size = new Vector2(150, 200);
                 UseBox.GetComponent<RectTransform>().sizeDelta = new Vector2(125, 175);
                 UseBox.GetComponent<RectTransform>().localPosition = new Vector3(0, 25, 0);
 
@@ -3141,6 +3158,21 @@ public void WorkingDay(int Mode)
     // Use this for initialization
     void Start()
     {
+        float ScreenWidth = Screen.width;
+        float ScreenHeight = Screen.height;
+
+        Debug.Log("Screen Width : " + Screen.width);
+        Debug.Log("Screen  height: " + Screen.height);
+
+        if(ScreenWidth/ ScreenHeight > 720f / 1280) { Debug.Log("横長");
+            CanvasMain.GetComponent<CanvasScaler>().matchWidthOrHeight = 1;
+        }
+        else if(ScreenWidth / ScreenHeight == 720f / 1280) { Debug.Log("ちょうど"); }
+        else { Debug.Log("縦長");
+            CanvasMain.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+        }
+
+
         BeforeStartAnim();
         SusGreen = new Color(255f / 255, 45f / 255, 58f / 255, 1.0f);
         GYellow = new Color(255f / 255, 226f / 255, 129f / 255, 1.0f);

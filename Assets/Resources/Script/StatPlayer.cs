@@ -37,6 +37,7 @@ public class StatPlayer : MonoBehaviour {
     public int FlagStoryOP = 0;
     public int FlagTutorialFirstFeed = 0;
     public int FlagTutorialSecondFeed = 0;
+    public int FlagTutorialThirdFeed = 0;
     public int FlagTutorialFirstSelect = 0;
     public int FlagTutorialFirstRare = 0;
     public int FlagTutorialFirstSaveSus = 0;
@@ -48,6 +49,7 @@ public class StatPlayer : MonoBehaviour {
     public string FSOPKey = " FSOPKey";
     public string FT1FeedKey = "FT1FeedKey";
     public string FT2FeedKey = "FT2FeedKey";
+    public string FT3FeedKey = "FT3FeedKey";
     public string FT1SelectKey = "FT1SelectKey";
     public string FT1RareKey = "FT1RareKey";
     public string FT1SaveSusKey = "FT1SaveSusKey";
@@ -278,6 +280,28 @@ public class StatPlayer : MonoBehaviour {
     public string MarketItem2SusKey = " MarketItem2SusKey";
     public string MarketItem2CostKey = " MarketItem2CostKey";
 
+    public static class PlayerPrefsUtils
+    {
+        /// <summary>
+        /// 指定されたオブジェクトの情報を保存します
+        /// </summary>
+        public static void SetObject<T>(string key, T obj)
+        {
+            var json = JsonUtility.ToJson(obj);
+            PlayerPrefs.SetString(key, json);
+        }
+
+        /// <summary>
+        /// 指定されたオブジェクトの情報を読み込みます
+        /// </summary>
+        public static T GetObject<T>(string key)
+        {
+            var json = PlayerPrefs.GetString(key);
+            var obj = JsonUtility.FromJson<T>(json);
+            return obj;
+        }
+    }
+
     //チュートリアルとストーリーの履歴フラグ
     //表示したときすぐ保存
     //別途、フラグを1に変える
@@ -286,6 +310,7 @@ public class StatPlayer : MonoBehaviour {
         PlayerPrefs.SetInt(FSOPKey, FlagStoryOP);
         PlayerPrefs.SetInt(FT1FeedKey, FlagTutorialFirstFeed);
         PlayerPrefs.SetInt(FT2FeedKey, FlagTutorialSecondFeed);
+        PlayerPrefs.SetInt(FT3FeedKey, FlagTutorialThirdFeed);
         PlayerPrefs.SetInt(FT1SelectKey, FlagTutorialFirstSelect);
         PlayerPrefs.SetInt(FT1RareKey, FlagTutorialFirstRare);
         PlayerPrefs.SetInt(FT1SaveSusKey, FlagTutorialFirstSaveSus);
@@ -303,7 +328,8 @@ public void ResetFlag()
         FlagStoryOP = 0;
   FlagTutorialFirstFeed = 0;
 FlagTutorialSecondFeed = 0;
-    FlagTutorialFirstSelect = 0;
+        FlagTutorialThirdFeed = 0;
+        FlagTutorialFirstSelect = 0;
     FlagTutorialFirstRare = 0;
     FlagTutorialFirstSaveSus = 0;
  FlagTutorialFirstDispose = 0;
@@ -992,6 +1018,7 @@ public void Load()
         FlagStoryOP = PlayerPrefs.GetInt(FSOPKey, 0);
         FlagTutorialFirstFeed = PlayerPrefs.GetInt(FT1FeedKey, 0);
         FlagTutorialSecondFeed = PlayerPrefs.GetInt(FT2FeedKey, 0);
+        FlagTutorialThirdFeed = PlayerPrefs.GetInt(FT3FeedKey, 0);
         FlagTutorialFirstLvup = PlayerPrefs.GetInt(FT1LvupKey, 0);
         FlagTutorialFirstSaveSus = PlayerPrefs.GetInt(FT1SaveSusKey, 0);
         FlagTutorialFirstSelect = PlayerPrefs.GetInt(FT1SelectKey, 0);

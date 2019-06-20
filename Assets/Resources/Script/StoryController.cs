@@ -60,10 +60,27 @@ public class StoryController : MonoBehaviour {
     public void RandomEndHint()
     {
         string StoryKey;
-        int n = Random.Range(0, 2);
+        int n = Random.Range(0, 19);
         if (n == 0) { StoryKey = "Hint1"; }
-        else if (n == 0) { StoryKey = "Hint2"; }
-        else { StoryKey = "Hint3"; }
+        else if (n == 1) { StoryKey = "Hint2"; }
+        else if (n == 2) { StoryKey = "Hint3"; }
+        else if (n == 3) { StoryKey = "Hint4"; }
+        else if (n == 4) { StoryKey = "Hint5"; }
+        else if (n == 5) { StoryKey = "Hint6"; }
+        else if (n == 6) { StoryKey = "Hint7"; }
+        else if (n == 7) { StoryKey = "Hint8"; }
+        else if (n == 8) { StoryKey = "Hint9"; }
+        else if (n == 9) { StoryKey = "Hint10"; }
+        else if (n == 10) { StoryKey = "Hint11"; }
+        else if (n == 11) { StoryKey = "Hint12"; }
+        else if (n == 12) { StoryKey = "Hint13"; }
+        else if (n == 13) { StoryKey = "Hint14"; }
+        else if (n == 14) { StoryKey = "Hint15"; }
+        else if (n == 15) { StoryKey = "Hint16"; }
+        else if (n == 16) { StoryKey = "Hint17"; }
+        else if (n == 17) { StoryKey = "Hint18"; }
+        else if (n == 18) { StoryKey = "Hint19"; }
+        else { StoryKey = "Hint20"; }
         StartStory(StoryKey);
     }
 
@@ -104,7 +121,24 @@ public class StoryController : MonoBehaviour {
         { ModeSetting(1); }
         else if (StoryKey == "Hint1" |
             StoryKey == "Hint2" |
-            StoryKey == "Hint3" )
+            StoryKey == "Hint3" |
+            StoryKey == "Hint4" |
+            StoryKey == "Hint5" |
+            StoryKey == "Hint6" |
+            StoryKey == "Hint7" |
+            StoryKey == "Hint8" |
+            StoryKey == "Hint9" |
+            StoryKey == "Hint10" |
+            StoryKey == "Hint11" |
+            StoryKey == "Hint12" |
+            StoryKey == "Hint13" |
+            StoryKey == "Hint14" |
+            StoryKey == "Hint15" |
+            StoryKey == "Hint16" |
+            StoryKey == "Hint17" |
+            StoryKey == "Hint18" |
+            StoryKey == "Hint19" |
+            StoryKey == "Hint20" )
         { ModeSetting(2); }
         else
         { Debug.Log("指定されたストーリーKeyはありません。モード１にします");

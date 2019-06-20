@@ -37,6 +37,7 @@ public class TutorialController : MonoBehaviour {
 
     public string[] TutorialFirstFeed;
     public string[] TutorialSecondFeed;
+    public string[] TutorialThirdFeed;
     public string[] TutorialFirstSaveSus;
     public string[] TutorialFirstLvup;
     public string[] TutorialFirstRare;
@@ -77,6 +78,13 @@ public class TutorialController : MonoBehaviour {
         else if (TutorialKey == "SecondFeed") { UseStory = TutorialSecondFeed;
             //ButtonBlock1.SetActive(true);
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed = 1;
+            WaitTime = 2.0f;
+        }
+        else if (TutorialKey == "ThirdFeed")
+        {
+            UseStory = TutorialThirdFeed;
+            //ButtonBlock1.SetActive(true);
+            StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed = 1;
             WaitTime = 2.0f;
         }
         else if (TutorialKey == "FirstSaveSus") { UseStory = TutorialFirstSaveSus;
@@ -278,10 +286,15 @@ public class TutorialController : MonoBehaviour {
     };
     TutorialSecondFeed =
         new string[]{
-        "１にち けいかしたよ。"+"\n"+"きょうも しょくざいを えらぼう",
+        "１にち けいかしたよ。",
         "おきゃくさまの いろ と" +"\n"+"しょくざいの いろ が ちかいと" +"\n"+"こうか ばつぐん だよ"
     };
-    TutorialFirstSaveSus =
+        TutorialThirdFeed =
+            new string[]{
+        "ちゅうだん する ときは" +"\n"+"ちゅうだん ボタン を おしてね",
+        "ほかの やりかたで" +"\n"+"ちゅうだん すると"+"\n"+"データは きえるよ"
+        };
+        TutorialFirstSaveSus =
         new string[]{
         "たんてい や けいかん を えらぶと" +"\n"+"カルマ を へらせるよ"
     };

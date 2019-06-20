@@ -730,9 +730,9 @@ public int VictoryDropG(int GetG,float VictoryPoint)
                 ReturnValue = StatGame.GetComponent<StatGame>().StatG * RandomCount / 100+1;
             }
             else {
-                //レベルと同じ量、ただし最大10
+                //レベルと同じ量、最大15
                 ReturnValue = StatGame.GetComponent<StatGame>().StatLv;
-                if (ReturnValue > 10) { ReturnValue = 10; }
+                if (ReturnValue > 15) { ReturnValue = 15; }
             }
         }
         else//大わいろ
@@ -744,12 +744,13 @@ public int VictoryDropG(int GetG,float VictoryPoint)
                 ReturnValue = StatGame.GetComponent<StatGame>().StatG * RandomCount / 100+5;
             }
             else {
-                //レベル×3、ただし最大20
+                //レベル×3、ただし最大30
                 ReturnValue = StatGame.GetComponent<StatGame>().StatLv*3;
-                if (ReturnValue > 20) { ReturnValue = 20; }
+                if (ReturnValue > 30) { ReturnValue = 30; }
             }
 
         }
+        if (ReturnValue > 999999) { ReturnValue = 999999; }
         return ReturnValue;
     }
 
@@ -825,8 +826,8 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         float Power = float.Parse(GetItem[2]);
         float Sus = float.Parse(GetItem[4]);
 
-        float RandomPower = Random.Range(50f/100, 180f/100);
-        float RandomSus = Random.Range(50f / 100, 180f / 100);
+        float RandomPower = Random.Range(150f/100, 400f/100);
+        float RandomSus = Random.Range(10f / 100, 50f / 100);
 
         Power = Power * RandomPower;
         Sus = Sus * RandomSus;
@@ -834,24 +835,24 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         int SusInt = Mathf.RoundToInt(Sus);
 
         float Cost=0;
-        //大コスト　所持金の6%
-        //中コスト　所持金の2%
-        //小コスト　所持金の0.5%
-        float BigCost = 6f/100;
-        float MediumCost = 2f / 100;
-        float SmallCost = 5f/1000;
+        //大コスト　所持金の1%
+        //中コスト　所持金の0.5%
+        //小コスト　所持金の0.1%
+        float BigCost = 1f/100;
+        float MediumCost = 5f / 1000;
+        float SmallCost = 1f/1000;
 
         //100~360
 
-        if (RandomPower<75f/100)//パワー75%以下
+        if (RandomPower<100f/100)//パワー100%以下
         {
             Cost += SmallCost;
         }
-        else if(RandomPower>=75f/100& RandomPower<120f/100)//75%以上120以下
+        else if(RandomPower>=100f/100& RandomPower<300f/100)//100%以上200以下
         {
             Cost += MediumCost;
         }
-        else if (RandomPower >= 120f / 100 & RandomPower < 150f/100)//120%以上150以下
+        else if (RandomPower >= 200f / 100 & RandomPower < 300f/100)//200%以上300以下
         {
             Cost += BigCost;
         }
@@ -860,15 +861,15 @@ public int VictoryDropG(int GetG,float VictoryPoint)
             Cost += BigCost*2;
         }
 
-        if (RandomSus < 75f / 100)//Sus75%以下
+        if (RandomSus < 10f / 100)//Sus10%以下
         {
             Cost += BigCost;
         }
-        else if (RandomSus >= 75f / 100 & RandomSus < 120f/100)//75%以上120以下
+        else if (RandomSus >= 10f / 100 & RandomSus < 30f/100)//10%以上30以下
         {
             Cost += MediumCost;
         }
-        else if (RandomSus >= 120f / 100 & RandomSus < 150f/100)//120%以上150以下
+        else if (RandomSus >= 30f / 100 & RandomSus < 50f/100)//30%以上50以下
         {
             Cost += SmallCost;
         }
@@ -876,6 +877,7 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         {
         }
 
+        /*
         //レアだと高く
         if (Rarerity == "R") { Cost = Cost * Random.Range(110f / 100, 150f / 100); }
         else { Cost = Cost * Random.Range(85f / 100, 100f / 100); }
@@ -883,7 +885,7 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         //Meatだと高く
         if (ItemType == 0) { Cost = Cost * Random.Range(85f / 100, 100f / 100); }
         else { Cost = Cost * Random.Range(110f / 100, 150f / 100); }
-
+        */
 
         //Debug.Log("FloatCost:"+Cost);
         float MyG = (float)StatGame.GetComponent<StatGame>().StatG;
