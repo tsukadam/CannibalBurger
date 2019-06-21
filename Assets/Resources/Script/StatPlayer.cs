@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Coffee.UIExtensions;
+
 //プレイヤーのステータスを保持する
 //プレイ外データ、ハイスコアなど
 //オートセーブではこの中のデータが保持される
 public class StatPlayer : MonoBehaviour {
     //StasGame
     public GameObject StatGame;
+
+    public GameObject Script;
     
     //全体での遊んだ数
     public int TotalCountPlay = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
@@ -15,7 +19,36 @@ public class StatPlayer : MonoBehaviour {
     public GameObject Menu;
     public GameObject Game;
     public GameObject HighScore;
+    public GameObject Library;
     public GameObject AdsDelete;
+
+    //図鑑画面
+    public GameObject LibraryField;
+
+    public GameObject InfoWindow;
+    public Text LibName;
+    public Text LibText;
+    public Text LibDropName;
+    public Text LibDropPower;
+    public Text LibDropSus;
+    public Text LibMeatName;
+    public Text LibMeatPower;
+    public Text LibMeatSus;
+    public GameObject LibDropImage;
+    public GameObject LibMeatImage;
+    public GameObject LibImage;
+    public GameObject LibImageBase;
+
+    public Text LibDropG;
+    public Text LibHp;
+    public Text LibSaveSus;
+    public Text LibPopLv;
+    public Text LibDisLv;
+    public Text LibRare;
+
+    public GameObject HatenaPrefab;
+    public Text LibCompleteNumber;
+
 
     public Text TextMaxG1;
     public Text TextMaxLv1;
@@ -32,6 +65,28 @@ public class StatPlayer : MonoBehaviour {
     public Text TextMaxG5;
     public Text TextMaxLv5;
     public Text TextMaxDays5;
+
+
+    //CustomerControllerから開始時に渡される、客データの行情報
+    public int LowId;
+    public int LowName;
+    public int LowImage;
+    public int LowPopLv;
+    public int LowDisLv;
+    public int LowRare;
+    public int LowHp;
+    public int LowCoreColor;
+    public int LowSaveSus;
+    public int LowDropG;
+    public int LowDropName;
+    public int LowDropImage;
+    public int LowDropPower;
+    public int LowDropSus;
+    public int LowMeatName;
+    public int LowMeatImage;
+    public int LowMeatPower;
+    public int LowMeatSus;
+    public int LowText;
 
     //チュートリアルやストーリーのフラグ
     public int FlagStoryOP = 0;
@@ -56,6 +111,17 @@ public class StatPlayer : MonoBehaviour {
     public string FT1DisposeKey = "FT1DisposeKey";
     public string FT1HolydayKey = "FT1HolydayKey";
     public string FT1LvupKey = "FT1LvupKey";
+
+    //倒した客の記録、図鑑用
+    //前回の記録は起動時に読み込んでいる
+    //ゲーム開始時と図鑑表示時に、Allの客データの数から箱を生成し、
+    //それに前回の記録を写す。ゲーム中はそれに書き込んでいき、リアルタイムでセーブする
+    //0=未、1=倒した
+    //0個目の要素＝id0の客　実際にはid4からしかデータ入ってないので、表示に使う時0～4までは無視する　総数も5引いて考える
+    //0～4がカラなので5多い数になる
+    public int[] CustomerList;
+    public int[] LoadedCustomerList;
+    public string CustomerListKey = "CustomerListKey";
 
 
     //セーブ中断しているかのフラグ
@@ -280,6 +346,11 @@ public class StatPlayer : MonoBehaviour {
     public string MarketItem2SusKey = " MarketItem2SusKey";
     public string MarketItem2CostKey = " MarketItem2CostKey";
 
+    class CustomerListClass
+    {
+        public int[] List;
+    }
+
     public static class PlayerPrefsUtils
     {
         /// <summary>
@@ -302,6 +373,40 @@ public class StatPlayer : MonoBehaviour {
         }
     }
 
+    //図鑑用客リストの生成
+    public void MakeCustomerList()
+    {
+        string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
+        int AllCustomerLength = CustomerAllData.GetLength(0);
+        //0～4がカラなので5足さないといけないが、一行目は項目名なので、差し引き4足さないといけない
+        CustomerList = new int[AllCustomerLength+4];
+        //全てに0を代入、このあと前回データを上書きする
+        for (int i = 0; i < CustomerList.Length; i++)
+        {
+            CustomerList[i]=0;
+        }
+
+    }
+    //前回データのコピー
+    //リスト生成の後に、前回データのロードが済んだタイミングで実行
+    public void LoadCustomerList()
+    {
+        if (LoadedCustomerList != null)
+        {
+            for (int i = 0; i < LoadedCustomerList.Length; i++)
+            {
+                //Loadedの数までしか書き込まない。書き込まなかったところは0になる
+                //1が入っているところだけ書き込む
+                if (LoadedCustomerList[i] == 1)
+                {
+                    CustomerList[i] = LoadedCustomerList[i];
+                }
+            }
+        }
+    }
+
+
+
     //チュートリアルとストーリーの履歴フラグ
     //表示したときすぐ保存
     //別途、フラグを1に変える
@@ -322,7 +427,7 @@ public class StatPlayer : MonoBehaviour {
 
 
 }
-//デバッグ用　チュートリアルとストーリーフラグをすべて０に
+//デバッグ用　チュートリアルとストーリーフラグ、図鑑フラグ、セーブをすべて０に
 public void ResetFlag()
     {
         FlagStoryOP = 0;
@@ -336,8 +441,12 @@ FlagTutorialSecondFeed = 0;
      FlagTutorialFirstHolyday = 0;
    FlagTutorialFirstLvup = 0;
 
+        MakeCustomerList();
+        WriteCustomerList();
 
         SaveFlag();
+        SaveDelete();
+
     }
 
 
@@ -617,8 +726,226 @@ public void Load()
         PlayerPrefs.SetInt(ExistSaveKey, ExistSave);//セーブ存在フラグ
 
     }
-    //ハイスコア画面の描画
-    public void GoHighScore()
+    //図鑑画面の描画
+    public void GoLibrary()
+    {
+        LoadCustomerList();
+        Script.GetComponent<CustomerController>().GetCustomerData(1);
+
+
+        string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
+        int AllCustomerLength = CustomerAllData.GetLength(0);
+        int Count = 1;
+        int LowId = Script.GetComponent<LvDesignController>().LowId;
+        int NowId = 0;
+        string NowIdString = "";
+
+        
+        while (Count < AllCustomerLength)
+        {
+            NowIdString = CustomerAllData[Count, LowId];
+           NowId = int.Parse(NowIdString);
+            if (CustomerList[NowId] == 1)
+            {
+                Script.GetComponent<LvDesignController>().MakeCustomerId(NowId, "", 1);
+            }
+            else
+            {
+
+                GameObject Question = (GameObject)Instantiate(
+                    HatenaPrefab,
+                    transform.position,
+                    Quaternion.identity);
+                Question.transform.SetParent(LibraryField.transform);
+                //位置決定
+                int PositionY = 0;
+                int PositionX = 0;
+                Question.transform.position = new Vector3(PositionX, PositionY, 0);
+                Question.tag = "Customer";
+            }
+
+            Count++;
+        }
+
+        //コンプリート率の表示
+        int NowNumberInt = 0;
+        Count = 5;
+        while (Count < CustomerList.Length)
+        {
+            if (CustomerList[Count] == 1)
+            {
+                NowNumberInt++;
+            }
+            Count++;
+        }
+
+
+        string AllNumber = (AllCustomerLength-1).ToString();
+        string NowNumber = (NowNumberInt).ToString();
+
+        LibCompleteNumber.text = NowNumber + "/"+AllNumber ;
+
+
+        Menu.SetActive(false);
+        HighScore.SetActive(false);
+        Library.SetActive(true);
+        AdsDelete.SetActive(false);
+        Game.SetActive(false);
+        InfoWindow.SetActive(false);
+
+
+    }
+
+    public void CloseInfomation()
+    {
+        InfoWindow.SetActive(false);
+
+    }
+    public void Infomation(int Id)
+    {
+        string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
+
+        int AllCustomerLength = CustomerAllData.GetLength(0);
+        int Count = 1;
+        int LowId = Script.GetComponent<LvDesignController>().LowId;
+        int NowColumn=1;
+        while (Count < AllCustomerLength)
+        {
+            if (int.Parse(CustomerAllData[Count,LowId]) == Id)
+            {
+                NowColumn = Count;
+            }
+            Count++;
+        }
+
+        string Name = CustomerAllData[NowColumn, LowName];
+        string Image = CustomerAllData[NowColumn, LowImage];
+        string Hp = CustomerAllData[NowColumn, LowHp];
+        string Color = CustomerAllData[NowColumn, LowCoreColor];
+        string DropG = CustomerAllData[NowColumn, LowDropG];
+        string DropItemName = CustomerAllData[NowColumn, LowDropName];
+        string DropItemImage = CustomerAllData[NowColumn, LowDropImage];
+        string DropItemPower = CustomerAllData[NowColumn, LowDropPower];
+        string DropItemSus = CustomerAllData[NowColumn, LowDropSus];
+        string MeatItemName = CustomerAllData[NowColumn, LowMeatName];
+        string MeatItemImage = CustomerAllData[NowColumn, LowMeatImage];
+        string MeatItemPower = CustomerAllData[NowColumn, LowMeatPower];
+        string MeatItemSus = CustomerAllData[NowColumn, LowMeatSus];
+
+        string SaveSus = CustomerAllData[NowColumn, LowSaveSus];
+        string Rarerity = CustomerAllData[NowColumn, LowRare];
+        string LvAppear = CustomerAllData[NowColumn, LowPopLv];
+        string LvDisAppear = CustomerAllData[NowColumn, LowDisLv];
+        string Text = CustomerAllData[NowColumn, LowText];
+
+        //LibImage.GetComponent<Infomation>().GlowOff();
+
+        //改行文字を改行に変換
+        string[] SplitSerif = Text.Split("／"[0]);
+        //Debug.Log(SplitSerif.Length);
+        if (SplitSerif.Length == 1) { }
+        else
+        {
+            int CountN = 0;
+            Text = "";
+            while (CountN < SplitSerif.Length)
+            {
+                if (CountN == 0)
+                {
+                    Text = SplitSerif[CountN];
+                }
+                else
+                {
+                    Text = Text + "\n" + SplitSerif[CountN];
+                }
+                CountN++;
+            }
+
+        }
+
+        LibName.text=Name;
+        LibText.text=Text;
+
+        LibDropName.text=DropItemName;
+        LibDropPower.text =DropItemPower;
+        LibDropSus.text =DropItemSus;
+        LibDropSus.color = Script.GetComponent<GameController>().SusGreen;
+
+
+        LibMeatName.text =MeatItemName;
+        LibMeatPower.text =MeatItemPower;
+        LibMeatSus.text=MeatItemSus;
+        LibMeatSus.color = Script.GetComponent<GameController>().SusGreen;
+
+        string ImagePath = "CustomerColor/" + Image;
+        string ImagePathBase = "CustomerBase/" + Image;
+
+        Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
+        Sprite SpriteImageBase = Resources.Load<Sprite>(ImagePathBase);
+
+        LibImage.GetComponent<Image>().sprite = SpriteImage;
+        LibImageBase.GetComponent<Image>().sprite = SpriteImageBase;
+
+        Color CoreCol = Script.GetComponent<ColorGetter>().ToColor(Color);
+
+        LibImage.GetComponent<Image>().color = CoreCol;
+        LibImage.GetComponent<UIEffect>().shadowColor = CoreCol;
+
+        string ItemImagePath = "Item/" + DropItemImage;
+        Sprite SpriteItemImage = Resources.Load<Sprite>(ItemImagePath);
+        string MeatImagePath = "Item/" + MeatItemImage;
+        Sprite SpriteMeatImage = Resources.Load<Sprite>(MeatImagePath);
+
+        LibDropImage.GetComponent<Image>().sprite = SpriteItemImage;
+        LibMeatImage.GetComponent<Image>().sprite = SpriteMeatImage;
+
+        LibDropImage.GetComponent<Image>().color = CoreCol;
+        LibMeatImage.GetComponent<Image>().color = CoreCol;
+
+        LibDropG.text =DropG;
+        LibDropG.color = Script.GetComponent<GameController>().GYellow;
+
+        LibHp.text =Hp;
+
+        LibSaveSus.text =SaveSus;
+        LibSaveSus.color = Script.GetComponent<GameController>().ExpBlue;
+
+        LibPopLv.text =LvAppear;
+
+        int DisAppearPlusOne = int.Parse(LvDisAppear);
+        int DisAppearResult = DisAppearPlusOne - 1;
+        LibDisLv.text=(string)DisAppearResult.ToString();
+
+
+        if (Rarerity == "R")
+        {
+            LibRare.color = Script.GetComponent<GameController>().GYellow;
+       //     LibImage.GetComponent<Infomation>().Glow();
+        }
+
+        else if (Rarerity == "UC")
+        {
+            LibRare.color = Script.GetComponent<GameController>().GSilver;
+        }
+        else if (Rarerity == "C")
+        {
+            LibRare.color = Script.GetComponent<GameController>().GCopper;
+        }
+        else if (Rarerity == "SUS")
+        {
+            Rarerity = "UC";
+            LibRare.color = Script.GetComponent<GameController>().GSilver;
+        }
+
+        LibRare.text = Rarerity;
+
+        InfoWindow.SetActive(true);
+   
+
+    }
+
+        //ハイスコア画面の描画
+        public void GoHighScore()
     {
         Menu.SetActive(false);
         HighScore.SetActive(true);
@@ -804,8 +1131,15 @@ public void Load()
 
         return result;
     }
-    //ハイスコアの記録
-    public void WriteHighScore()
+    //客リストの記録
+    public void WriteCustomerList()
+    {
+        CustomerListClass SaveList = new CustomerListClass();
+        SaveList.List = CustomerList;
+        PlayerPrefsUtils.SetObject(CustomerListKey, SaveList);
+    }
+        //ハイスコアの記録
+        public void WriteHighScore()
     {
         //書き込み
         PlayerPrefs.SetInt(TotalCountPlayKey, TotalCountPlay);
@@ -966,6 +1300,7 @@ public void Load()
     // Use this for initialization
     void Start () {
 
+
         ExistSave = PlayerPrefs.GetInt(ExistSaveKey, 0);
 
         TotalCountPlay = PlayerPrefs.GetInt(TotalCountPlayKey, 0);
@@ -1025,6 +1360,10 @@ public void Load()
         FlagTutorialFirstDispose = PlayerPrefs.GetInt(FT1DisposeKey, 0);
         FlagTutorialFirstRare = PlayerPrefs.GetInt(FT1RareKey, 0);
         FlagTutorialFirstHolyday = PlayerPrefs.GetInt(FT1HolydayKey, 0);
+
+        CustomerListClass LoadList = new CustomerListClass();
+        LoadList= PlayerPrefsUtils.GetObject<CustomerListClass>(CustomerListKey);
+        LoadedCustomerList = LoadList.List;
 
     }
 

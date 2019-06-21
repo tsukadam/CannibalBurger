@@ -28,6 +28,7 @@ public class LvDesignController : MonoBehaviour
     public int LowMeatImage;
     public int LowMeatPower;
     public int LowMeatSus;
+    public int LowText;
 
     //レベルデザインデータの行情報
     public int LowNeedExp;
@@ -52,11 +53,12 @@ public class LvDesignController : MonoBehaviour
     public int LvDesignDataGetCount=0;
 
     public int LvDesignLowNumber;
-    
 
-        //そのレベルの情報を保持する、レベルアップ時に走る
-        //初回は列番号のデータを取得
-        public void GetLvDesignData()
+  
+
+    //そのレベルの情報を保持する、レベルアップ時に走る
+    //初回は列番号のデータを取得
+    public void GetLvDesignData()
     {
         string[,] LvDesignData = StatGame.GetComponent<StatGame>().LvDesignData;
 
@@ -118,7 +120,7 @@ public class LvDesignController : MonoBehaviour
     {
         StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "3", "#dd6645", "0" };
         StatGame.GetComponent<StatGame>().Item2 = new string[] { "レタス", "Retasu", "1", "#88cc66", "0" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "99", "#dddd77", "0" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "3", "#dddd77", "0" };
         StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "0" };
     }
 
@@ -160,7 +162,7 @@ public class LvDesignController : MonoBehaviour
         {
             if (StatPlayer.GetComponent<StatPlayer>().CID[Count] != 0)
             {
-                MakeCustomerId(StatPlayer.GetComponent<StatPlayer>().CID[Count], StatPlayer.GetComponent<StatPlayer>().CColor[Count]);
+                MakeCustomerId(StatPlayer.GetComponent<StatPlayer>().CID[Count], StatPlayer.GetComponent<StatPlayer>().CColor[Count],0);
             }
             Count++;
         }
@@ -168,7 +170,8 @@ public class LvDesignController : MonoBehaviour
     }
 
     //入れたidの客を生成する
-    public void MakeCustomerId(int Id,string Color)
+    //Mode 0=ゲーム中　1=図鑑
+    public void MakeCustomerId(int Id,string Color,int Mode)
     {
         string SelectedId;
         int SelectedIdInt;
@@ -276,7 +279,8 @@ public class LvDesignController : MonoBehaviour
      SelectedSaveSusInt,
      SelectedRare,
      SelectedPopLvInt,
-     SelectedDisLvInt);
+     SelectedDisLvInt,
+     Mode);
     
 }
     //Market用のアイテム生成
@@ -577,7 +581,8 @@ public class LvDesignController : MonoBehaviour
                  SelectedSaveSusInt,
                  SelectedRare,
                  SelectedPopLvInt,
-                 SelectedDisLvInt);
+                 SelectedDisLvInt,
+                 0);
             yield return new WaitForSeconds(0.1f);//遅延時間
             count++;
         }

@@ -14,6 +14,7 @@ public class StatItem : MonoBehaviour
     public float UpSus = 0;//Sus上昇値
     public int SaveSus = 0;//元になった人間がSaveSusを持っているか
     public string HumanName = "";//元になった人間の名前
+    public int HumanId = 0;//元になった人間のID
     //肉を使う時にはSaveは発揮されないが、killの時に参照する
 
     //ステータス表示オブジェクトの取得

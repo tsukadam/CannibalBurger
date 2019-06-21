@@ -61,6 +61,9 @@ public class SoundController : MonoBehaviour {
 
     //ボタンを押した音
     public void ButtonMenuSE()    {        PlaySE("TapButtonDai");    }
+    public void ButtonCloseInfo() { PlaySE("TapButton"); }
+    public void ButtonOpenInfo() { PlaySE("TapButtonHigh1"); }
+
     public void Button4ItemSE()    {        PlaySE("TapButton");    }
     public void Button6ItemSE()    {        PlaySE("TapButton");    }
     public void ButtonSaveSusOKSE() { PlaySE("TapButtonHigh1"); }

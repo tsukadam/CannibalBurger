@@ -27,6 +27,10 @@ public class GameController : MonoBehaviour
     public GameObject Game;
     public GameObject HighScore;
     public GameObject AdsDelete;
+    public GameObject Library;
+
+    public GameObject CanvasAll;
+
 
     //各パーツ
     public GameObject CustomerField;
@@ -183,12 +187,15 @@ public class GameController : MonoBehaviour
     public Color ExpBlue;
     //Gの色
     public Color GYellow;
+    public Color GCopper;
+    public Color GSilver;
 
     //ゲームスタート前オープニング
     public void GameOpening() {
         //ゲーム画面への遷移
         Menu.SetActive(false);
         HighScore.SetActive(false);
+        Library.SetActive(false);
         AdsDelete.SetActive(false);
         Game.SetActive(true);
         Status.SetActive(false);
@@ -223,6 +230,11 @@ public class GameController : MonoBehaviour
 
         //BGM
         //GetComponent<SoundController>().PlayStoreBgm("StoreBgm1");
+
+        //キル客リストを読み込み
+        //（ゲーム中では、リストを読むことはなくて、書き込んでいくだけなので、なくてもいいけど、後で読む必要が出るかもなので）
+        StatPlayer.GetComponent<StatPlayer>().LoadCustomerList();
+        StatPlayer.GetComponent<StatPlayer>().LoadCustomerList();
 
 
         //ボタン初期化
@@ -314,6 +326,9 @@ public class GameController : MonoBehaviour
         GetComponent<StatGameController>().DrawModify();
         GetComponent<StatGameController>().DrawYoubi();
 
+        //メッセージ表示
+        MessageDraw("");
+
         if (StatPlayer.GetComponent<StatPlayer>().ExistSave == 1)
         {
             //ある時はロードの選択肢を出す  
@@ -348,9 +363,10 @@ public class GameController : MonoBehaviour
         MaxCustomerVictory = StatPlayer.GetComponent<StatPlayer>().MaxCustomerVictory;//うち魅了した客の数
         MaxGetG = StatPlayer.GetComponent<StatPlayer>().MaxGetG; ;//かせいだ売上の総和
 
-
         //レベルデザイン情報の読み込み
         GetComponent<LvDesignController>().GetLvDesignData();
+
+
 
         //客データの読み込み
         GetComponent<CustomerController>().GetCustomerData(StatGame.GetComponent<StatGame>().StatLv);
@@ -1208,49 +1224,50 @@ StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を�
                 color.mode = ParticleSystemGradientMode.Color;
                 color.color = new Color(255f / 255, 226f / 255, 129f / 255, 1.0f);
 
-                //0～50Gは、50Gごとに銅のG一つ（500Gまで表現）
-                //500Gで銀のG一つ（5000Gまで表現）
-                //5000Gで金のG一つ（50000Gまで表現）
-                //50000Gで1.3倍金G一つ（500000Gまで表現）
-                //500000Gで1.6倍金G一つ（5000000Gまで表現）
+                //0～50Gは、100Gごとに銅のG一つ（500Gまで表現）
+                //1000Gで銀のG一つ（5000Gまで表現）
+                //10000Gで金のG一つ（50000Gまで表現）
+                //100000Gで1.3倍金G一つ（500000Gまで表現）
+                //1000000Gで1.6倍金G一つ（5000000Gまで表現）
+
                 if (NowGetG <= 500)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 100);
 
                     em.rateOverTime = 1;
-                    main.duration = 6;
+                    main.duration = 4;
                     color.color = new Color(191f / 255, 125f / 255, 102f / 255, 1.0f);
                 }
                 else if (NowGetG > 500 & NowGetG <= 5000)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500f);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 1000f);
 
                     em.rateOverTime = 1;
-                    main.duration = 6;
+                    main.duration = 4;
                     color.color = new Color(216f / 255, 216f / 255, 216f / 255, 1.0f);
                 }
                 else if (NowGetG > 5000 & NowGetG <= 50000)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 5000);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 10000);
 
                     em.rateOverTime = 1;
-                    main.duration = 6;
+                    main.duration = 4;
                     color.color = GYellow;
                 }
                 else if (NowGetG > 50000 & NowGetG <= 500000)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 50000 * 3 / 2);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 100000 * 3 / 2);
 
                     em.rateOverTime = 2;
-                    main.duration = 6;
+                    main.duration = 4;
                     color.color = GYellow;
                 }
                 else if (NowGetG > 500000)
                 {
-                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 500000 * 2);
+                    main.maxParticles = Mathf.CeilToInt(NowGetG * 1.0f / 1000000 * 2);
 
                     em.rateOverTime = 2;
-                    main.duration = 8;
+                    main.duration = 4;
                     color.color = GYellow;
                 }
 
@@ -1893,6 +1910,7 @@ StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を�
                 UseBox.GetComponent<StatItem>().UpSus = UpSus;
                 UseBox.GetComponent<StatItem>().SaveSus = 0;
                 UseBox.GetComponent<StatItem>().HumanName = "";
+                UseBox.GetComponent<StatItem>().HumanId = 0;
 
                 //ワクの位置と大きさ
                 SelectBox.transform.localScale = new Vector3(1, 1, 1);
@@ -1960,6 +1978,7 @@ StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を�
                 UseBox.GetComponent<StatItem>().UpSus = UpSus;
                 UseBox.GetComponent<StatItem>().SaveSus = SaveSus;
                 UseBox.GetComponent<StatItem>().HumanName = SelectedItem.GetComponent<StatCustomer>().Name;
+                UseBox.GetComponent<StatItem>().HumanId = SelectedItem.GetComponent<StatCustomer>().Id;
 
 
                 //ワクの位置と大きさ
@@ -2034,6 +2053,7 @@ StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を�
         UseBox.GetComponent<StatItem>().UpSus = 0;
         UseBox.GetComponent<StatItem>().SaveSus = 0;
         UseBox.GetComponent<StatItem>().HumanName = "";
+        UseBox.GetComponent<StatItem>().HumanId = 0;
         //        UseBox.tag = "Untagged";
 
         TapBlock.SetActive(false);
@@ -2100,6 +2120,7 @@ StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を�
                 //赤色変化してフェードアウトし、アイテム画像に変わる
                 if (SelectItemImage1.tag == "Top1" | SelectItemImage1.tag == "Top2" | SelectItemImage1.tag == "Top3" | SelectItemImage1.tag == "Top0")
                 {
+
                 StartCoroutine(CustomerKill(SelectItemImage1, SelectItemName1, SelectItemPower1, SelectItemSus1, Time2, Time3, Time4));
                 }
 
@@ -2263,10 +2284,20 @@ StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を�
         string ImagePath;
         Sprite SpriteImage;
         Color ItemCol = Image.GetComponent<StatItem>().Col;
+        int HumanId = Image.GetComponent<StatItem>().HumanId;
         Color CustomCol = Image.GetComponent<Image>().color;
         string PowerString;
         string SusString;
         GameObject Base = Image.transform.Find("Base").gameObject;
+
+        //キル客リストに書き込み
+        if (HumanId != 0)
+        {
+            StatPlayer.GetComponent<StatPlayer>().CustomerList[HumanId] = 1;
+            StatPlayer.GetComponent<StatPlayer>().WriteCustomerList();
+
+
+        }
 
         iTween.ShakePosition(Image,iTween.Hash("x",5, "y", 5, "time",Time2 + Time3));
 
@@ -3077,6 +3108,7 @@ public void WorkingDay(int Mode)
 
         Menu.SetActive(true);
         HighScore.SetActive(false);
+        Library.SetActive(false);
         AdsDelete.SetActive(false);
         Game.SetActive(false);
         BeforeStartAnim();
@@ -3169,7 +3201,13 @@ public void WorkingDay(int Mode)
         }
         else if(ScreenWidth / ScreenHeight == 720f / 1280) { Debug.Log("ちょうど"); }
         else { Debug.Log("縦長");
-            CanvasMain.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+            /*
+             *CanvasMain.GetComponent<CanvasScaler>().matchWidthOrHeight = 0;
+             float AdjustedHeight = ScreenHeight * 720f / ScreenWidth;
+             float NeedMoveHeight = (AdjustedHeight - 1280f) / 2;
+             Debug.Log(NeedMoveHeight);
+             CanvasAll.GetComponent<RectTransform>().localPosition = new Vector3(0, NeedMoveHeight*-1, 0);
+ */
         }
 
 
@@ -3178,14 +3216,18 @@ public void WorkingDay(int Mode)
         GYellow = new Color(255f / 255, 226f / 255, 129f / 255, 1.0f);
         ExpBlue = new Color(24f / 255, 255f / 255, 150f / 255, 1.0f);
 
+        GCopper = new Color(191f / 255, 125f / 255, 102f / 255, 1.0f);
 
-    //ナビゲーションバーを透明に
-    /*
-    ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
-    ApplicationChrome.statusBarState = ApplicationChrome.States.Hidden;
-    */
-    //解像度設定
-    float screenRate = (float)1280 / Screen.height;
+        GSilver = new Color(216f / 255, 216f / 255, 216f / 255, 1.0f);
+
+
+        //ナビゲーションバーを透明に
+        /*
+        ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
+        ApplicationChrome.statusBarState = ApplicationChrome.States.Hidden;
+        */
+        //解像度設定
+        float screenRate = (float)1280 / Screen.height;
         if (screenRate > 1) screenRate = 1;
         int width = (int)(Screen.width * screenRate);
         int height = (int)(Screen.height * screenRate);

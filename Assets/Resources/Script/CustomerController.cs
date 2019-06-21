@@ -9,11 +9,15 @@ public class CustomerController : MonoBehaviour
 
     //客プレファブ
     public GameObject CustomerPrefab;
+    public GameObject CustomerLibraryPrefab;
 
     //gamestat
     public GameObject StatGame;
+    public GameObject StatPlayer;
 
     public GameObject CustomerField;//表示スペース
+    public GameObject LibraryField;//ライブラリ表示スペース
+
     //イベントシステムの取得（処理中に切る場合がある）
     public GameObject EventSystem;
 
@@ -39,6 +43,7 @@ public class CustomerController : MonoBehaviour
     public int LowMeatImage;
     public int LowMeatPower;
     public int LowMeatSus;
+    public int LowText;
 
     public int LowNumber;
 
@@ -82,6 +87,7 @@ public class CustomerController : MonoBehaviour
                 else if (CustomerAllData[0, LowCount] == "MPower") { LowMeatPower = LowCount; }
                 else if (CustomerAllData[0, LowCount] == "MSus") { LowMeatSus = LowCount; }
                 else if (CustomerAllData[0, LowCount] == "Id") { LowId = LowCount; }
+                else if (CustomerAllData[0, LowCount] == "Text") { LowText = LowCount; }
                 else { Debug.Log("Customerデータの行の取得に失敗しました Low="+ LowCount); }
                 LowCount++;
             }
@@ -105,6 +111,28 @@ public class CustomerController : MonoBehaviour
             GetComponent<LvDesignController>().LowMeatImage = LowMeatImage;
             GetComponent<LvDesignController>().LowMeatPower = LowMeatPower;
             GetComponent<LvDesignController>().LowMeatSus = LowMeatSus;
+            GetComponent<LvDesignController>().LowText = LowText;
+
+            StatPlayer.GetComponent<StatPlayer>().LowId = LowId;
+            StatPlayer.GetComponent<StatPlayer>().LowName = LowName;
+            StatPlayer.GetComponent<StatPlayer>().LowImage = LowImage;
+            StatPlayer.GetComponent<StatPlayer>().LowPopLv = LowPopLv;
+            StatPlayer.GetComponent<StatPlayer>().LowDisLv = LowDisLv;
+            StatPlayer.GetComponent<StatPlayer>().LowRare = LowRare;
+            StatPlayer.GetComponent<StatPlayer>().LowHp = LowHp;
+            StatPlayer.GetComponent<StatPlayer>().LowCoreColor = LowCoreColor;
+            StatPlayer.GetComponent<StatPlayer>().LowSaveSus = LowSaveSus;
+            StatPlayer.GetComponent<StatPlayer>().LowDropG = LowDropG;
+            StatPlayer.GetComponent<StatPlayer>().LowDropName = LowDropName;
+            StatPlayer.GetComponent<StatPlayer>().LowDropImage = LowDropImage;
+            StatPlayer.GetComponent<StatPlayer>().LowDropPower = LowDropPower;
+            StatPlayer.GetComponent<StatPlayer>().LowDropSus = LowDropSus;
+            StatPlayer.GetComponent<StatPlayer>().LowMeatName = LowMeatName;
+            StatPlayer.GetComponent<StatPlayer>().LowMeatImage = LowMeatImage;
+            StatPlayer.GetComponent<StatPlayer>().LowMeatPower = LowMeatPower;
+            StatPlayer.GetComponent<StatPlayer>().LowMeatSus = LowMeatSus;
+            StatPlayer.GetComponent<StatPlayer>().LowText = LowText;
+
 
             LowDataGetCount = 1;
             LowNumber = LowCount;//列の数を記録
@@ -233,19 +261,34 @@ public class CustomerController : MonoBehaviour
 
 
     //客生成
-    public void MakeCustomer(int Id,string Name,string Image, int Hp, string CoreColor,string Color, int DropG,string[] DropItem,string[]DropMeat,int SaveSus,string Rarerity,int LvAppear,int LvDisAppear)
+    //int Field 0=ゲーム中 1=図鑑
+    public void MakeCustomer(int Id,string Name,string Image, int Hp, string CoreColor,string Color, int DropG,string[] DropItem,string[]DropMeat,int SaveSus,string Rarerity,int LvAppear,int LvDisAppear,int Field)
     {
+
+        GameObject NowField=CustomerField;
+        GameObject NowPrefab=CustomerPrefab;
+        if (Field == 0) {
+            NowField = CustomerField;
+            NowPrefab = CustomerPrefab;
+        }
+        else {
+            NowField = LibraryField;
+            NowPrefab = CustomerLibraryPrefab;
+        }
+
+
+
         GameObject Customer = (GameObject)Instantiate(
-            CustomerPrefab,
+            NowPrefab,
             transform.position,
             Quaternion.identity);
-//        Customer.transform.parent = CustomerField.transform;
-        Customer.transform.SetParent(CustomerField.transform);
+        Customer.transform.SetParent(NowField.transform);
 
         //CustomerBaseを取得
 GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
 
-        //位置決定
+        //位置・大きさ決定
+        Customer.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
         int PositionY = 400;
         int PositionX = Random.Range(-200, 200);
         Customer.transform.position = new Vector3(PositionX, PositionY, 0);
@@ -253,7 +296,10 @@ GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
         float ForceX = Random.Range(-2.5f, 2.5f);
         int ForcePower = Random.Range(0, 50000);
 
-        Customer.GetComponent<Rigidbody2D>().AddForce(new Vector2(ForceX, ForceY) * ForcePower);
+        if (Field == 0)
+        {
+            Customer.GetComponent<Rigidbody2D>().AddForce(new Vector2(ForceX, ForceY) * ForcePower);
+        }
 
         //画像決定
 
@@ -285,9 +331,19 @@ GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
         //カラーが入っていないならコアカラーの揺れた奴が色
         if (Color == "" | Color == null || Color == "None")
         {
+            //ゲーム中は揺れた色、図鑑では揺れない色
+            if (Field == 0) { 
             Customer.GetComponent<Image>().color = UseCol;
             Customer.GetComponent<UIEffect>().shadowColor = UseCol;
             ColorString = "#" + GetComponent<ColorGetter>().ToColorString(UseCol);
+            }
+            else
+            {
+                Customer.GetComponent<Image>().color = CoreCol;
+                Customer.GetComponent<UIEffect>().shadowColor = CoreCol;
+                ColorString = "#" + GetComponent<ColorGetter>().ToColorString(CoreCol);
+
+            }
         }
         //そうでないならカラーに一意的に決定
         else
@@ -309,8 +365,15 @@ GameObject CustomerBase= Customer.transform.Find("CustomerBase").gameObject;
         }
         //タグをつける
         Customer.tag = "Customer";
-//アイテム選択時用のボタンを不活性にする
-        Customer.GetComponent<Button>().interactable = false;
+        //アイテム選択時用のボタンを不活性にする
+        if (Field == 0)
+        {
+            Customer.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            Customer.GetComponent<Button>().interactable = true;
+        }
 
         //客の情報をカスタマーＳＴＡＴに書き込み
         Customer.GetComponent<StatCustomer>().Id = Id;

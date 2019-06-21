@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class CSVDataReader : MonoBehaviour
 {
     public GameObject StatGame;
+    public GameObject StatPlayer;
 
     public Text DebugLog;
 
@@ -119,17 +120,20 @@ public class CSVDataReader : MonoBehaviour
         StatGame.GetComponent<StatGame>().EndHintData = EndHintData;
 
 
-
         //        DebugLog.text = CustomerAllData[0, 0];
 
         //        WriteMapDatas(this.stageMapDatas, this.height, this.width);
 
+        //読み込みが終わってから客リストを作る必要があるので、ここで指示して作る
+        StatPlayer.GetComponent<StatPlayer>().MakeCustomerList();
 
     }
 
     void Start()
     {
         CustomerCSVRead();
+
+
     }
 
     void UpDate()

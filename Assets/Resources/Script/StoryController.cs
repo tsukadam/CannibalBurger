@@ -503,6 +503,7 @@ public class StoryController : MonoBehaviour {
         if (Routine != null) { StopCoroutine(Routine); }
 
         NowSerif = NowSerif.Replace("＠","");
+        Suuzi.SetActive(true);
         Massage.text = NowSerif;
  
         if (ReadCount >= ReadCountMax)
