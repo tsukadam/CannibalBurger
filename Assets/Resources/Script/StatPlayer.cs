@@ -391,10 +391,27 @@ public class StatPlayer : MonoBehaviour {
     //リスト生成の後に、前回データのロードが済んだタイミングで実行
     public void LoadCustomerList()
     {
+        string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
+        int AllCustomerLength = CustomerAllData.GetLength(0);
+        int LoadedDataLength = LoadedCustomerList.GetLength(0);
+
+
+        Debug.Log(LoadedDataLength);
+        Debug.Log(AllCustomerLength);
+
         if (LoadedCustomerList != null)
         {
-            for (int i = 0; i < LoadedCustomerList.Length; i++)
+            //データがロードデータより減ってる時は、
+            //そのぶん書き込み回数を減らす。減った分のデータは消える。
+            if (LoadedDataLength > AllCustomerLength+4)
             {
+                LoadedDataLength = AllCustomerLength-4;
+            }
+
+            Debug.Log(LoadedDataLength);
+            for (int i = 0; i < LoadedDataLength; i++)
+            {
+                Debug.Log(i);
                 //Loadedの数までしか書き込まない。書き込まなかったところは0になる
                 //1が入っているところだけ書き込む
                 if (LoadedCustomerList[i] == 1)
@@ -442,6 +459,7 @@ FlagTutorialSecondFeed = 0;
    FlagTutorialFirstLvup = 0;
 
         MakeCustomerList();
+        LoadedCustomerList = CustomerList;
         WriteCustomerList();
 
         SaveFlag();
@@ -726,6 +744,29 @@ public void Load()
         PlayerPrefs.SetInt(ExistSaveKey, ExistSave);//セーブ存在フラグ
 
     }
+    //図鑑全開放（デバッグ用）
+    public void LibraryAllOpen()
+    {
+        string[,] CustomerAllData = StatGame.GetComponent<StatGame>().CustomerAllData;
+        int AllCustomerLength = CustomerAllData.GetLength(0);
+        int Count = 1;
+        int LowId = Script.GetComponent<LvDesignController>().LowId;
+        int NowId = 0;
+        int LoadedDataLength = LoadedCustomerList.GetLength(0);
+        string NowIdString = "";
+
+        while (Count < AllCustomerLength)
+        {
+            NowIdString = CustomerAllData[Count, LowId];
+            NowId = int.Parse(NowIdString);
+            CustomerList[NowId] = 1;
+
+            Count++;
+        }
+        WriteCustomerList();
+
+    }
+
     //図鑑画面の描画
     public void GoLibrary()
     {
@@ -739,12 +780,16 @@ public void Load()
         int LowId = Script.GetComponent<LvDesignController>().LowId;
         int NowId = 0;
         string NowIdString = "";
-
-        
+      
+       
+       // Debug.Log(AllCustomerLength);
         while (Count < AllCustomerLength)
         {
             NowIdString = CustomerAllData[Count, LowId];
            NowId = int.Parse(NowIdString);
+
+            //Debug.Log(Count + ":" + NowId);
+
             if (CustomerList[NowId] == 1)
             {
                 Script.GetComponent<LvDesignController>().MakeCustomerId(NowId, "", 1);
