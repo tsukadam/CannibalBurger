@@ -20,7 +20,16 @@ public class StatPlayer : MonoBehaviour {
     public GameObject Game;
     public GameObject HighScore;
     public GameObject Library;
-    public GameObject AdsDelete;
+    public GameObject Setting;
+
+    //ハイスコア光らせ用
+    public GameObject Score1;
+    public GameObject Score2;
+    public GameObject Score3;
+    public GameObject Score4;
+    public GameObject Score5;
+    //今何位にランクインしたか
+    public int RankInNumber = 0;
 
     //図鑑画面
     public GameObject LibraryField;
@@ -396,8 +405,8 @@ public class StatPlayer : MonoBehaviour {
         int LoadedDataLength = LoadedCustomerList.GetLength(0);
 
 
-        Debug.Log(LoadedDataLength);
-        Debug.Log(AllCustomerLength);
+      //  Debug.Log(LoadedDataLength);
+      //  Debug.Log(AllCustomerLength);
 
         if (LoadedCustomerList != null)
         {
@@ -408,10 +417,10 @@ public class StatPlayer : MonoBehaviour {
                 LoadedDataLength = AllCustomerLength-4;
             }
 
-            Debug.Log(LoadedDataLength);
+          //  Debug.Log(LoadedDataLength);
             for (int i = 0; i < LoadedDataLength; i++)
             {
-                Debug.Log(i);
+         //       Debug.Log(i);
                 //Loadedの数までしか書き込まない。書き込まなかったところは0になる
                 //1が入っているところだけ書き込む
                 if (LoadedCustomerList[i] == 1)
@@ -444,8 +453,31 @@ public class StatPlayer : MonoBehaviour {
 
 
 }
-//デバッグ用　チュートリアルとストーリーフラグ、図鑑フラグ、セーブをすべて０に
-public void ResetFlag()
+    //チュートリアルのみリセット
+    public void ResetTutorial()
+    {
+        FlagTutorialFirstFeed = 0;
+        FlagTutorialSecondFeed = 0;
+        FlagTutorialThirdFeed = 0;
+        FlagTutorialFirstSelect = 0;
+        FlagTutorialFirstRare = 0;
+        FlagTutorialFirstSaveSus = 0;
+        FlagTutorialFirstDispose = 0;
+        FlagTutorialFirstHolyday = 0;
+        FlagTutorialFirstLvup = 0;
+        SaveFlag();
+        SaveDelete();
+    }
+    //ストーリーのみリセット
+    public void ResetOpening()
+    {
+        FlagStoryOP = 0;
+        SaveFlag();
+        SaveDelete();
+    }
+
+    //デバッグ用　チュートリアルとストーリーフラグ、図鑑フラグ、セーブをすべて０に
+    public void ResetFlag()
     {
         FlagStoryOP = 0;
   FlagTutorialFirstFeed = 0;
@@ -834,7 +866,6 @@ public void Load()
         Menu.SetActive(false);
         HighScore.SetActive(false);
         Library.SetActive(true);
-        AdsDelete.SetActive(false);
         Game.SetActive(false);
         InfoWindow.SetActive(false);
 
@@ -992,11 +1023,7 @@ public void Load()
         //ハイスコア画面の描画
         public void GoHighScore()
     {
-        Menu.SetActive(false);
-        HighScore.SetActive(true);
-        AdsDelete.SetActive(false);
-        Game.SetActive(false);
-
+   
         TextMaxG1.text=MaxG1.ToString();
         TextMaxLv1.text = MaxLv1.ToString();
         TextMaxDays1.text = MaxDays1.ToString();
@@ -1017,163 +1044,235 @@ public void Load()
         TextMaxLv5.text = MaxLv5.ToString();
         TextMaxDays5.text = MaxDays5.ToString();
 
+        Menu.SetActive(false);
+        HighScore.SetActive(true);
+        Game.SetActive(false);
+        Setting.SetActive(false);
+
+        Score1.GetComponent<Glower2>().GlowRareTypeStop();
+        Score2.GetComponent<Glower2>().GlowRareTypeStop();
+        Score3.GetComponent<Glower2>().GlowRareTypeStop();
+        Score4.GetComponent<Glower2>().GlowRareTypeStop();
+        Score5.GetComponent<Glower2>().GlowRareTypeStop();
     }
 
+    public void HighScoreRankIn1()
+    {
+        RankInNumber = 1;
+        MaxLv5 = MaxLv4;
+        MaxDays5 = MaxDays4;
+        MaxKill5 = MaxKill4;
+        MaxCustomer5 = MaxCustomer4;
+        MaxCustomerVictory5 = MaxCustomerVictory4;
+        MaxG5 = MaxG4;
+        MaxGetG5 = MaxGetG4;
+        CountPlay5 = CountPlay4;
+
+        MaxLv4 = MaxLv3;
+        MaxDays4 = MaxDays3;
+        MaxKill4 = MaxKill3;
+        MaxCustomer4 = MaxCustomer3;
+        MaxCustomerVictory4 = MaxCustomerVictory3;
+        MaxG4 = MaxG3;
+        MaxGetG4 = MaxGetG3;
+        CountPlay4 = CountPlay3;
+
+        MaxLv3 = MaxLv2;
+        MaxDays3 = MaxDays2;
+        MaxKill3 = MaxKill2;
+        MaxCustomer3 = MaxCustomer2;
+        MaxCustomerVictory3 = MaxCustomerVictory2;
+        MaxG3 = MaxG2;
+        MaxGetG3 = MaxGetG2;
+        CountPlay3 = CountPlay2;
+
+        MaxLv2 = MaxLv1;
+        MaxDays2 = MaxDays1;
+        MaxKill2 = MaxKill1;
+        MaxCustomer2 = MaxCustomer1;
+        MaxCustomerVictory2 = MaxCustomerVictory1;
+        MaxG2 = MaxG1;
+        MaxGetG2 = MaxGetG1;
+        CountPlay2 = CountPlay1;
+
+        MaxLv1 = MaxLv;
+        MaxDays1 = MaxDays;
+        MaxKill1 = MaxKill;
+        MaxCustomer1 = MaxCustomer;
+        MaxCustomerVictory1 = MaxCustomerVictory;
+        MaxG1 = MaxG;
+        MaxGetG1 = MaxGetG;
+        CountPlay1 = TotalCountPlay;
+
+    }
+    public void HighScoreRankIn2()
+    {
+        RankInNumber = 2;
+        MaxLv5 = MaxLv4;
+        MaxDays5 = MaxDays4;
+        MaxKill5 = MaxKill4;
+        MaxCustomer5 = MaxCustomer4;
+        MaxCustomerVictory5 = MaxCustomerVictory4;
+        MaxG5 = MaxG4;
+        MaxGetG5 = MaxGetG4;
+        CountPlay5 = CountPlay4;
+
+        MaxLv4 = MaxLv3;
+        MaxDays4 = MaxDays3;
+        MaxKill4 = MaxKill3;
+        MaxCustomer4 = MaxCustomer3;
+        MaxCustomerVictory4 = MaxCustomerVictory3;
+        MaxG4 = MaxG3;
+        MaxGetG4 = MaxGetG3;
+        CountPlay4 = CountPlay3;
+
+        MaxLv3 = MaxLv2;
+        MaxDays3 = MaxDays2;
+        MaxKill3 = MaxKill2;
+        MaxCustomer3 = MaxCustomer2;
+        MaxCustomerVictory3 = MaxCustomerVictory2;
+        MaxG3 = MaxG2;
+        MaxGetG3 = MaxGetG2;
+        CountPlay3 = CountPlay2;
+
+        MaxLv2 = MaxLv;
+        MaxDays2 = MaxDays;
+        MaxKill2 = MaxKill;
+        MaxCustomer2 = MaxCustomer;
+        MaxCustomerVictory2 = MaxCustomerVictory;
+        MaxG2 = MaxG;
+        MaxGetG2 = MaxGetG;
+        CountPlay2 = TotalCountPlay;
+    }
+    public void HighScoreRankIn3()
+    {
+        RankInNumber = 3;
+        MaxLv5 = MaxLv4;
+        MaxDays5 = MaxDays4;
+        MaxKill5 = MaxKill4;
+        MaxCustomer5 = MaxCustomer4;
+        MaxCustomerVictory5 = MaxCustomerVictory4;
+        MaxG5 = MaxG4;
+        MaxGetG5 = MaxGetG4;
+        CountPlay5 = CountPlay4;
+
+        MaxLv4 = MaxLv3;
+        MaxDays4 = MaxDays3;
+        MaxKill4 = MaxKill3;
+        MaxCustomer4 = MaxCustomer3;
+        MaxCustomerVictory4 = MaxCustomerVictory3;
+        MaxG4 = MaxG3;
+        MaxGetG4 = MaxGetG3;
+        CountPlay4 = CountPlay3;
+
+        MaxLv3 = MaxLv;
+        MaxDays3 = MaxDays;
+        MaxKill3 = MaxKill;
+        MaxCustomer3 = MaxCustomer;
+        MaxCustomerVictory3 = MaxCustomerVictory;
+        MaxG3 = MaxG;
+        MaxGetG3 = MaxGetG;
+        CountPlay3 = TotalCountPlay;
+    }
+    public void HighScoreRankIn4()
+    {
+        RankInNumber = 4;
+        MaxLv5 = MaxLv4;
+        MaxDays5 = MaxDays4;
+        MaxKill5 = MaxKill4;
+        MaxCustomer5 = MaxCustomer4;
+        MaxCustomerVictory5 = MaxCustomerVictory4;
+        MaxG5 = MaxG4;
+        MaxGetG5 = MaxGetG4;
+        CountPlay5 = CountPlay4;
+
+        MaxLv4 = MaxLv;
+        MaxDays4 = MaxDays;
+        MaxKill4 = MaxKill;
+        MaxCustomer4 = MaxCustomer;
+        MaxCustomerVictory4 = MaxCustomerVictory;
+        MaxG4 = MaxG;
+        MaxGetG4 = MaxGetG;
+        CountPlay4 = TotalCountPlay;
+    }
+    public void HighScoreRankIn5()
+    {
+        RankInNumber = 5;
+        MaxLv5 = MaxLv;
+        MaxDays5 = MaxDays;
+        MaxKill5 = MaxKill;
+        MaxCustomer5 = MaxCustomer;
+        MaxCustomerVictory5 = MaxCustomerVictory;
+        MaxG5 = MaxG;
+        MaxGetG5 = MaxGetG;
+        CountPlay5 = TotalCountPlay;
+    }
+    //前回プレイのスコアを光らせる
+    public void ScoreGlow()
+    {
+        if (RankInNumber == 1) { Score1.GetComponent<Glower2>().GlowRareType(); }
+        else if (RankInNumber == 2) { Score2.GetComponent<Glower2>().GlowRareType(); }
+        else if (RankInNumber == 3) { Score3.GetComponent<Glower2>().GlowRareType(); }
+        else if (RankInNumber == 4) { Score4.GetComponent<Glower2>().GlowRareType(); }
+        else if (RankInNumber == 5) { Score5.GetComponent<Glower2>().GlowRareType(); }
+        else { }
+    }
     //ハイスコアの順位確認
     public int CheckHighScore()
     {
+        RankInNumber = 0;
         int result = 1;
         //過去のスコアにまさっているかどうか確認し、まさっていれば挿入してスコアを更新
-        if (MaxG > MaxG1)
+        if (MaxG == 0)
         {
-            MaxLv5 = MaxLv4;
-            MaxDays5 = MaxDays4;
-            MaxKill5 = MaxKill4;
-            MaxCustomer5 = MaxCustomer4;
-            MaxCustomerVictory5 = MaxCustomerVictory4;
-            MaxG5 = MaxG4;
-            MaxGetG5 = MaxGetG4;
-            CountPlay5 = CountPlay4;
+            if (MaxDays > MaxDays1)
+            {
+                HighScoreRankIn1();
+            }
+            else if (MaxDays > MaxDays2)
+            {
+                HighScoreRankIn2();
+            }
+            else if (MaxDays > MaxDays3)
+            {
+                HighScoreRankIn3();
+            }
+            else if (MaxDays > MaxDays4)
+            {
+                HighScoreRankIn4();
 
-            MaxLv4 = MaxLv3;
-            MaxDays4 = MaxDays3;
-            MaxKill4 = MaxKill3;
-            MaxCustomer4 = MaxCustomer3;
-            MaxCustomerVictory4 = MaxCustomerVictory3;
-            MaxG4 = MaxG3;
-            MaxGetG4 = MaxGetG3;
-            CountPlay4 = CountPlay3;
-
-            MaxLv3 = MaxLv2;
-            MaxDays3 = MaxDays2;
-            MaxKill3 = MaxKill2;
-            MaxCustomer3 = MaxCustomer2;
-            MaxCustomerVictory3 = MaxCustomerVictory2;
-            MaxG3 = MaxG2;
-            MaxGetG3 = MaxGetG2;
-            CountPlay3 = CountPlay2;
-
-            MaxLv2 = MaxLv1;
-            MaxDays2 = MaxDays1;
-            MaxKill2 = MaxKill1;
-            MaxCustomer2 = MaxCustomer1;
-            MaxCustomerVictory2 = MaxCustomerVictory1;
-            MaxG2 = MaxG1;
-            MaxGetG2 = MaxGetG1;
-            CountPlay2 = CountPlay1;
-
-            MaxLv1 = MaxLv;
-            MaxDays1 = MaxDays;
-            MaxKill1 = MaxKill;
-            MaxCustomer1 = MaxCustomer;
-            MaxCustomerVictory1 = MaxCustomerVictory;
-            MaxG1 = MaxG;
-            MaxGetG1 = MaxGetG;
-            CountPlay1 = TotalCountPlay;
+            }
+            else if (MaxDays > MaxDays5)
+            {
+                HighScoreRankIn5();
+            }
+            else { result = 0; }
         }
-        else if (MaxG > MaxG2)
+            else
         {
-            MaxLv5 = MaxLv4;
-            MaxDays5 = MaxDays4;
-            MaxKill5 = MaxKill4;
-            MaxCustomer5 = MaxCustomer4;
-            MaxCustomerVictory5 = MaxCustomerVictory4;
-            MaxG5 = MaxG4;
-            MaxGetG5 = MaxGetG4;
-            CountPlay5 = CountPlay4;
+            if (MaxG > MaxG1)
+            {
+                HighScoreRankIn1();
+            }
+            else if (MaxG > MaxG2)
+            {
+                HighScoreRankIn2();
+            }
+            else if (MaxG > MaxG3)
+            {
+                HighScoreRankIn3();
+            }
+            else if (MaxG > MaxG4)
+            {
+                HighScoreRankIn4();
 
-            MaxLv4 = MaxLv3;
-            MaxDays4 = MaxDays3;
-            MaxKill4 = MaxKill3;
-            MaxCustomer4 = MaxCustomer3;
-            MaxCustomerVictory4 = MaxCustomerVictory3;
-            MaxG4 = MaxG3;
-            MaxGetG4 = MaxGetG3;
-            CountPlay4 = CountPlay3;
-
-            MaxLv3 = MaxLv2;
-            MaxDays3 = MaxDays2;
-            MaxKill3 = MaxKill2;
-            MaxCustomer3 = MaxCustomer2;
-            MaxCustomerVictory3 = MaxCustomerVictory2;
-            MaxG3 = MaxG2;
-            MaxGetG3 = MaxGetG2;
-            CountPlay3 = CountPlay2;
-
-            MaxLv2 = MaxLv;
-            MaxDays2 = MaxDays;
-            MaxKill2 = MaxKill;
-            MaxCustomer2 = MaxCustomer;
-            MaxCustomerVictory2 = MaxCustomerVictory;
-            MaxG2 = MaxG;
-            MaxGetG2 = MaxGetG;
-            CountPlay2 = TotalCountPlay;
-
+            }
+            else if (MaxG > MaxG5)
+            {
+                HighScoreRankIn5();
+            }
+            else { result = 0; }
         }
-        else if (MaxG > MaxG3)
-        {
-            MaxLv5 = MaxLv4;
-            MaxDays5 = MaxDays4;
-            MaxKill5 = MaxKill4;
-            MaxCustomer5 = MaxCustomer4;
-            MaxCustomerVictory5 = MaxCustomerVictory4;
-            MaxG5 = MaxG4;
-            MaxGetG5 = MaxGetG4;
-            CountPlay5 = CountPlay4;
-
-            MaxLv4 = MaxLv3;
-            MaxDays4 = MaxDays3;
-            MaxKill4 = MaxKill3;
-            MaxCustomer4 = MaxCustomer3;
-            MaxCustomerVictory4 = MaxCustomerVictory3;
-            MaxG4 = MaxG3;
-            MaxGetG4 = MaxGetG3;
-            CountPlay4 = CountPlay3;
-
-            MaxLv3 = MaxLv;
-            MaxDays3 = MaxDays;
-            MaxKill3 = MaxKill;
-            MaxCustomer3 = MaxCustomer;
-            MaxCustomerVictory3 = MaxCustomerVictory;
-            MaxG3 = MaxG;
-            MaxGetG3 = MaxGetG;
-            CountPlay3 = TotalCountPlay;
-
-        }
-        else if (MaxG > MaxG4)
-        {
-            MaxLv5 = MaxLv4;
-            MaxDays5 = MaxDays4;
-            MaxKill5 = MaxKill4;
-            MaxCustomer5 = MaxCustomer4;
-            MaxCustomerVictory5 = MaxCustomerVictory4;
-            MaxG5 = MaxG4;
-            MaxGetG5 = MaxGetG4;
-            CountPlay5 = CountPlay4;
-
-            MaxLv4 = MaxLv;
-            MaxDays4 = MaxDays;
-            MaxKill4 = MaxKill;
-            MaxCustomer4 = MaxCustomer;
-            MaxCustomerVictory4 = MaxCustomerVictory;
-            MaxG4 = MaxG;
-            MaxGetG4 = MaxGetG;
-            CountPlay4 = TotalCountPlay;
-        }
-
-        else if (MaxG > MaxG5)
-        {
-            MaxLv5 = MaxLv;
-            MaxDays5 = MaxDays;
-            MaxKill5 = MaxKill;
-            MaxCustomer5 = MaxCustomer;
-            MaxCustomerVictory5 = MaxCustomerVictory;
-            MaxG5 = MaxG;
-            MaxGetG5 = MaxGetG;
-            CountPlay5 = TotalCountPlay;
-        }
-        else { result = 0; }
-
         return result;
     }
     //客リストの記録

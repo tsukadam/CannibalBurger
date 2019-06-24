@@ -118,10 +118,10 @@ public class LvDesignController : MonoBehaviour
     //初回アイテムの生成
     public void MakeItemFirst()
     {
-        StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "3", "#dd6645", "0" };
+        StatGame.GetComponent<StatGame>().Item1 = new string[] { "にく", "NikuSyou", "3", "#dd6645", "2" };
         StatGame.GetComponent<StatGame>().Item2 = new string[] { "レタス", "Retasu", "1", "#88cc66", "0" };
-        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "3", "#dddd77", "0" };
-        StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "0" };
+        StatGame.GetComponent<StatGame>().Item3 = new string[] { "チーズ", "CheezeSyou", "3", "#dddd77", "2" };
+        StatGame.GetComponent<StatGame>().Item4 = new string[] { "チーズ", "CheeseTyuu", "2", "#ebebdd", "1" };
     }
 
 

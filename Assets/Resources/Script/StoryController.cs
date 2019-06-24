@@ -28,6 +28,8 @@ public class StoryController : MonoBehaviour {
     public GameObject SkipButton;
     public string NowSerif="";
 
+    public string ActionSerif;
+    public string ActionVoice;
     public string ActionNowSerif="";
     public Text ActionMassage;
 
@@ -592,15 +594,21 @@ public class StoryController : MonoBehaviour {
     }
 
     //休日アクションの中の、演出だけの文字送り
-    public void ActionReadLine(string Serif,string Voice)
+    public void ActionReadLine(string Serif, string Voice)
     {
         Routine = null;
-        Routine = ActionMassageCoroutine(Serif, Voice);
+        ActionSerif = Serif;
+        ActionVoice = Voice;
+        Routine = ActionMassageCoroutine();
         StartCoroutine(Routine);
     }
 
-    IEnumerator ActionMassageCoroutine(string Serif,string Voice)
+    IEnumerator ActionMassageCoroutine()
     {
+        GetComponent<GameController>().PopupActionSkipTapBlock.SetActive(true);
+
+        string Serif = ActionSerif;
+        string Voice = ActionVoice;
         int Count = 0;
         string ReadingSerif = "";
         string NowGriff;
@@ -614,15 +622,29 @@ public class StoryController : MonoBehaviour {
                 {
             GetComponent<SoundController>().PlaySE(Voice);
         }
+//            yield return new WaitForSeconds(1f);
             yield return new WaitForSeconds(0.01f);
             Count++;
         }
-
+        GetComponent<GameController>().PopupActionSkipTapBlock.SetActive(false);
         yield return null;
+    }
+    public void ActionReadLineSkip()
+    {
+        StopCoroutine();
+        ActionMassage.text = ActionSerif;
+        GetComponent<GameController>().PopupActionSkipTapBlock.SetActive(false);
+
+    }
+
+    public void StopCoroutine()
+    {
+        if (Routine != null) { StopCoroutine(Routine); }
+
     }
     public void SkipActionReadLine()
     {
-        if (Routine != null) { StopCoroutine(Routine); }
+        StopCoroutine();
         Massage.text = "";
     }
     // Use this for initialization

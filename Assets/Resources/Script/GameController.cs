@@ -26,8 +26,8 @@ public class GameController : MonoBehaviour
     public GameObject Menu;
     public GameObject Game;
     public GameObject HighScore;
-    public GameObject AdsDelete;
     public GameObject Library;
+    public GameObject Setting;
 
     public GameObject CanvasAll;
 
@@ -102,6 +102,8 @@ public class GameController : MonoBehaviour
     public GameObject SaveSusOKButton;
 
     public GameObject PopupSelectAction;
+    public GameObject PopupActionSkipTapBlock;
+
     public GameObject PopupAction;
     public GameObject ActHito1;
     public GameObject ActHito2;
@@ -161,6 +163,8 @@ public class GameController : MonoBehaviour
     //平日休日の切り替え基準
     //7で割った余り
 
+    //ロード開始時のしるし
+    public int LoadStartedFlag = 0;
 
     //プレハブ
     public GameObject HeartPrefab;
@@ -196,11 +200,11 @@ public class GameController : MonoBehaviour
         Menu.SetActive(false);
         HighScore.SetActive(false);
         Library.SetActive(false);
-        AdsDelete.SetActive(false);
         Game.SetActive(true);
         Status.SetActive(false);
         StoryAll.SetActive(false);
         TutorialAll.SetActive(false);
+        Setting.SetActive(false);
 
         if (StatPlayer.GetComponent<StatPlayer>().FlagStoryOP == 0)//オープニング見ていなければ表示
         {
@@ -354,7 +358,7 @@ public class GameController : MonoBehaviour
         PopupLoad.SetActive(false);
 
         StatPlayer.GetComponent<StatPlayer>().Load();
-
+        LoadStartedFlag = 1;
 
         //ロードでステータスは読み込まれる
 
@@ -391,6 +395,8 @@ public class GameController : MonoBehaviour
     //セーブがない時の初期処理
     public void NoLoadStart()
     {
+        LoadStartedFlag = 0;
+
         TapBlock.SetActive(true);
         EventSystem.SetActive(false);
         PopupLoad.SetActive(false);
@@ -617,55 +623,62 @@ public class GameController : MonoBehaviour
         MessageDraw("どれを つかいますか？");
 
         //チュートリアル　初回Feed
-        if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 0)//以前に見ていなければ表示
+        //ロードスタート時は一回目は出さない
+        if (LoadStartedFlag == 1)
         {
-            //ボタン押せなくする
-            ButtonSave.GetComponent<Button>().interactable = false;
-            Button4Items1.GetComponent<Button>().interactable = false;
-            Button4Items2.GetComponent<Button>().interactable = false;
-            Button4Items3.GetComponent<Button>().interactable = false;
-            Button4Items4.GetComponent<Button>().interactable = false;
-            GetComponent<TutorialController>().StartTutorial("FirstFeed");
+            LoadStartedFlag = 0;
         }
-
-        //チュートリアル　二回目Feed
-        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
-            StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 0)//１を見て２がまだなら表示
+        else
         {
-            ButtonSave.GetComponent<Button>().interactable = false;
-            Button4Items1.GetComponent<Button>().interactable = false;
-            Button4Items2.GetComponent<Button>().interactable = false;
-            Button4Items3.GetComponent<Button>().interactable = false;
-            Button4Items4.GetComponent<Button>().interactable = false;
-            GetComponent<TutorialController>().StartTutorial("SecondFeed");
+            if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 0)//以前に見ていなければ表示
+            {
+                //ボタン押せなくする
+                ButtonSave.GetComponent<Button>().interactable = false;
+                Button4Items1.GetComponent<Button>().interactable = false;
+                Button4Items2.GetComponent<Button>().interactable = false;
+                Button4Items3.GetComponent<Button>().interactable = false;
+                Button4Items4.GetComponent<Button>().interactable = false;
+                GetComponent<TutorialController>().StartTutorial("FirstFeed");
+            }
+
+            //チュートリアル　二回目Feed
+            else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
+                StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 0)//１を見て２がまだなら表示
+            {
+                ButtonSave.GetComponent<Button>().interactable = false;
+                Button4Items1.GetComponent<Button>().interactable = false;
+                Button4Items2.GetComponent<Button>().interactable = false;
+                Button4Items3.GetComponent<Button>().interactable = false;
+                Button4Items4.GetComponent<Button>().interactable = false;
+                GetComponent<TutorialController>().StartTutorial("SecondFeed");
+            }
+            else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
+    StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
+    StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を見て３がまだなら表示
+            {
+                ButtonSave.GetComponent<Button>().interactable = false;
+                Button4Items1.GetComponent<Button>().interactable = false;
+                Button4Items2.GetComponent<Button>().interactable = false;
+                Button4Items3.GetComponent<Button>().interactable = false;
+                Button4Items4.GetComponent<Button>().interactable = false;
+                GetComponent<TutorialController>().StartTutorial("ThirdFeed");
+            }
+
+
+            else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
+                StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
+                StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare == 0 &
+                StatGame.GetComponent<StatGame>().FlagGlowCustomer == 1)
+            {
+                ButtonSave.GetComponent<Button>().interactable = false;
+                Button4Items1.GetComponent<Button>().interactable = false;
+                Button4Items2.GetComponent<Button>().interactable = false;
+                Button4Items3.GetComponent<Button>().interactable = false;
+                Button4Items4.GetComponent<Button>().interactable = false;
+                GetComponent<TutorialController>().StartTutorial("FirstRare");
+
+            }
         }
-        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
-StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
-StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed == 0)//１、２を見て３がまだなら表示
-        {
-            ButtonSave.GetComponent<Button>().interactable = false;
-            Button4Items1.GetComponent<Button>().interactable = false;
-            Button4Items2.GetComponent<Button>().interactable = false;
-            Button4Items3.GetComponent<Button>().interactable = false;
-            Button4Items4.GetComponent<Button>().interactable = false;
-            GetComponent<TutorialController>().StartTutorial("ThirdFeed");
-        }
-
-
-        else if (StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed == 1 &
-            StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed == 1 &
-            StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare == 0 &
-            StatGame.GetComponent<StatGame>().FlagGlowCustomer == 1)
-        {
-            ButtonSave.GetComponent<Button>().interactable = false;
-            Button4Items1.GetComponent<Button>().interactable = false;
-            Button4Items2.GetComponent<Button>().interactable = false;
-            Button4Items3.GetComponent<Button>().interactable = false;
-            Button4Items4.GetComponent<Button>().interactable = false;
-            GetComponent<TutorialController>().StartTutorial("FirstRare");
-
-        }
-
         TapBlock.SetActive(false);
         EventSystem.SetActive(true);
     }
@@ -2722,8 +2735,11 @@ public void SelectOK()
         }
 
     }
-
-    public void ActionPolice()
+    public void ActionSerifSkip()
+    {
+        GetComponent<StoryController>().ActionReadLineSkip();
+    }
+        public void ActionPolice()
     {
         ButtonActionBack.SetActive(true);
         PopupSelectAction.SetActive(false);
@@ -3109,8 +3125,8 @@ public void WorkingDay(int Mode)
         Menu.SetActive(true);
         HighScore.SetActive(false);
         Library.SetActive(false);
-        AdsDelete.SetActive(false);
         Game.SetActive(false);
+        Setting.SetActive(false);
         BeforeStartAnim();
     }
 

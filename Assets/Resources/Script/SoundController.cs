@@ -63,7 +63,7 @@ public class SoundController : MonoBehaviour {
     public void ButtonMenuSE()    {        PlaySE("TapButtonDai");    }
     public void ButtonCloseInfo() { PlaySE("TapButton"); }
     public void ButtonOpenInfo() { PlaySE("TapButtonHigh1"); }
-
+    public void ButtonReset() { PlaySE("SEMahouHoly"); }
     public void Button4ItemSE()    {        PlaySE("TapButton");    }
     public void Button6ItemSE()    {        PlaySE("TapButton");    }
     public void ButtonSaveSusOKSE() { PlaySE("TapButtonHigh1"); }
@@ -95,7 +95,7 @@ public class SoundController : MonoBehaviour {
     //キーを送るとクリップを返す
     public AudioClip GetNameSE(string SEName)
     {
-        AudioClip UseSE = SEGGet;//宣言で入れるデフォ値、指定された番号のSEがないとこれが鳴ってしまう
+        AudioClip UseSE = SETapButton;//宣言で入れるデフォ値、指定された番号のSEがないとこれが鳴ってしまう
 
         if (SEName == "GGet") { UseSE = SEGGet; }
         else if (SEName == "DoorOpen") { UseSE = SEDoorOpen; }

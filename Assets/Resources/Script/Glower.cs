@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using Coffee.UIExtensions;
@@ -8,6 +7,9 @@ public class Glower : MonoBehaviour {
     //ステータス表示オブジェクトの取得
     public GameObject Myself;//自分自身
     int GlowFlag = 0;
+    public float ColorChangeSpan = 0.4f;
+    Color MotoColor=new Color(1.0f,1.0f,1.0f,1.0f);
+
 
     public void Glow()
     {

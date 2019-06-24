@@ -11,11 +11,17 @@ public class TutorialController : MonoBehaviour {
     public GameObject StatGame;
 
     public GameObject TutorialAll;
-    public GameObject Sankaku;
     public GameObject NextButton;
     public GameObject SkipButton;
     public GameObject EndButton;
     public string NowSerif="";
+
+    public GameObject BlockAll;
+    public GameObject BlockExceptSave;
+    public GameObject BlockExceptSus;
+    public GameObject BlockExcept4Item;
+    public GameObject BlockExceptSus4Item;
+
 
     public int ReadCount;
     public int ReadCountMax;
@@ -67,18 +73,26 @@ public class TutorialController : MonoBehaviour {
         EndButton.SetActive(false);
         SkipButton.SetActive(false);
 
-     //   ButtonBlock1.SetActive(false);
+        BlockAll.SetActive(false);
+        BlockExceptSave.SetActive(false);
+        BlockExceptSus.SetActive(false);
+        BlockExceptSus4Item.SetActive(false);
+        BlockExcept4Item.SetActive(false);
+
+        //   ButtonBlock1.SetActive(false);
 
         Massage.text = "";
         if (TutorialKey == "FirstFeed") { UseStory = TutorialFirstFeed;
       //      ButtonBlock1.SetActive(true);
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstFeed = 1;
             WaitTime = 2.0f;
+            BlockExceptSus4Item.SetActive(true);
         }
         else if (TutorialKey == "SecondFeed") { UseStory = TutorialSecondFeed;
             //ButtonBlock1.SetActive(true);
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed = 1;
             WaitTime = 2.0f;
+            BlockExcept4Item.SetActive(true);
         }
         else if (TutorialKey == "ThirdFeed")
         {
@@ -86,30 +100,37 @@ public class TutorialController : MonoBehaviour {
             //ButtonBlock1.SetActive(true);
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialThirdFeed = 1;
             WaitTime = 2.0f;
+            BlockExceptSave.SetActive(true);
         }
         else if (TutorialKey == "FirstSaveSus") { UseStory = TutorialFirstSaveSus;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSaveSus = 1;
             WaitTime = 2.0f;
+            BlockExceptSus.SetActive(true);
         }
         else if (TutorialKey == "FirstLvup") { UseStory = TutorialFirstLvup;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstLvup = 1;
             WaitTime = 1.0f;
+            BlockExceptSus.SetActive(true);
         }
         else if (TutorialKey == "FirstRare") { UseStory = TutorialFirstRare;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare = 1;
             WaitTime = 2.0f;
+            BlockAll.SetActive(true);
         }
         else if (TutorialKey == "FirstHolyday") { UseStory = TutorialFirstHolyday;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstHolyday = 1;
             WaitTime = 1.0f;
+            BlockAll.SetActive(true);
         }
         else if (TutorialKey == "FirstSelect") { UseStory = TutorialFirstSelect;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSelect = 1;
             WaitTime = 2.0f;
+            BlockAll.SetActive(true);
         }
         else if (TutorialKey == "FirstDispose") { UseStory = TutorialFirstDispose;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstDispose = 1;
             WaitTime = 1.0f;
+            BlockAll.SetActive(true);
         }
         else { Debug.Log("指定されたチュートリアルKeyはありません");
             TutorialAll.SetActive(false); }
@@ -282,7 +303,7 @@ public class TutorialController : MonoBehaviour {
         new string[]{
         "４つの しょくざいから" +"\n"+"１つ えらんで " +"\n"+"バーガーを つくるよ",
         "しろい すうじが パワー" +"\n"+"あかい すうじが カルマ",
-        "カルマ が まんたん に なると" +"\n"+"ゲームオーバーだよ"
+        "カルマメーター が まんたん に なると" +"\n"+"ゲームオーバーだよ"
     };
     TutorialSecondFeed =
         new string[]{
@@ -313,7 +334,7 @@ public class TutorialController : MonoBehaviour {
     };
     TutorialFirstSelect =
    new string[] {
-        "まんぞくした おきゃくさま だけが" +"\n"+"しょくざい を くれるよ",
+        "まんぞくした おきゃくさま が" +"\n"+"レアリティじゅん で ４にんまで"+"\n"+"しょくざい を くれるよ",
         "ほしい しょくざい を" +"\n"+"２つ タップして えらぼう",
         "もういちど タップ で キャンセル",
         "おきゃくさま ほんにん も えらべるよ"
