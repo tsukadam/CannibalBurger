@@ -147,6 +147,8 @@ public class GameController : MonoBehaviour
     public Text PopupLvUpSusText;
     public GameObject PopupGameOver;
     public Text PopupGameOverText;
+    public GameObject PopupGameOverEndcard;
+
     public GameObject ButtonActionBack;
 
     public GameObject PopupRankIn;
@@ -1480,12 +1482,16 @@ public class GameController : MonoBehaviour
     }
 
     //ゲームオーバーストーリー表示後のエンドカード
-    public void EndCard(string EndMassage,int BDFlag)
+    public void EndCard(string EndMassage,int BDFlag, string EndKey)
     {
         CustomerField.SetActive(false);
         Button4Items.SetActive(false);
         Hand.SetActive(false);
         Message.SetActive(false);
+
+        string ImagePath = "Endcard/" + EndKey;
+        Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
+        PopupGameOverEndcard.GetComponent<Image>().sprite = SpriteImage;
 
         PopupGameOverText.text = EndMassage;
         PopupGameOver.SetActive(true);
@@ -2864,7 +2870,7 @@ public void SelectOK()
         GetComponent<StatGameController>().GUp(Cost*-1);
         GetComponent<StatGameController>().SusUp(Return*-1);
         ActButtonPolice.SetActive(false);
-        GetComponent<SoundController>().PlaySE("SEMahouHoly");
+        GetComponent<SoundController>().PlaySE("GGet");
 
         GetComponent<StoryController>().ActionReadLine("オヤ おとしもの だね？\nあずかって おこう", "SEVoiceMan");
         ActionEndOK.SetActive(true);
@@ -3203,9 +3209,22 @@ public void WorkingDay(int Mode)
 #endif
 
     }
+
+    public void ScreenNotFull()
+    {
+#if UNITY_STANDALONE
+        Screen.fullScreen = false;
+        Screen.SetResolution(360, 640, false, 60);
+
+#endif
+
+    }
+
     // Use this for initialization
     void Start()
     {
+
+
         float ScreenWidth = Screen.width;
         float ScreenHeight = Screen.height;
 
@@ -3242,12 +3261,15 @@ public void WorkingDay(int Mode)
         ApplicationChrome.navigationBarState = ApplicationChrome.States.TranslucentOverContent;
         ApplicationChrome.statusBarState = ApplicationChrome.States.Hidden;
         */
+
         //解像度設定
+        /*
         float screenRate = (float)1280 / Screen.height;
         if (screenRate > 1) screenRate = 1;
         int width = (int)(Screen.width * screenRate);
         int height = (int)(Screen.height * screenRate);
         Screen.SetResolution(width, height, true, 60);
+        */
 
         //回転固定
         // 縦
@@ -3258,10 +3280,17 @@ public void WorkingDay(int Mode)
         Screen.autorotateToLandscapeRight = false;
         // 上下反転
         Screen.autorotateToPortraitUpsideDown = false;
+
+        #if UNITY_STANDALONE
+        Screen.fullScreen = false;
+        Screen.SetResolution(540, 960, false, 60);
+        #endif
+
         GoMenu();
     }
     void Awake()
     {
+
         //FPS固定
         Application.targetFrameRate = FPS;
     }

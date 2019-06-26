@@ -20,6 +20,9 @@ public class License : MonoBehaviour
     public GameObject LinkMob;
     public GameObject LinkKoka;
 
+    public GameObject LinkLetterSpacing;
+    public GameObject LinkCSV;
+
     public void LinkDraw()
     {
         LinkJF20.SetActive(false);
@@ -27,6 +30,9 @@ public class License : MonoBehaviour
         LinkPixel.SetActive(false);
         LinkMob.SetActive(false);
         LinkKoka.SetActive(false);
+        LinkLetterSpacing.SetActive(false);
+        LinkCSV.SetActive(false);
+
 #if UNITY_EDITOR
 #elif UNITY_ANDROID
         Debug.Log("android");
@@ -35,8 +41,10 @@ public class License : MonoBehaviour
         LinkPixel.SetActive(true);
         LinkMob.SetActive(true);
         LinkKoka.SetActive(true);
+        LinkLetterSpacing.SetActive(true);
+        LinkCSV.SetActive(true);
 #else
-        #endif
+#endif
 
     }
 
@@ -94,6 +102,20 @@ public class License : MonoBehaviour
     {
 #if UNITY_ANDROID
         string url = "https://soundeffect-lab.info/sound/various/";
+        Application.OpenURL(url);
+#endif
+    }
+    public void OpenLetterSpacing()
+    {
+#if UNITY_ANDROID
+        string url = "https://forum.unity.com/threads/adjustable-character-spacing-free-script.288277/#post-2768776";
+        Application.OpenURL(url);
+#endif
+    }
+    public void OpenCSV()
+    {
+#if UNITY_ANDROID
+        string url = "https://qiita.com/Akematty/items/2fbb61b55132ced4a3be";
         Application.OpenURL(url);
 #endif
     }

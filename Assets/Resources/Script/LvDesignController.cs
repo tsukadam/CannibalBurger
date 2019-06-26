@@ -840,12 +840,12 @@ public int VictoryDropG(int GetG,float VictoryPoint)
         int SusInt = Mathf.RoundToInt(Sus);
 
         float Cost=0;
-        //大コスト　所持金の1%
-        //中コスト　所持金の0.5%
-        //小コスト　所持金の0.1%
-        float BigCost = 1f/100;
-        float MediumCost = 5f / 1000;
-        float SmallCost = 1f/1000;
+        //大コスト　所持金の3%
+        //中コスト　所持金の1%
+        //小コスト　所持金の0.5%
+        float BigCost = 3f/100;
+        float MediumCost = 1f / 100;
+        float SmallCost = 5f/1000;
 
         //100~360
 

@@ -4,7 +4,11 @@ Hint1,HintMan,None,L,Hint,レベルを あげるほど／おかねは かせぎ�
 Hint1,HintMan,None,L,Hint,できるだけ はやく／レベルアップ するのが コツだ
 Hint1,HintMan,None,L,Hint,タイム イズ マネー…／それが けいえいしゃ マインド
 Hint2,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint2,HintMan,None,L,Hint,わかい おきゃく は／にく の しつ も いい
+Hint2,HintMan,None,L,Hint,しょくざい と おきゃく の／いろ が ちかければ／こうか ばつぐんだ
+Hint2,HintMan,None,L,Hint,ぐたいてきに どれくらい かというと…
+Hint2,HintMan,None,L,Hint,かなりちかい いろだと／３～４ばい の パワーに なるぞ
+Hint2,HintMan,None,L,Hint,ぎゃくに とおい いろだと／はんぶん まで パワーダウンしてしまう
+Hint2,HintMan,None,L,Hint,けいさん ほうほう は／きぎょうひみつ だ
 Hint3,HintMan,None,L,Hint,わたしは ヒント・マン
 Hint3,HintMan,None,L,Hint,きいろ っぽい おきゃくは／ちょっと おかねもち
 Hint3,HintMan,None,L,Hint,そのぶん ちょっと てごわい
@@ -31,56 +35,59 @@ Hint7,HintMan,None,L,Hint,あふれた けいけんち は／じょうはつ し
 Hint7,HintMan,None,L,Hint,ブランデー の ようにな
 Hint7,HintMan,None,L,Hint,なにごとも ロマンチックに／かんがえよう
 Hint8,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint8,HintMan,None,L,Hint,ひかる おきゃくは てごわいが／おかね も ドロップも／ゴージャス
-Hint8,HintMan,None,L,Hint,とっておき の しょくざいを／ぶつけよう
-Hint9,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint9,HintMan,None,L,Hint,パワーの たかい にくは／カルマも たかい／けいこう に ある
-Hint9,HintMan,None,L,Hint,つかいすぎる と／カルマが すぐ たまるぞ
-Hint9,HintMan,None,L,Hint,せつやく しよう
-Hint9,HintMan,None,L,Hint,しけた おきゃく ばかりの とき／しょぼい にくを つかっても／いいじゃないか
-Hint9,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
+Hint8,HintMan,None,L,Hint,パワーの たかい にくは／カルマも たかい／けいこう に ある
+Hint8,HintMan,None,L,Hint,つかいすぎる と／カルマが すぐ たまるぞ
+Hint8,HintMan,None,L,Hint,せつやく しよう
+Hint8,HintMan,None,L,Hint,しけた おきゃく ばかりの とき／しょぼい にくを つかっても／いいじゃないか
+Hint8,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
+Hint9,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint9,HintGirl,None,L,Hint,たべられない もの や／くさった もの は／たいてい カルマ が たかいわ
+Hint9,HintGirl,None,L,Hint,たべられる ものを だしましょう
 Hint10,HintGirl,None,L,Hint,わたしは ヒント・ガール
-Hint10,HintGirl,None,L,Hint,たべられない もの や／くさった もの は／カルマ が たかいわ
-Hint10,HintGirl,None,L,Hint,たべられる ものを だしましょう
-Hint11,HintGirl,None,L,Hint,わたしは ヒント・ガール
-Hint11,HintGirl,None,L,Hint,かんぺき に クリアする には／いっせんまんえん ひつようだけど
-Hint11,HintGirl,None,L,Hint,あるていど かせいで いれば／たりなくても クリアできるわ
-Hint11,HintGirl,None,L,Hint,スコア は さがるけどね
+Hint10,HintGirl,None,L,Hint,かんぺき に クリアする には／いっせんまんえん ひつようだけど
+Hint10,HintGirl,None,L,Hint,あるていど かせいで いれば／たりなくても クリアできるわ
+Hint10,HintGirl,None,L,Hint,スコア は さがるけどね
+Hint11,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint11,HintMan,None,L,Hint,おきゃく を にく に したほうが／もちもの を もらう より トク／とは かぎらない
+Hint11,HintMan,None,L,Hint,レア な おきゃく は／もちものが ゴージャス な／けいこう あるぞ
 Hint12,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint12,HintMan,None,L,Hint,おきゃく を にく に したほうが／もちもの を もらう より トク／とは かぎらない
-Hint12,HintMan,None,L,Hint,レア な おきゃく は／もちものが ゴージャス な／けいこう あるぞ
-Hint13,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint13,HintMan,None,L,Hint,おきゃく の いろ や パワーは／しゅぞく に よって／おおよそ きまっている
-Hint13,HintMan,None,L,Hint,が じゃっかん の こじんさ も ある
-Hint14,HintGirl,None,L,Hint,わたしは ヒント・ガール
-Hint14,HintGirl,None,L,Hint,おおかみ は／あかずきん の にくがすき
-Hint14,HintGirl,None,L,Hint,そういう かんけい／ちょくちょく あるわよ
-Hint14,HintGirl,None,L,Hint,ぜったい では ないけど／いろ や パワー が／あっているのね
+Hint12,HintMan,None,L,Hint,おきゃく の いろ や パワーは／しゅぞく に よって／おおよそ きまっている
+Hint12,HintMan,None,L,Hint,が じゃっかん の こじんさ も ある
+Hint12,HintMan,None,L,Hint,ずかんに ひょうじ される データは／りろんち というやつだ
+Hint13,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint13,HintGirl,None,L,Hint,おおかみ は／あかずきん の にくがすき
+Hint13,HintGirl,None,L,Hint,そういう かんけい／ちょくちょく あるわよ
+Hint13,HintGirl,None,L,Hint,ぜったい では ないけど／いろ や パワー が／あっているのね
+Hint14,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint14,HintMan,None,L,Hint,カルマ を おそれすぎると／おかね は かせげないぞ
+Hint14,HintMan,None,L,Hint,リスク を とらねば いっかげつ で／いっせんまえん は かせげない…／いっぱんろん と してもな
+Hint14,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
 Hint15,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint15,HintMan,None,L,Hint,カルマ を おそれすぎると／おかね は かせげないぞ
-Hint15,HintMan,None,L,Hint,リスク を とらねば いっかげつ で／いっせんまえん は かせげない…／いっぱんろん と してもな
-Hint15,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
+Hint15,HintMan,None,L,Hint,ちょろい おきゃく に／こうきゅう しょくざい…／それは ムダ
+Hint15,HintMan,None,L,Hint,てごわい おきゃく に／しょぼい しょくざい…／それでは かせげない
+Hint15,HintMan,None,L,Hint,きゃくそう を みて／ちょうどよく さばく のが／コツだ
+Hint15,HintMan,None,L,Hint,さべつ ではない／これは ターゲティング です
 Hint16,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint16,HintMan,None,L,Hint,ちょろい おきゃく に／こうきゅう しょくざい…／それは ムダ
-Hint16,HintMan,None,L,Hint,てごわい おきゃく に／しょぼい しょくざい…／それでは かせげない
-Hint16,HintMan,None,L,Hint,きゃくそう を みて／ちょうどよく さばく のが／コツだ
-Hint16,HintMan,None,L,Hint,さべつ ではない／これは ターゲティング です
+Hint16,HintMan,None,L,Hint,カルマ…／それは つみ
+Hint16,HintMan,None,L,Hint,つみぶかい しょくざい を／つかった とき／ カルマ が たまる
+Hint16,HintMan,None,L,Hint,まんたん に なると／たいほ されて／ゲームオーバー だ
+Hint16,HintMan,None,L,Hint,ぎゃくにいえば／まんたん に ならないかぎり／だいじょうぶ
+Hint16,HintMan,None,L,Hint,まんたんに なるまでは／なんの デメリット も ないぞ
 Hint17,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint17,HintMan,None,L,Hint,カルマ…／それは つみ
-Hint17,HintMan,None,L,Hint,つみぶかい しょくざい を／つかった とき／ カルマ が たまる
-Hint17,HintMan,None,L,Hint,まんたん に なると／たいほ されて／ゲームオーバー だ
-Hint17,HintMan,None,L,Hint,ぎゃくにいえば／まんたん に ならないかぎり／だいじょうぶ
-Hint17,HintMan,None,L,Hint,まんたんに なるまでは／なんの デメリット も ないぞ
-Hint18,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint18,HintMan,None,L,Hint,いっせんまんえん かせぐには／ひかる おきゃく が／カギだ
-Hint18,HintMan,None,L,Hint,ひかる おきゃく を／どれだけ こうりつ よく／おとしていくか…
-Hint18,HintMan,None,L,Hint,ぜんいん は ムリだけど／ねらえる とき は／ねらって いきたい
+Hint17,HintMan,None,L,Hint,いっせんまんえん かせぐには／ひかる おきゃく が／カギだ
+Hint17,HintMan,None,L,Hint,ひかる おきゃく を／どれだけ こうりつ よく／おとしていくか…
+Hint17,HintMan,None,L,Hint,ぜんいん は ムリだけど／ねらえる とき は／ねらって いきたい
+Hint18,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint18,HintGirl,None,L,Hint,カルマ は／レベルアップ の とき／きまった りょう さがる
+Hint18,HintGirl,None,L,Hint,だから じょばん は／あんまり きにしなくて いいよ
+Hint18,HintGirl,None,L,Hint,まあ ゆだん してると／いつのまにか たまるんだけど
+Hint18,HintGirl,None,L,Hint,そういうもの よ
 Hint19,HintGirl,None,L,Hint,わたしは ヒント・ガール
-Hint19,HintGirl,None,L,Hint,カルマ は／レベルアップ の とき／きまった りょう さがる
-Hint19,HintGirl,None,L,Hint,だから じょばん は／あんまり きにしなくて いいよ
-Hint19,HintGirl,None,L,Hint,まあ ゆだん してると／いつのまにか たまるんだけど
-Hint19,HintGirl,None,L,Hint,そういうもの よ
-Hint20,HintGirl,None,L,Hint,わたしは ヒント・ガール
-Hint20,HintGirl,None,L,Hint,カルマ の ひくい しょくざい も／キープして おかないと
-Hint20,HintGirl,None,L,Hint,カルマ が あがってきたとき／つむわよ
-Hint20,HintGirl,None,L,Hint,たまにね
+Hint19,HintGirl,None,L,Hint,カルマ の ひくい しょくざい も／キープして おかないと
+Hint19,HintGirl,None,L,Hint,カルマ が あがってきたとき／つむわよ
+Hint19,HintGirl,None,L,Hint,たまにね
+Hint20,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint20,HintMan,None,L,Hint,あいての このみ を／こちらの パワーが うわまっている ばあい／すこしだけ ボーナスがある
+Hint20,HintMan,None,L,Hint,うわまわって いれば いるほど／もらえる おかねが すこしだけ おおくなる
+Hint20,HintMan,None,L,Hint,でも すこしだけだ。／できるだけ ぎりぎりの パワーで／まんぞくさせた ほうが こうりつはいい
+Hint20,HintMan,None,L,Hint,それが けいえいしゃ マインド なのだ

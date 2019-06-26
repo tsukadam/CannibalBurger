@@ -327,9 +327,12 @@
     <Compile Include="Assets\Resources\Script\Floater.cs" />
     <Compile Include="Assets\Resources\Script\GameController.cs" />
     <Compile Include="Assets\Resources\Script\Glower.cs" />
+    <Compile Include="Assets\Resources\Script\Glower2.cs" />
     <Compile Include="Assets\Resources\Script\GlowImage.cs" />
+    <Compile Include="Assets\Resources\Script\Infomation.cs" />
     <Compile Include="Assets\Resources\Script\ItemController.cs" />
     <Compile Include="Assets\Resources\Script\LetterSpacing.cs" />
+    <Compile Include="Assets\Resources\Script\License.cs" />
     <Compile Include="Assets\Resources\Script\LvDesignController.cs" />
     <Compile Include="Assets\Resources\Script\Music.cs" />
     <Compile Include="Assets\Resources\Script\PixelBase.cs" />

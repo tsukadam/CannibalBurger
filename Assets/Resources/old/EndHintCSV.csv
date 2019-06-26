@@ -1,7 +1,86 @@
 SceneName,Person1,Person2,Fukidashi,Place,Serif
-Hint1,Miyako,None,L,Hint,ヒント１
-Hint2,Miyako,None,L,Hint,ヒント２の１
-Hint2,Miyako,None,L,Hint,ヒント２の２／だよ
-Hint3,Morrel2,None,L,Hint,ヒント３の１
-Hint3,Morrel2,None,L,Hint,ヒント３の２／です
-Hint3,Morrel2,None,L,Hint,ヒント３の３／おわり／だよ
+Hint1,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint1,HintMan,None,L,Hint,レベルを あげるほど／おかねは かせぎやすく なる
+Hint1,HintMan,None,L,Hint,できるだけ はやく／レベルアップ するのが コツだ
+Hint1,HintMan,None,L,Hint,タイム イズ マネー…／それが けいえいしゃ マインド
+Hint2,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint2,HintMan,None,L,Hint,わかい おきゃく は／にく の しつ も いい
+Hint3,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint3,HintMan,None,L,Hint,きいろ っぽい おきゃくは／ちょっと おかねもち
+Hint3,HintMan,None,L,Hint,そのぶん ちょっと てごわい
+Hint3,HintMan,None,L,Hint,けしからんな
+Hint4,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint4,HintMan,None,L,Hint,どうぶつ の にく は／ひとより カルマが ひくいぞ
+Hint4,HintMan,None,L,Hint,それに てなづけ やすい／まさに てんの めぐみだ
+Hint4,HintMan,None,L,Hint,しかし おかねは／あまり もっていない
+Hint4,HintMan,None,L,Hint,もってる ほうが へんだろう？
+Hint5,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint5,HintMan,None,L,Hint,おとなは すききらい が はげしい
+Hint5,HintMan,None,L,Hint,どうぶつ や こどもは そうでもない／ちょろいぜ
+Hint5,HintMan,None,L,Hint,リアル だと／こじんさ が あるけどね
+Hint5,HintMan,None,L,Hint,だが こどもは まずしい／おとなは おかねを もっている
+Hint5,HintMan,None,L,Hint,これも こじんさ あるかな？
+Hint6,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint6,HintMan,None,L,Hint,ねんれい や せいべつ は／にくの しつ に かんけいする
+Hint6,HintMan,None,L,Hint,いっぱんろん と してな
+Hint7,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint7,HintMan,None,L,Hint,かせいだ おかね が／けいけんち と なる
+Hint7,HintMan,None,L,Hint,つまり おかね と けいけんち は／イコールだ
+Hint7,HintMan,None,L,Hint,だが レベルアップのとき だけは ちがう
+Hint7,HintMan,None,L,Hint,あふれた けいけんち は／じょうはつ して／どこかに きえてしまう…
+Hint7,HintMan,None,L,Hint,ブランデー の ようにな
+Hint7,HintMan,None,L,Hint,なにごとも ロマンチックに／かんがえよう
+Hint8,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint8,HintMan,None,L,Hint,ひかる おきゃくは てごわいが／おかね も ドロップも／ゴージャス
+Hint8,HintMan,None,L,Hint,とっておき の しょくざいを／ぶつけよう
+Hint9,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint9,HintMan,None,L,Hint,パワーの たかい にくは／カルマも たかい／けいこう に ある
+Hint9,HintMan,None,L,Hint,つかいすぎる と／カルマが すぐ たまるぞ
+Hint9,HintMan,None,L,Hint,せつやく しよう
+Hint9,HintMan,None,L,Hint,しけた おきゃく ばかりの とき／しょぼい にくを つかっても／いいじゃないか
+Hint9,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
+Hint10,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint10,HintGirl,None,L,Hint,たべられない もの や／くさった もの は／カルマ が たかいわ
+Hint10,HintGirl,None,L,Hint,たべられる ものを だしましょう
+Hint11,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint11,HintGirl,None,L,Hint,かんぺき に クリアする には／いっせんまんえん ひつようだけど
+Hint11,HintGirl,None,L,Hint,あるていど かせいで いれば／たりなくても クリアできるわ
+Hint11,HintGirl,None,L,Hint,スコア は さがるけどね
+Hint12,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint12,HintMan,None,L,Hint,おきゃく を にく に したほうが／もちもの を もらう より トク／とは かぎらない
+Hint12,HintMan,None,L,Hint,レア な おきゃく は／もちものが ゴージャス な／けいこう あるぞ
+Hint13,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint13,HintMan,None,L,Hint,おきゃく の いろ や パワーは／しゅぞく に よって／おおよそ きまっている
+Hint13,HintMan,None,L,Hint,が じゃっかん の こじんさ も ある
+Hint14,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint14,HintGirl,None,L,Hint,おおかみ は／あかずきん の にくがすき
+Hint14,HintGirl,None,L,Hint,そういう かんけい／ちょくちょく あるわよ
+Hint14,HintGirl,None,L,Hint,ぜったい では ないけど／いろ や パワー が／あっているのね
+Hint15,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint15,HintMan,None,L,Hint,カルマ を おそれすぎると／おかね は かせげないぞ
+Hint15,HintMan,None,L,Hint,リスク を とらねば いっかげつ で／いっせんまえん は かせげない…／いっぱんろん と してもな
+Hint15,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
+Hint16,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint16,HintMan,None,L,Hint,ちょろい おきゃく に／こうきゅう しょくざい…／それは ムダ
+Hint16,HintMan,None,L,Hint,てごわい おきゃく に／しょぼい しょくざい…／それでは かせげない
+Hint16,HintMan,None,L,Hint,きゃくそう を みて／ちょうどよく さばく のが／コツだ
+Hint16,HintMan,None,L,Hint,さべつ ではない／これは ターゲティング です
+Hint17,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint17,HintMan,None,L,Hint,カルマ…／それは つみ
+Hint17,HintMan,None,L,Hint,つみぶかい しょくざい を／つかった とき／ カルマ が たまる
+Hint17,HintMan,None,L,Hint,まんたん に なると／たいほ されて／ゲームオーバー だ
+Hint17,HintMan,None,L,Hint,ぎゃくにいえば／まんたん に ならないかぎり／だいじょうぶ
+Hint17,HintMan,None,L,Hint,まんたんに なるまでは／なんの デメリット も ないぞ
+Hint18,HintMan,None,L,Hint,わたしは ヒント・マン
+Hint18,HintMan,None,L,Hint,いっせんまんえん かせぐには／ひかる おきゃく が／カギだ
+Hint18,HintMan,None,L,Hint,ひかる おきゃく を／どれだけ こうりつ よく／おとしていくか…
+Hint18,HintMan,None,L,Hint,ぜんいん は ムリだけど／ねらえる とき は／ねらって いきたい
+Hint19,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint19,HintGirl,None,L,Hint,カルマ は／レベルアップ の とき／きまった りょう さがる
+Hint19,HintGirl,None,L,Hint,だから じょばん は／あんまり きにしなくて いいよ
+Hint19,HintGirl,None,L,Hint,まあ ゆだん してると／いつのまにか たまるんだけど
+Hint19,HintGirl,None,L,Hint,そういうもの よ
+Hint20,HintGirl,None,L,Hint,わたしは ヒント・ガール
+Hint20,HintGirl,None,L,Hint,カルマ の ひくい しょくざい も／キープして おかないと
+Hint20,HintGirl,None,L,Hint,カルマ が あがってきたとき／つむわよ
+Hint20,HintGirl,None,L,Hint,たまにね
