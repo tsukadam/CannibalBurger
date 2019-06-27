@@ -19,6 +19,8 @@ public class TutorialController : MonoBehaviour {
     public GameObject BlockAll;
     public GameObject BlockExceptSave;
     public GameObject BlockExceptSus;
+    public GameObject BlockExceptSusLevel;
+    public GameObject BlockExceptDays4Item;
     public GameObject BlockExcept4Item;
     public GameObject BlockExceptSus4Item;
 
@@ -76,7 +78,9 @@ public class TutorialController : MonoBehaviour {
         BlockAll.SetActive(false);
         BlockExceptSave.SetActive(false);
         BlockExceptSus.SetActive(false);
+        BlockExceptSusLevel.SetActive(false);
         BlockExceptSus4Item.SetActive(false);
+        BlockExceptDays4Item.SetActive(false);
         BlockExcept4Item.SetActive(false);
 
         //   ButtonBlock1.SetActive(false);
@@ -92,7 +96,7 @@ public class TutorialController : MonoBehaviour {
             //ButtonBlock1.SetActive(true);
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialSecondFeed = 1;
             WaitTime = 2.0f;
-            BlockExcept4Item.SetActive(true);
+            BlockExceptDays4Item.SetActive(true);
         }
         else if (TutorialKey == "ThirdFeed")
         {
@@ -105,12 +109,12 @@ public class TutorialController : MonoBehaviour {
         else if (TutorialKey == "FirstSaveSus") { UseStory = TutorialFirstSaveSus;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstSaveSus = 1;
             WaitTime = 2.0f;
-            BlockExceptSus.SetActive(true);
+            BlockAll.SetActive(true);
         }
         else if (TutorialKey == "FirstLvup") { UseStory = TutorialFirstLvup;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstLvup = 1;
             WaitTime = 1.0f;
-            BlockExceptSus.SetActive(true);
+            BlockExceptSusLevel.SetActive(true);
         }
         else if (TutorialKey == "FirstRare") { UseStory = TutorialFirstRare;
             StatPlayer.GetComponent<StatPlayer>().FlagTutorialFirstRare = 1;
@@ -293,11 +297,16 @@ public class TutorialController : MonoBehaviour {
 
     }
 
+    //テキストのぼやけを切る
+    public void Point(Text TargetText)
+    {
+        TargetText.font.material.mainTexture.filterMode = FilterMode.Point;
 
+    }
 
     // Use this for initialization
     void Start () {
-
+        Point(Massage);
 
     TutorialFirstFeed =
         new string[]{

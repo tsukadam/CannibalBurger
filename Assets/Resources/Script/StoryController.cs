@@ -654,9 +654,20 @@ public class StoryController : MonoBehaviour {
         StopCoroutine();
         Massage.text = "";
     }
+
+    //テキストのぼやけを切る
+    public void Point(Text TargetText)
+    {
+        TargetText.font.material.mainTexture.filterMode = FilterMode.Point;
+
+    }
+
     // Use this for initialization
     void Start()
     {
+        Point(Massage);
+        Point(ActionMassage);
+
         FukidashiL.SetActive(false);
         FukidashiL.SetActive(false);
         NextButton.SetActive(false);

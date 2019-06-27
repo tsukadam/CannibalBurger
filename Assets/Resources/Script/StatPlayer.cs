@@ -1441,11 +1441,46 @@ public void Load()
 
     }
 
+    //テキストのぼやけを切る
+    public void Point(Text TargetText)
+    {
+        TargetText.font.material.mainTexture.filterMode = FilterMode.Point;
+
+    }
     // Use this for initialization
     void Start () {
+        Point(LibName);
+        Point(LibText);
+        Point(LibDropName);
+        Point(LibDropPower);
+        Point(LibDropSus);
+        Point(LibMeatName);
+        Point(LibMeatPower);
+        Point(LibMeatSus);
+        Point(LibDropG);
+        Point(LibHp);
+        Point(LibSaveSus);
+        Point(LibPopLv);
+        Point(LibDisLv);
+        Point(LibRare);
+        Point(LibCompleteNumber);
+        Point(TextMaxG1);
+        Point(TextMaxLv1);
+        Point(TextMaxDays1);
+        Point(TextMaxG2);
+        Point(TextMaxLv2);
+        Point(TextMaxDays2);
+        Point(TextMaxG3);
+        Point(TextMaxLv3);
+        Point(TextMaxDays3);
+        Point(TextMaxG4);
+        Point(TextMaxLv4);
+        Point(TextMaxDays4);
+        Point(TextMaxG5);
+        Point(TextMaxLv5);
+        Point(TextMaxDays5);
 
-
-        ExistSave = PlayerPrefs.GetInt(ExistSaveKey, 0);
+    ExistSave = PlayerPrefs.GetInt(ExistSaveKey, 0);
 
         TotalCountPlay = PlayerPrefs.GetInt(TotalCountPlayKey, 0);
 

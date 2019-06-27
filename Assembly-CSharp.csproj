@@ -82,6 +82,7 @@
     <Compile Include="Assets\Resources\Script\LvDesignController.cs" />
     <Compile Include="Assets\Resources\Script\Music.cs" />
     <Compile Include="Assets\Resources\Script\PixelBase.cs" />
+    <Compile Include="Assets\Resources\Script\Pointer.cs" />
     <Compile Include="Assets\Resources\Script\SelectButton.cs" />
     <Compile Include="Assets\Resources\Script\Sorter.cs" />
     <Compile Include="Assets\Resources\Script\SoundController.cs" />

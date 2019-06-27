@@ -3196,6 +3196,15 @@ public void WorkingDay(int Mode)
         //アイテム選択のＯＫボタンを切る
 
     }
+
+    //テキストのぼやけを切る
+    public void Point(Text TargetText)
+    {
+        TargetText.font.material.mainTexture.filterMode = FilterMode.Point;
+
+    }
+
+
     public void Quit()
     {
 #if UNITY_EDITOR
@@ -3210,21 +3219,14 @@ public void WorkingDay(int Mode)
 
     }
 
-    public void ScreenNotFull()
-    {
-#if UNITY_STANDALONE
-        Screen.fullScreen = false;
-        Screen.SetResolution(360, 640, false, 60);
 
-#endif
-
-    }
 
     // Use this for initialization
     void Start()
     {
 
 
+        //画面の縦横比ひによってタテヨコどっちに合わせるか変更
         float ScreenWidth = Screen.width;
         float ScreenHeight = Screen.height;
 
@@ -3281,12 +3283,36 @@ public void WorkingDay(int Mode)
         // 上下反転
         Screen.autorotateToPortraitUpsideDown = false;
 
-        #if UNITY_STANDALONE
+        //ＰＣ起動の場合のサイズ設定
+#if UNITY_STANDALONE
         Screen.fullScreen = false;
         Screen.SetResolution(540, 960, false, 60);
-        #endif
+#endif
 
-        GoMenu();
+        //ぼやけを切る
+        Point(PopupResultGTextG);
+        Point(PopupResultGTextExp);
+        Point(PopupResultGTextSus);
+        Point(PopupSaveSusName1);
+        Point(PopupSaveSusName2);
+        Point(PopupSaveSusValue);
+        Point(ActPlaceText);
+        Point(ActMessageText);
+        Point(PoliceCost1);
+        Point(PoliceReturn1);
+        Point(PoliceCost2);
+        Point(PoliceReturn2);
+        Point(ChurchReturn1);
+        Point(ChurchReturn2);
+        Point(HomeReturn1);
+        Point(HomeReturn2);
+        Point(PopupDisposeText);
+        Point(PopupGetText);
+        Point(PopupLvUpText);
+        Point(PopupLvUpSusText);
+        Point(PopupGameOverText);
+        Point(MessageText);
+    GoMenu();
     }
     void Awake()
     {

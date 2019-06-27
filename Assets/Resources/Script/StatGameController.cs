@@ -819,6 +819,69 @@ public class StatGameController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Point(TextG);
+        Point(SelectItemItem1Power);
+        Point(SelectItemItem2Power);
+        Point(SelectItemItem3Power);
+        Point(SelectItemItem4Power);
+        Point(SelectItemItem1Sus);
+        Point(SelectItemItem2Sus);
+        Point(SelectItemItem3Sus);
+        Point(SelectItemItem4Sus);
+        Point(TextLv);
+        Point(TextDays);
+        Point(TextSus);
+        Point(Item4_1Text);
+        Point(Item4_1Power);
+        Point(Item4_1Sus);
+        Point(Item4_2Text);
+        Point(Item4_2Power);
+        Point(Item4_2Sus);
+        Point(Item4_3Text);
+        Point(Item4_3Power);
+        Point(Item4_3Sus);
+        Point(Item4_4Text);
+        Point(Item4_4Power);
+        Point(Item4_4Sus);
+        Point(Item6_1Text);
+        Point(Item6_1Power);
+        Point(Item6_1Sus);
+        Point(Item6_2Text);
+        Point(Item6_2Power);
+        Point(Item6_2Sus);
+        Point(Item6_3Text);
+        Point(Item6_3Power);
+        Point(Item6_3Sus);
+        Point(Item6_4Text);
+        Point(Item6_4Power);
+        Point(Item6_4Sus);
+        Point(Item6_5Text);
+        Point(Item6_5Power);
+        Point(Item6_5Sus);
+        Point(Item6_6Text);
+        Point(Item6_6Power);
+        Point(Item6_6Sus);
+        Point(DisPoseText);
+        Point(DisPosePower);
+        Point(DisPoseSus);
+        Point(GetText);
+        Point(GetPower);
+        Point(GetSus);
+        Point(MarketName1);
+        Point(MarketPower1);
+        Point(MarketSus1);
+        Point(MarketCost1);
+        Point(MarketName2);
+        Point(MarketPower2);
+        Point(MarketSus2);
+        Point(MarketCost2);
+
+}
+
+    //テキストのぼやけを切る
+    public void Point(Text TargetText)
+    {
+        TargetText.font.material.mainTexture.filterMode = FilterMode.Point;
 
     }
 

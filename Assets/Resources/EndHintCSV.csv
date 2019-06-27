@@ -30,7 +30,7 @@ Hint6,HintMan,None,L,Hint,いっぱんろん と してな
 Hint7,HintMan,None,L,Hint,わたしは ヒント・マン
 Hint7,HintMan,None,L,Hint,かせいだ おかね が／けいけんち と なる
 Hint7,HintMan,None,L,Hint,つまり おかね と けいけんち は／イコールだ
-Hint7,HintMan,None,L,Hint,だが レベルアップのとき だけは ちがう
+Hint7,HintMan,None,L,Hint,だが／レベルアップのとき だけは ちがう
 Hint7,HintMan,None,L,Hint,あふれた けいけんち は／じょうはつ して／どこかに きえてしまう…
 Hint7,HintMan,None,L,Hint,ブランデー の ようにな
 Hint7,HintMan,None,L,Hint,なにごとも ロマンチックに／かんがえよう
@@ -60,7 +60,7 @@ Hint13,HintGirl,None,L,Hint,そういう かんけい／ちょくちょく あ�
 Hint13,HintGirl,None,L,Hint,ぜったい では ないけど／いろ や パワー が／あっているのね
 Hint14,HintMan,None,L,Hint,わたしは ヒント・マン
 Hint14,HintMan,None,L,Hint,カルマ を おそれすぎると／おかね は かせげないぞ
-Hint14,HintMan,None,L,Hint,リスク を とらねば いっかげつ で／いっせんまえん は かせげない…／いっぱんろん と してもな
+Hint14,HintMan,None,L,Hint,リスク を とらねば いっかげつ で／いっせんまんえん は かせげない…／いっぱんろん と してもな
 Hint14,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
 Hint15,HintMan,None,L,Hint,わたしは ヒント・マン
 Hint15,HintMan,None,L,Hint,ちょろい おきゃく に／こうきゅう しょくざい…／それは ムダ
@@ -87,7 +87,8 @@ Hint19,HintGirl,None,L,Hint,カルマ の ひくい しょくざい も／キー
 Hint19,HintGirl,None,L,Hint,カルマ が あがってきたとき／つむわよ
 Hint19,HintGirl,None,L,Hint,たまにね
 Hint20,HintMan,None,L,Hint,わたしは ヒント・マン
-Hint20,HintMan,None,L,Hint,あいての このみ を／こちらの パワーが うわまっている ばあい／すこしだけ ボーナスがある
-Hint20,HintMan,None,L,Hint,うわまわって いれば いるほど／もらえる おかねが すこしだけ おおくなる
-Hint20,HintMan,None,L,Hint,でも すこしだけだ。／できるだけ ぎりぎりの パワーで／まんぞくさせた ほうが こうりつはいい
-Hint20,HintMan,None,L,Hint,それが けいえいしゃ マインド なのだ
+Hint20,HintMan,None,L,Hint,あいての このみ を／こちらの パワーが うわまわると／すこしだけ ボーナスがある
+Hint20,HintMan,None,L,Hint,うわまわる ほど／もらえる おかねが／すこしだけ おおくなるのだ
+Hint20,HintMan,None,L,Hint,でも すこしだけだ。／こうりつ は わるい
+Hint20,HintMan,None,L,Hint,だから おきゃく の このみ／ぎりぎり くらいを せめるのが／けっきょく とく なのだ
+Hint20,HintMan,None,L,Hint,それが けいえいしゃ マインドだ
