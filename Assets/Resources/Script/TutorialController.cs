@@ -326,11 +326,11 @@ public class TutorialController : MonoBehaviour {
         };
         TutorialFirstSaveSus =
         new string[]{
-        "たんてい や けいかん を えらぶと" +"\n"+"カルマ を へらせるよ"
+        "たんてい や けいかん を えらぶと" +"\n"+"カルマ が １０へるよ"
     };
     TutorialFirstLvup =
         new string[]{
-        "レベルアップ すると " +"\n"+"カルマ を へらせるよ",
+        "レベルアップ すると " +"\n"+"カルマ が １０へるよ",
         "おきゃくさま の しゅるい も" +"\n"+"へんか するよ"
     };
     TutorialFirstRare =

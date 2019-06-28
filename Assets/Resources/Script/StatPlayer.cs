@@ -31,6 +31,26 @@ public class StatPlayer : MonoBehaviour {
     //今何位にランクインしたか
     public int RankInNumber = 0;
 
+    //スコア情報
+    public GameObject ScoreButton1;
+    public GameObject ScoreButton2;
+    public GameObject ScoreButton3;
+    public GameObject ScoreButton4;
+    public GameObject ScoreButton5;
+    public GameObject ScoreInfo;
+    public GameObject ScoreEndCard;
+    public Text InfoRank;
+    public Text InfoG;
+    public Text InfoLv;
+    public Text InfoDays;
+    public Text InfoPlayCount;
+    public Text InfoResult;
+    public Text InfoGetG;
+    public Text InfoCustomerNumber;
+    public Text InfoVictory;
+    public Text InfoKill;
+
+
     //図鑑画面
     public GameObject LibraryField;
 
@@ -225,6 +245,7 @@ public class StatPlayer : MonoBehaviour {
         "CColor20Key" ,
     };
     //今回のゲームでのスコア
+    public int EndCard = 0;//エンドカード
     public int MaxLv=0;//到達レベル
     public int MaxDays=0;//到達日付
     public int MaxKill=0;//殺人数
@@ -234,6 +255,7 @@ public class StatPlayer : MonoBehaviour {
     public int MaxGetG=0;//かせいだ売上の総和　持ち金を引けば利益率が出る
 
     //過去のスコア
+    public int EndCard1 = 0;//エンドカード
     public int MaxLv1;//到達レベル
     public int MaxDays1;//到達日付
     public int MaxKill1;//殺人数
@@ -243,6 +265,7 @@ public class StatPlayer : MonoBehaviour {
     public int MaxGetG1;//かせいだ売上の総和　持ち金を引けば利益率が出る
     public int CountPlay1;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
+    public int EndCard2 = 0;//エンドカード
     public int MaxLv2;//到達レベル
     public int MaxDays2;//到達日付
     public int MaxKill2;//殺人数
@@ -252,6 +275,7 @@ public class StatPlayer : MonoBehaviour {
     public int MaxGetG2;//かせいだ売上の総和　持ち金を引けば利益率が出る
     public int CountPlay2;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
+    public int EndCard3 = 0;//エンドカード
     public int MaxLv3;//到達レベル
     public int MaxDays3;//到達日付
     public int MaxKill3;//殺人数
@@ -261,6 +285,7 @@ public class StatPlayer : MonoBehaviour {
     public int MaxGetG3;//かせいだ売上の総和　持ち金を引けば利益率が出る
     public int CountPlay3;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
+    public int EndCard4 = 0;//エンドカード
     public int MaxLv4;//到達レベル
     public int MaxDays4;//到達日付
     public int MaxKill4;//殺人数
@@ -270,6 +295,7 @@ public class StatPlayer : MonoBehaviour {
     public int MaxGetG4;//かせいだ売上の総和　持ち金を引けば利益率が出る
     public int CountPlay4;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
+    public int EndCard5 = 0;//エンドカード
     public int MaxLv5;//到達レベル
     public int MaxDays5;//到達日付
     public int MaxKill5;//殺人数
@@ -280,6 +306,12 @@ public class StatPlayer : MonoBehaviour {
     public int CountPlay5;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
     public string TotalCountPlayKey = "TotalCountPlay";
+
+    public string EndCard1Key = "EndCard1";
+    public string EndCard2Key = "EndCard2";
+    public string EndCard3Key = "EndCard3";
+    public string EndCard4Key = "EndCard4";
+    public string EndCard5Key = "EndCard5";
 
     public string MaxLv1Key = "MaxLv1";
     public string MaxDays1Key = "MaxDays1";
@@ -872,6 +904,13 @@ public void Load()
 
     }
 
+    public void CloseScroreInfo()
+    {
+        ScoreInfo.SetActive(false);
+
+    }
+
+
     public void CloseInfomation()
     {
         InfoWindow.SetActive(false);
@@ -1023,7 +1062,8 @@ public void Load()
         //ハイスコア画面の描画
         public void GoHighScore()
     {
-   
+
+        
         TextMaxG1.text=MaxG1.ToString();
         TextMaxLv1.text = MaxLv1.ToString();
         TextMaxDays1.text = MaxDays1.ToString();
@@ -1046,6 +1086,7 @@ public void Load()
 
         Menu.SetActive(false);
         HighScore.SetActive(true);
+        ScoreInfo.SetActive(false);
         Game.SetActive(false);
         Setting.SetActive(false);
 
@@ -1054,6 +1095,35 @@ public void Load()
         Score3.GetComponent<Glower2>().GlowRareTypeStop();
         Score4.GetComponent<Glower2>().GlowRareTypeStop();
         Score5.GetComponent<Glower2>().GlowRareTypeStop();
+
+        //空のスコアは押せないようにする
+        ScoreButton1.GetComponent<Button>().interactable = false;
+        ScoreButton2.GetComponent<Button>().interactable = false;
+        ScoreButton3.GetComponent<Button>().interactable = false;
+        ScoreButton4.GetComponent<Button>().interactable = false;
+        ScoreButton5.GetComponent<Button>().interactable = false;
+        if (MaxDays1 != 0)
+        {
+            ScoreButton1.GetComponent<Button>().interactable = true;
+        }
+        if (MaxDays2 != 0)
+        {
+            ScoreButton2.GetComponent<Button>().interactable = true;
+        }
+        if (MaxDays3 != 0)
+        {
+            ScoreButton3.GetComponent<Button>().interactable = true;
+        }
+        if (MaxDays4 != 0)
+        {
+            ScoreButton4.GetComponent<Button>().interactable = true;
+        }
+        if (MaxDays5 != 0)
+        {
+            ScoreButton5.GetComponent<Button>().interactable = true;
+        }
+
+
     }
 
     public void HighScoreRankIn1()
@@ -1067,6 +1137,7 @@ public void Load()
         MaxG5 = MaxG4;
         MaxGetG5 = MaxGetG4;
         CountPlay5 = CountPlay4;
+        EndCard5 = EndCard4;
 
         MaxLv4 = MaxLv3;
         MaxDays4 = MaxDays3;
@@ -1076,6 +1147,7 @@ public void Load()
         MaxG4 = MaxG3;
         MaxGetG4 = MaxGetG3;
         CountPlay4 = CountPlay3;
+        EndCard4 = EndCard3;
 
         MaxLv3 = MaxLv2;
         MaxDays3 = MaxDays2;
@@ -1085,6 +1157,7 @@ public void Load()
         MaxG3 = MaxG2;
         MaxGetG3 = MaxGetG2;
         CountPlay3 = CountPlay2;
+        EndCard3 = EndCard2;
 
         MaxLv2 = MaxLv1;
         MaxDays2 = MaxDays1;
@@ -1094,6 +1167,7 @@ public void Load()
         MaxG2 = MaxG1;
         MaxGetG2 = MaxGetG1;
         CountPlay2 = CountPlay1;
+        EndCard2 = EndCard1;
 
         MaxLv1 = MaxLv;
         MaxDays1 = MaxDays;
@@ -1103,6 +1177,7 @@ public void Load()
         MaxG1 = MaxG;
         MaxGetG1 = MaxGetG;
         CountPlay1 = TotalCountPlay;
+        EndCard1 = EndCard;
 
     }
     public void HighScoreRankIn2()
@@ -1116,6 +1191,7 @@ public void Load()
         MaxG5 = MaxG4;
         MaxGetG5 = MaxGetG4;
         CountPlay5 = CountPlay4;
+        EndCard5 = EndCard4;
 
         MaxLv4 = MaxLv3;
         MaxDays4 = MaxDays3;
@@ -1125,6 +1201,7 @@ public void Load()
         MaxG4 = MaxG3;
         MaxGetG4 = MaxGetG3;
         CountPlay4 = CountPlay3;
+        EndCard4 = EndCard3;
 
         MaxLv3 = MaxLv2;
         MaxDays3 = MaxDays2;
@@ -1134,6 +1211,7 @@ public void Load()
         MaxG3 = MaxG2;
         MaxGetG3 = MaxGetG2;
         CountPlay3 = CountPlay2;
+        EndCard3 = EndCard2;
 
         MaxLv2 = MaxLv;
         MaxDays2 = MaxDays;
@@ -1143,6 +1221,7 @@ public void Load()
         MaxG2 = MaxG;
         MaxGetG2 = MaxGetG;
         CountPlay2 = TotalCountPlay;
+        EndCard2 = EndCard;
     }
     public void HighScoreRankIn3()
     {
@@ -1155,6 +1234,7 @@ public void Load()
         MaxG5 = MaxG4;
         MaxGetG5 = MaxGetG4;
         CountPlay5 = CountPlay4;
+        EndCard5 = EndCard4;
 
         MaxLv4 = MaxLv3;
         MaxDays4 = MaxDays3;
@@ -1164,6 +1244,7 @@ public void Load()
         MaxG4 = MaxG3;
         MaxGetG4 = MaxGetG3;
         CountPlay4 = CountPlay3;
+        EndCard4 = EndCard3;
 
         MaxLv3 = MaxLv;
         MaxDays3 = MaxDays;
@@ -1173,6 +1254,7 @@ public void Load()
         MaxG3 = MaxG;
         MaxGetG3 = MaxGetG;
         CountPlay3 = TotalCountPlay;
+        EndCard3 = EndCard;
     }
     public void HighScoreRankIn4()
     {
@@ -1185,6 +1267,7 @@ public void Load()
         MaxG5 = MaxG4;
         MaxGetG5 = MaxGetG4;
         CountPlay5 = CountPlay4;
+        EndCard5 = EndCard4;
 
         MaxLv4 = MaxLv;
         MaxDays4 = MaxDays;
@@ -1194,6 +1277,7 @@ public void Load()
         MaxG4 = MaxG;
         MaxGetG4 = MaxGetG;
         CountPlay4 = TotalCountPlay;
+        EndCard4 = EndCard;
     }
     public void HighScoreRankIn5()
     {
@@ -1206,6 +1290,7 @@ public void Load()
         MaxG5 = MaxG;
         MaxGetG5 = MaxGetG;
         CountPlay5 = TotalCountPlay;
+        EndCard5 = EndCard;
     }
     //前回プレイのスコアを光らせる
     public void ScoreGlow()
@@ -1246,9 +1331,41 @@ public void Load()
             {
                 HighScoreRankIn5();
             }
-            else { result = 0; }
-        }
+            else if(MaxDays == MaxDays1)
+            {
+                if (MaxGetG > MaxGetG1)
+                {
+                    HighScoreRankIn1();
+                }
+                else if (MaxGetG > MaxGetG2)
+                {
+                    HighScoreRankIn2();
+                }
+                else if (MaxGetG > MaxGetG3)
+                {
+                    HighScoreRankIn3();
+                }
+                else if (MaxGetG > MaxGetG4)
+                {
+                    HighScoreRankIn4();
+
+                }
+                else if (MaxGetG > MaxGetG5)
+                {
+                    HighScoreRankIn5();
+                }
+                else
+                {
+                    result = 0;
+                }
+            }
             else
+            {
+                result = 0;
+            }
+
+        }
+        else
         {
             if (MaxG > MaxG1)
             {
@@ -1271,7 +1388,11 @@ public void Load()
             {
                 HighScoreRankIn5();
             }
-            else { result = 0; }
+            else
+            {
+
+                result = 0;
+            }
         }
         return result;
     }
@@ -1296,6 +1417,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG1Key, MaxG1);
         PlayerPrefs.SetInt(MaxGetG1Key, MaxGetG1);
         PlayerPrefs.SetInt(CountPlay1Key, CountPlay1);
+        PlayerPrefs.SetInt(EndCard1Key, EndCard1);
 
         PlayerPrefs.SetInt(MaxLv2Key, MaxLv2);
         PlayerPrefs.SetInt(MaxDays2Key, MaxDays2);
@@ -1305,6 +1427,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG2Key, MaxG2);
         PlayerPrefs.SetInt(MaxGetG2Key, MaxGetG2);
         PlayerPrefs.SetInt(CountPlay2Key, CountPlay2);
+        PlayerPrefs.SetInt(EndCard2Key, EndCard2);
 
         PlayerPrefs.SetInt(MaxLv3Key, MaxLv3);
         PlayerPrefs.SetInt(MaxDays3Key, MaxDays3);
@@ -1314,6 +1437,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG3Key, MaxG3);
         PlayerPrefs.SetInt(MaxGetG3Key, MaxGetG3);
         PlayerPrefs.SetInt(CountPlay3Key, CountPlay3);
+        PlayerPrefs.SetInt(EndCard3Key, EndCard3);
 
         PlayerPrefs.SetInt(MaxLv4Key, MaxLv4);
         PlayerPrefs.SetInt(MaxDays4Key, MaxDays4);
@@ -1323,6 +1447,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG4Key, MaxG4);
         PlayerPrefs.SetInt(MaxGetG4Key, MaxGetG4);
         PlayerPrefs.SetInt(CountPlay4Key, CountPlay4);
+        PlayerPrefs.SetInt(EndCard4Key, EndCard4);
 
         PlayerPrefs.SetInt(MaxLv5Key, MaxLv5);
         PlayerPrefs.SetInt(MaxDays5Key, MaxDays5);
@@ -1332,6 +1457,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG5Key, MaxG5);
         PlayerPrefs.SetInt(MaxGetG5Key, MaxGetG5);
         PlayerPrefs.SetInt(CountPlay5Key, CountPlay5);
+        PlayerPrefs.SetInt(EndCard5Key, EndCard5);
 
     }
     //スコアリセット　デバッグ用
@@ -1347,6 +1473,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG1Key, 0);
         PlayerPrefs.SetInt(MaxGetG1Key, 0);
         PlayerPrefs.SetInt(CountPlay1Key, 0);
+        PlayerPrefs.SetInt(EndCard1Key, 0);
 
         PlayerPrefs.SetInt(MaxLv2Key, 0);
         PlayerPrefs.SetInt(MaxDays2Key, 0);
@@ -1356,6 +1483,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG2Key, 0);
         PlayerPrefs.SetInt(MaxGetG2Key, 0);
         PlayerPrefs.SetInt(CountPlay2Key, 0);
+        PlayerPrefs.SetInt(EndCard2Key, 0);
 
         PlayerPrefs.SetInt(MaxLv3Key, 0);
         PlayerPrefs.SetInt(MaxDays3Key, 0);
@@ -1365,6 +1493,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG3Key, 0);
         PlayerPrefs.SetInt(MaxGetG3Key, 0);
         PlayerPrefs.SetInt(CountPlay3Key, 0);
+        PlayerPrefs.SetInt(EndCard3Key, 0);
 
         PlayerPrefs.SetInt(MaxLv4Key, 0);
         PlayerPrefs.SetInt(MaxDays4Key, 0);
@@ -1374,6 +1503,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG4Key, 0);
         PlayerPrefs.SetInt(MaxGetG4Key, 0);
         PlayerPrefs.SetInt(CountPlay4Key, 0);
+        PlayerPrefs.SetInt(EndCard4Key, 0);
 
         PlayerPrefs.SetInt(MaxLv5Key, 0);
         PlayerPrefs.SetInt(MaxDays5Key,0);
@@ -1383,6 +1513,7 @@ public void Load()
         PlayerPrefs.SetInt(MaxG5Key, 0);
         PlayerPrefs.SetInt(MaxGetG5Key, 0);
         PlayerPrefs.SetInt(CountPlay5Key, 0);
+        PlayerPrefs.SetInt(EndCard5Key, 0);
 
         MaxLv1 = 0;//到達レベル
         MaxDays1 = 0;//到達日付
@@ -1392,6 +1523,7 @@ public void Load()
         MaxG1 = 0;//最終的な持ち金＝スコア
         MaxGetG1 = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
         CountPlay1 = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
+        EndCard1 = 0;
 
         MaxLv2 = 0;//到達レベル
         MaxDays2 = 0;//到達日付
@@ -1401,6 +1533,7 @@ public void Load()
         MaxG2 = 0;//最終的な持ち金＝スコア
         MaxGetG2 = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
         CountPlay2 = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
+        EndCard2 = 0;
 
         MaxLv3 = 0;//到達レベル
         MaxDays3 = 0;//到達日付
@@ -1410,6 +1543,7 @@ public void Load()
         MaxG3 = 0;//最終的な持ち金＝スコア
         MaxGetG3 = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
         CountPlay3 = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
+        EndCard3 = 0;
 
         MaxLv4 = 0;//到達レベル
         MaxDays4 = 0;//到達日付
@@ -1419,6 +1553,7 @@ public void Load()
         MaxG4 = 0;//最終的な持ち金＝スコア
         MaxGetG4 = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
         CountPlay4 = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
+        EndCard4 = 0;
 
         MaxLv5 = 0;//到達レベル
         MaxDays5 = 0;//到達日付
@@ -1428,6 +1563,7 @@ public void Load()
         MaxG5 = 0;//最終的な持ち金＝スコア
         MaxGetG5 = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
         CountPlay5 = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
+        EndCard5 = 0;
 
         MaxLv = 0;//到達レベル
         MaxDays = 0;//到達日付
@@ -1436,10 +1572,124 @@ public void Load()
         MaxCustomerVictory = 0;//うち魅了した客の数
         MaxG = 0;//最終的な持ち金＝スコア
         MaxGetG = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
+        EndCard = 0;
 
         TotalCountPlay = 0;//遊んだ回数　初回はチュートリアル出す　初回は数周で切る？
 
     }
+
+    //エンドカード番号を返すとエンドカード画像名を返す
+    public string EndCardPass(int EndNumber)
+    {
+        string Result = "";
+        if (EndNumber == 1) { Result = "arrest"; }//逮捕
+        else if (EndNumber == 2) { Result = "dorei"; }//どれい
+        else if (EndNumber == 3) { Result = "tabi"; }//300万以上500万以下
+        else if (EndNumber == 4) { Result = "tabi"; }//カルマ時わいろ
+        else if (EndNumber == 5) { Result = "shop"; }//500万以上
+        else if (EndNumber == 6) { Result = "win"; }//500万以上
+        else { Result = "mu"; }//0のとき。初期値
+        return Result;
+    }
+    //エンドカード番号を返すとエンドカード名称を返す
+    public string EndCardName(int EndNumber)
+    {
+        string Result = "";
+        if (EndNumber == 1) { Result = "ゲームオーバー"; }//逮捕
+        else if (EndNumber == 2) { Result = "ゲームオーバー"; }//どれい
+        else if (EndNumber == 3) { Result = "たびだち（タイムアップ）"; }//300万以上500万以下
+        else if (EndNumber == 4) { Result = "たびだち（カルマオーバー）"; }//カルマ時わいろ
+        else if (EndNumber == 5) { Result = "ゲームクリア"; }//500万以上
+        else if (EndNumber == 6) { Result = "パーフェクトクリア"; }//500万以上
+        else { Result = "データなし"; }//0のとき。初期値
+        return Result;
+    }
+    //スコア詳細表示
+    public void OpenScoreInfo(int ScoreNumber)
+    {
+
+        string EndKey = "";
+
+        if (ScoreNumber == 1)
+        {
+            EndKey = EndCardPass(EndCard1);
+            InfoResult.text = EndCardName(EndCard1);
+            InfoRank.text="1";
+            InfoG.text=MaxG1.ToString();
+            InfoLv.text=MaxLv1.ToString();
+            InfoDays.text =MaxDays1.ToString();
+            InfoPlayCount.text =CountPlay1.ToString();
+            InfoGetG.text =MaxGetG1.ToString();
+            InfoCustomerNumber.text =MaxCustomer1.ToString();
+            InfoVictory.text =MaxCustomerVictory1.ToString();
+            InfoKill.text =MaxKill1.ToString();
+        }
+else if (ScoreNumber == 2)
+            {
+            EndKey = EndCardPass(EndCard2);
+            InfoResult.text = EndCardName(EndCard2);
+            InfoRank.text = "2";
+                InfoG.text = MaxG2.ToString();
+                InfoLv.text = MaxLv2.ToString();
+                InfoDays.text = MaxDays2.ToString();
+                InfoPlayCount.text = CountPlay2.ToString();
+                InfoGetG.text = MaxGetG2.ToString();
+                InfoCustomerNumber.text = MaxCustomer2.ToString();
+                InfoVictory.text = MaxCustomerVictory2.ToString();
+                InfoKill.text = MaxKill2.ToString();
+            }
+else if (ScoreNumber == 3)
+        {
+            EndKey = EndCardPass(EndCard3);
+            InfoResult.text = EndCardName(EndCard3);
+            InfoRank.text = "3";
+            InfoG.text = MaxG3.ToString();
+            InfoLv.text = MaxLv3.ToString();
+            InfoDays.text = MaxDays3.ToString();
+            InfoPlayCount.text = CountPlay3.ToString();
+            InfoGetG.text = MaxGetG3.ToString();
+            InfoCustomerNumber.text = MaxCustomer3.ToString();
+            InfoVictory.text = MaxCustomerVictory3.ToString();
+            InfoKill.text = MaxKill3.ToString();
+        }
+        else if (ScoreNumber == 4)
+        {
+            EndKey = EndCardPass(EndCard4);
+            InfoResult.text = EndCardName(EndCard4);
+            InfoRank.text = "4";
+            InfoG.text = MaxG4.ToString();
+            InfoLv.text = MaxLv4.ToString();
+            InfoDays.text = MaxDays4.ToString();
+            InfoPlayCount.text = CountPlay4.ToString();
+            InfoGetG.text = MaxGetG4.ToString();
+            InfoCustomerNumber.text = MaxCustomer4.ToString();
+            InfoVictory.text = MaxCustomerVictory4.ToString();
+            InfoKill.text = MaxKill4.ToString();
+        }
+        else if (ScoreNumber == 5)
+        {
+            EndKey = EndCardPass(EndCard5);
+            InfoResult.text = EndCardName(EndCard5);
+            InfoRank.text = "5";
+            InfoG.text = MaxG5.ToString();
+            InfoLv.text = MaxLv5.ToString();
+            InfoDays.text = MaxDays5.ToString();
+            InfoPlayCount.text = CountPlay5.ToString();
+            InfoGetG.text = MaxGetG5.ToString();
+            InfoCustomerNumber.text = MaxCustomer5.ToString();
+            InfoVictory.text = MaxCustomerVictory5.ToString();
+            InfoKill.text = MaxKill5.ToString();
+        }
+
+
+        string ImagePath = "Endcard/" + EndKey;
+        Sprite SpriteImage = Resources.Load<Sprite>(ImagePath);
+        ScoreEndCard.GetComponent<Image>().sprite = SpriteImage;
+
+        ScoreInfo.SetActive(true);
+
+    }
+
 
     //テキストのぼやけを切る
     public void Point(Text TargetText)
@@ -1480,6 +1730,18 @@ public void Load()
         Point(TextMaxLv5);
         Point(TextMaxDays5);
 
+        Point(InfoRank);
+        Point(InfoG);
+        Point(InfoLv);
+        Point(InfoDays);
+        Point(InfoPlayCount);
+        Point(InfoResult);
+        Point(InfoGetG);
+        Point(InfoCustomerNumber);
+        Point(InfoVictory);
+        Point(InfoKill);
+
+
     ExistSave = PlayerPrefs.GetInt(ExistSaveKey, 0);
 
         TotalCountPlay = PlayerPrefs.GetInt(TotalCountPlayKey, 0);
@@ -1492,6 +1754,7 @@ public void Load()
         MaxG1 = PlayerPrefs.GetInt(MaxG1Key, 0);
         MaxGetG1 = PlayerPrefs.GetInt(MaxGetG1Key, 0);
         CountPlay1 = PlayerPrefs.GetInt(CountPlay1Key, 0);
+        EndCard1= PlayerPrefs.GetInt(EndCard1Key, 0);
 
         MaxLv2 = PlayerPrefs.GetInt(MaxLv2Key, 0);
         MaxDays2 = PlayerPrefs.GetInt(MaxDays2Key, 0);
@@ -1501,6 +1764,7 @@ public void Load()
         MaxG2 = PlayerPrefs.GetInt(MaxG2Key, 0);
         MaxGetG2 = PlayerPrefs.GetInt(MaxGetG2Key, 0);
         CountPlay2 = PlayerPrefs.GetInt(CountPlay2Key, 0);
+        EndCard2 = PlayerPrefs.GetInt(EndCard2Key, 0);
 
         MaxLv3 = PlayerPrefs.GetInt(MaxLv3Key, 0);
         MaxDays3 = PlayerPrefs.GetInt(MaxDays3Key, 0);
@@ -1510,6 +1774,7 @@ public void Load()
         MaxG3 = PlayerPrefs.GetInt(MaxG3Key, 0);
         MaxGetG3 = PlayerPrefs.GetInt(MaxGetG3Key, 0);
         CountPlay3 = PlayerPrefs.GetInt(CountPlay3Key, 0);
+        EndCard3 = PlayerPrefs.GetInt(EndCard3Key, 0);
 
         MaxLv4 = PlayerPrefs.GetInt(MaxLv4Key, 0);
         MaxDays4 = PlayerPrefs.GetInt(MaxDays4Key, 0);
@@ -1519,6 +1784,7 @@ public void Load()
         MaxG4 = PlayerPrefs.GetInt(MaxG4Key, 0);
         MaxGetG4 = PlayerPrefs.GetInt(MaxGetG4Key, 0);
         CountPlay4 = PlayerPrefs.GetInt(CountPlay4Key, 0);
+        EndCard4 = PlayerPrefs.GetInt(EndCard4Key, 0);
 
         MaxLv5 = PlayerPrefs.GetInt(MaxLv5Key, 0);
         MaxDays5 = PlayerPrefs.GetInt(MaxDays5Key, 0);
@@ -1528,6 +1794,7 @@ public void Load()
         MaxG5 = PlayerPrefs.GetInt(MaxG5Key, 0);
         MaxGetG5 = PlayerPrefs.GetInt(MaxGetG5Key, 0);
         CountPlay5 = PlayerPrefs.GetInt(CountPlay5Key, 0);
+        EndCard5 = PlayerPrefs.GetInt(EndCard5Key, 0);
 
         FlagStoryOP = PlayerPrefs.GetInt(FSOPKey, 0);
         FlagTutorialFirstFeed = PlayerPrefs.GetInt(FT1FeedKey, 0);

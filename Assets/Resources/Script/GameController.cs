@@ -1486,7 +1486,7 @@ public class GameController : MonoBehaviour
     {
         CustomerField.SetActive(false);
         Button4Items.SetActive(false);
-        Hand.SetActive(false);
+        PopupHand.SetActive(false);
         Message.SetActive(false);
 
         string ImagePath = "Endcard/" + EndKey;
@@ -1501,6 +1501,7 @@ public class GameController : MonoBehaviour
     {
         int ScoreFlag = 0;
         //スコア記録
+        StatPlayer.GetComponent<StatPlayer>().TotalCountPlay++;
         GetHighScore();
         if (StatPlayer.GetComponent<StatPlayer>().CheckHighScore() == 1)
         {
@@ -1519,7 +1520,7 @@ public class GameController : MonoBehaviour
     {
         CustomerField.SetActive(false);
         Button4Items.SetActive(false);
-        Hand.SetActive(false);
+        PopupHand.SetActive(false);
         Message.SetActive(false);
         PopupGameOver.SetActive(false);
         PopupRankIn.SetActive(true);
@@ -1534,7 +1535,7 @@ public class GameController : MonoBehaviour
         DestroyG();
         DestroyHeart();
 
-        Hand.SetActive(false);
+        PopupHand.SetActive(false);
         CustomerField.SetActive(false);
 
         GetComponent<SoundController>().StopStoreBgm();
@@ -1563,7 +1564,7 @@ public class GameController : MonoBehaviour
     //ゲームオーバー時（日数）
     public void DaysEnd()
     {
-        Hand.SetActive(false);
+        PopupHand.SetActive(false);
         CustomerField.SetActive(false);
 
         GetComponent<SoundController>().StopStoreBgm();
@@ -1589,12 +1590,11 @@ public class GameController : MonoBehaviour
     //ハイスコアの記録
     public void GetHighScore()
     {
-        StatPlayer.GetComponent<StatPlayer>().TotalCountPlay++;
 
         StatPlayer.GetComponent<StatPlayer>().MaxKill = MaxKill;//殺人数
         StatPlayer.GetComponent<StatPlayer>().MaxCustomer = MaxCustomer;//さばいた客の数
         StatPlayer.GetComponent<StatPlayer>().MaxCustomerVictory = MaxCustomerVictory;//うち魅了した客の数
-        StatPlayer.GetComponent<StatPlayer>().MaxGetG = StatGame.GetComponent<StatGame>().StatG;//かせいだ売上（=所持金）の総和
+        StatPlayer.GetComponent<StatPlayer>().MaxGetG = MaxGetG;//かせいだ売上（=所持金）の総和
 
         StatPlayer.GetComponent<StatPlayer>().MaxG = StatGame.GetComponent<StatGame>().StatG;
         StatPlayer.GetComponent<StatPlayer>().MaxLv = StatGame.GetComponent<StatGame>().StatLv;
@@ -3182,7 +3182,11 @@ public void WorkingDay(int Mode)
         SelectButtonOK.GetComponent<Button>().interactable = false;
 
         Button6Items.GetComponent<RectTransform>().localPosition = new Vector3(0f,800f,0f);
-      //  Hand.GetComponent<RectTransform>().localPosition = new Vector3(0f, 345f, 0f);
+        //  Hand.GetComponent<RectTransform>().localPosition = new Vector3(0f, 345f, 0f);
+
+        Hand.SetActive(false);
+        HandButton.SetActive(false);
+
 
         SelectItem1.GetComponent<RectTransform>().sizeDelta=new Vector2(335f, 255f);
         SelectItem2.GetComponent<RectTransform>().sizeDelta = new Vector2(335f, 255f);

@@ -34,6 +34,16 @@ public class License : MonoBehaviour
         LinkCSV.SetActive(false);
 
 #if UNITY_EDITOR
+        Debug.Log("android");
+        LinkJF20.SetActive(true);
+        LinkJF68.SetActive(true);
+        LinkPixel.SetActive(true);
+        LinkMob.SetActive(true);
+        LinkKoka.SetActive(true);
+        LinkLetterSpacing.SetActive(true);
+        LinkCSV.SetActive(true);
+
+
 #elif UNITY_ANDROID
         Debug.Log("android");
         LinkJF20.SetActive(true);
@@ -74,6 +84,7 @@ public class License : MonoBehaviour
     {
 #if UNITY_ANDROID
         string url = "http://jikasei.me/font/jf-dotfont/";
+        //Debug.Log("LINK");
         Application.OpenURL(url);
 #endif
     }

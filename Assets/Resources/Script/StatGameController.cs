@@ -511,7 +511,7 @@ public class StatGameController : MonoBehaviour
         float Moto = StatSus;//元のステータス値
         float Goal = Moto + Count;//変化後のステータス値
         if (Goal < 0) { Goal = 0; }//結果が０以下なら０
-//        else if (Goal > 100) { Goal = 101.0f; Count = 100 - Moto; }//結果が１００以上なら１００
+        else if (Goal > 100) { Goal = 100.0f; Count = 100 - Moto; }//結果が１００以上なら１００
         float Memori = 100 / BarSize * MemoriSize;//描画一回の変化量がコレ（10px動く分）
         float iCount = Mathf.Abs(Count / Memori);
                 float Start = Moto - Moto % Memori;//開始地点を丸める

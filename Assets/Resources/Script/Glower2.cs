@@ -44,7 +44,7 @@ public class Glower2 : MonoBehaviour
     public void GlowRareTypeStop()
     {
         Myself.GetComponent<UIEffect>().enabled = false;
-        Myself.GetComponent<Text>().color = MotoColor;
+        Myself.GetComponent<Text>().color = Script.GetComponent<GameController>().GYellow;
         iTween.Stop(Myself);
     }
 

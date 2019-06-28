@@ -79,6 +79,11 @@ public class Pointer : MonoBehaviour
     public Text NeedPointText72;
     public Text NeedPointText73;
     public Text NeedPointText74;
+    public Text NeedPointText75;
+    public Text NeedPointText76;
+    public Text NeedPointText77;
+    public Text NeedPointText78;
+    public Text NeedPointText79;
 
     //テキストのぼやけを切る
     public void Point(Text TargetText)
@@ -164,6 +169,11 @@ public class Pointer : MonoBehaviour
         Point(NeedPointText72);
         Point(NeedPointText73);
         Point(NeedPointText74);
+        Point(NeedPointText75);
+        Point(NeedPointText76);
+        Point(NeedPointText77);
+        Point(NeedPointText78);
+        Point(NeedPointText79);
     }
 
     // Update is called once per frame

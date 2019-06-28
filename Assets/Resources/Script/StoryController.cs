@@ -558,35 +558,44 @@ public class StoryController : MonoBehaviour {
     {
         StoryAll.SetActive(false);
         string EndMassage="";
-        string EndKey = "arrest";
+        string EndKey = "mu";
+        int EndScore = 0;
+
         int BadEndFlag = 0;
         if (NowStoryKey == "EndingKarma1"| NowStoryKey == "SkipEndingKarma1") { EndMassage = "ゲームオーバー！";
             GetComponent<SoundController>().PlaySE("SEBadEnd");
             BadEndFlag = 1;
             EndKey = "arrest";
+            EndScore = 1;
         }
         else if (NowStoryKey == "EndingKarma2"| NowStoryKey == "SkipEndingKarma2") { EndMassage = "ゲームクリア…？";
             GetComponent<SoundController>().PlaySE("SEBadEnd");
             EndKey = "tabi";
+            EndScore = 4;
         }
         else if (NowStoryKey == "Ending1" | NowStoryKey == "SkipEnding1") { EndMassage = "ゲームオーバー！";
             GetComponent<SoundController>().PlaySE("SEBadEnd");
             BadEndFlag = 1;
             EndKey = "dorei";
+            EndScore = 2;
         }
         else if (NowStoryKey == "Ending2" | NowStoryKey == "SkipEnding2") { EndMassage = "スコア０クリア！";
             GetComponent<SoundController>().PlaySE("SEGoodEnd");
             EndKey = "tabi";
+            EndScore = 3;
         }
         else if (NowStoryKey == "Ending3"| NowStoryKey == "SkipEnding3") { EndMassage = "ゲームクリア！";
             GetComponent<SoundController>().PlaySE("SEGoodEnd");
             EndKey = "shop";
+            EndScore = 5;
         }
         else if (NowStoryKey == "Ending4"| NowStoryKey == "SkipEnding4") { EndMassage = "パーフェクトクリア！";
             GetComponent<SoundController>().PlaySE("SEGoodEnd");
             EndKey = "win";
+            EndScore = 6;
         }
 
+        StatPlayer.GetComponent<StatPlayer>().EndCard = EndScore;
         EndFine = GetComponent<GameController>().GetEndFine(NowStoryKey);
         GetComponent<StatGameController>().GUp(EndFine * -1);
       //  Debug.Log("G:"+StatGame.GetComponent<StatGame>().StatG);

@@ -201,13 +201,13 @@ public void StopStoreBgm()
 	// Update is called once per frame
 	void Update () {
         // 拍に来たフレームで true になる
-
+        /*
         if (Music.IsJustChangedBar()&BgmFlag2==1)
         {
             BgmFlag2 = 2;
                  PlayStoreBgm("StoreBgm2");
         }
-
+        */
 
 
     }

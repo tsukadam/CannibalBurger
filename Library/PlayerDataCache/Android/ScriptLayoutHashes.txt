@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Build/Build19062601.aab
+D:/Build/Build19062901.aab
 SceneListBegin?
 Assets/SceneMain.unity
 SceneListEnd?
@@ -94,6 +94,7 @@ b9b03beb7a2f49cf8ade5ddfd6d5a83c Assembly-CSharp.dll:Coffee.UIExtensions.UIGradi
 65ee9b920df0743d42574638bc8a05b7 Assembly-CSharp.dll:.StatItem
 e28ce91e0fac5aaf36cac548e1d497bd Assembly-CSharp.dll:.StatCustomer
 c427ebcc70979cdae21dbfd6841602e3 Assembly-CSharp.dll:.SelectButton
+766efc4c8258b8741d72fe2647e5522b Assembly-CSharp.dll:.Pointer
 11aada67eb197fdc1ca1a2b4577e60a6 Assembly-CSharp.dll:.Glower2
 6784338e62f5c21bb019dcc679fc8242 Assembly-CSharp.dll:.Music
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
@@ -139,7 +140,7 @@ c975bf1eec04faa3afd7dd52491e2b93 Assembly-CSharp.dll:.CSVDataReader
 1876633f28dcbaeaec42c01b9735cc3a Assembly-CSharp.dll:.Floater
 4fd8bf02e3089425d3502e26c44ba31a Unity.TextMeshPro.dll:TMPro.TextContainer
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.Sorter
-befadfe92344154102589df700a6bc55 Assembly-CSharp.dll:.TutorialController
+422b0e74c85d9c516c53c8d2485a169c Assembly-CSharp.dll:.TutorialController
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.ColorGetter
 8bce613e4d41cc331eb235322eca973f Assembly-CSharp.dll:.ItemController
 e6ae40841db498b6e673877ac45ad208 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
@@ -180,9 +181,9 @@ a4f0a4f62100f1a4fb5cbe0e00dde83f Unity.TextMeshPro.dll:TMPro.TextMeshProUGUI
 5fc094978ce3e3591a7500ed380d854a Unity.Analytics.DataPrivacy.dll:UnityEngine.Analytics.DataPrivacyButton
 d251bf88db6c95a6b1aa0b69298da9ef UnityEngine.SpatialTracking.dll:UnityEngine.SpatialTracking.TrackedPoseDriver
 a8c617b65c5b46182c5d64cf79431bdf Assembly-CSharp.dll:.Blinker
-81c77da9ba810854bdcb2f1274bda67a Assembly-CSharp.dll:.License
+a3cd576ae9c07c6889d9ae3984206d24 Assembly-CSharp.dll:.License
 d791aa6007fa3640be1164ea75bb087d Unity.TextMeshPro.dll:TMPro.TMP_StyleSheet
-28021f5227dbaa22ca1cddeed1d5a42f Assembly-CSharp.dll:.StatPlayer
+1c0368da7101ba110f8441c6ab6e5a6f Assembly-CSharp.dll:.StatPlayer
 b1e4c7dc7b7a782861e73679f2fa25ae Assembly-CSharp.dll:.Infomation
 c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
