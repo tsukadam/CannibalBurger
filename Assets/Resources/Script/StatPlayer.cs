@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 using Coffee.UIExtensions;
+using System;
+using System.Collections.Generic;
 
 //プレイヤーのステータスを保持する
 //プレイ外データ、ハイスコアなど
@@ -700,7 +702,6 @@ FlagTutorialSecondFeed = 0;
         PlayerPrefs.SetString(MarketItem2SusKey, MarketItem2Sus);
 
 
-
 }
 //セーブ情報のロード
 //ゲーム開始時に一回だけ呼ばれる
@@ -1062,8 +1063,8 @@ public void Load()
         //ハイスコア画面の描画
         public void GoHighScore()
     {
+        SortHighScore();
 
-        
         TextMaxG1.text=MaxG1.ToString();
         TextMaxLv1.text = MaxLv1.ToString();
         TextMaxDays1.text = MaxDays1.ToString();
@@ -1302,98 +1303,207 @@ public void Load()
         else if (RankInNumber == 5) { Score5.GetComponent<Glower2>().GlowRareType(); }
         else { }
     }
+    //ハイスコアの狂った順番を並びなおす
+    //戻り値1~5=ランクイン 0=非ランクイン
+    public int SortHighScore()
+    {
+        //配列に格納
+        int[,] AllScore = new int[6,10];
+        AllScore[0, 0] = MaxLv1;
+        AllScore[0, 1] = MaxDays1;
+        AllScore[0, 2] = MaxKill1;
+        AllScore[0, 3] = MaxCustomer1;
+        AllScore[0, 4] = MaxCustomerVictory1;
+        AllScore[0, 5] = MaxG1;
+        AllScore[0, 6] = MaxGetG1;
+        AllScore[0, 7] = CountPlay1;
+        AllScore[0, 8] = EndCard1;
+        AllScore[0, 9] = 0;//1=今判定中のスコア、0=既に記録されたスコア
+
+        AllScore[1, 0] = MaxLv2;
+        AllScore[1, 1] = MaxDays2;
+        AllScore[1, 2] = MaxKill2;
+        AllScore[1, 3] = MaxCustomer2;
+        AllScore[1, 4] = MaxCustomerVictory2;
+        AllScore[1, 5] = MaxG2;
+        AllScore[1, 6] = MaxGetG2;
+        AllScore[1, 7] = CountPlay2;
+        AllScore[1, 8] = EndCard2;
+        AllScore[1, 9] = 0;//1=今判定中のスコア、0=既に記録されたスコア
+
+        AllScore[2, 0] = MaxLv3;
+        AllScore[2, 1] = MaxDays3;
+        AllScore[2, 2] = MaxKill3;
+        AllScore[2, 3] = MaxCustomer3;
+        AllScore[2, 4] = MaxCustomerVictory3;
+        AllScore[2, 5] = MaxG3;
+        AllScore[2, 6] = MaxGetG3;
+        AllScore[2, 7] = CountPlay3;
+        AllScore[2, 8] = EndCard3;
+        AllScore[2, 9] = 0;//1=今判定中のスコア、0=既に記録されたスコア
+
+        AllScore[3, 0] = MaxLv4;
+        AllScore[3, 1] = MaxDays4;
+        AllScore[3, 2] = MaxKill4;
+        AllScore[3, 3] = MaxCustomer4;
+        AllScore[3, 4] = MaxCustomerVictory4;
+        AllScore[3, 5] = MaxG4;
+        AllScore[3, 6] = MaxGetG4;
+        AllScore[3, 7] = CountPlay4;
+        AllScore[3, 8] = EndCard4;
+        AllScore[3, 9] = 0;//1=今判定中のスコア、0=既に記録されたスコア
+
+        AllScore[4, 0] = MaxLv5;
+        AllScore[4, 1] = MaxDays5;
+        AllScore[4, 2] = MaxKill5;
+        AllScore[4, 3] = MaxCustomer5;
+        AllScore[4, 4] = MaxCustomerVictory5;
+        AllScore[4, 5] = MaxG5;
+        AllScore[4, 6] = MaxGetG5;
+        AllScore[4, 7] = CountPlay5;
+        AllScore[4, 8] = EndCard5;
+        AllScore[4, 9] = 0;//1=今判定中のスコア、0=既に記録されたスコア
+
+        AllScore[5, 0] = MaxLv;
+        AllScore[5, 1] = MaxDays;
+        AllScore[5, 2] = MaxKill;
+        AllScore[5, 3] = MaxCustomer;
+        AllScore[5, 4] = MaxCustomerVictory;
+        AllScore[5, 5] = MaxG;
+        AllScore[5, 6] = MaxGetG;
+        AllScore[5, 7] = TotalCountPlay;
+        AllScore[5, 8] = EndCard;
+        AllScore[5, 9] = 1;//1=今判定中のスコア、0=既に記録されたスコア
+
+        int Key1 = 5;//MaxGetG
+        int Key2 = 1;//MaxDays
+        int Key3 = 6;//MaxGetG
+
+        int[,] Key1Sorted=BubbleSort(AllScore,Key1,Key2,Key3);
+
+        MaxLv1=AllScore[0, 0];
+        MaxDays1=AllScore[0, 1];
+        MaxKill1 = AllScore[0, 2];
+        MaxCustomer1=AllScore[0, 3];
+        MaxCustomerVictory1= AllScore[0, 4];
+        MaxG1= AllScore[0, 5];
+        MaxGetG1= AllScore[0, 6];
+        CountPlay1= AllScore[0, 7];
+        EndCard1= AllScore[0, 8];
+
+        MaxLv2 = AllScore[1, 0];
+        MaxDays2 = AllScore[1, 1];
+        MaxKill2 = AllScore[1, 2];
+        MaxCustomer2 = AllScore[1, 3];
+        MaxCustomerVictory2 = AllScore[1, 4];
+        MaxG2 = AllScore[1, 5];
+        MaxGetG2 = AllScore[1, 6];
+        CountPlay2 = AllScore[1, 7];
+        EndCard2 = AllScore[1, 8];
+
+        MaxLv3 = AllScore[2, 0];
+        MaxDays3 = AllScore[2, 1];
+        MaxKill3 = AllScore[2, 2];
+        MaxCustomer3 = AllScore[2, 3];
+        MaxCustomerVictory3 = AllScore[2, 4];
+        MaxG3 = AllScore[2, 5];
+        MaxGetG3 = AllScore[2, 6];
+        CountPlay3 = AllScore[2, 7];
+        EndCard3 = AllScore[2, 8];
+
+        MaxLv4 = AllScore[3, 0];
+        MaxDays4 = AllScore[3, 1];
+        MaxKill4 = AllScore[3, 2];
+        MaxCustomer4 = AllScore[3, 3];
+        MaxCustomerVictory4 = AllScore[3, 4];
+        MaxG4 = AllScore[3, 5];
+        MaxGetG4 = AllScore[3, 6];
+        CountPlay4 = AllScore[3, 7];
+        EndCard4 = AllScore[3, 8];
+
+        MaxLv5 = AllScore[4, 0];
+        MaxDays5 = AllScore[4, 1];
+        MaxKill5 = AllScore[4, 2];
+        MaxCustomer5 = AllScore[4, 3];
+        MaxCustomerVictory5 = AllScore[4, 4];
+        MaxG5 = AllScore[4, 5];
+        MaxGetG5 = AllScore[4, 6];
+        CountPlay5 = AllScore[4, 7];
+        EndCard5 = AllScore[4, 8];
+
+        int RankIn = 0;
+        if (AllScore[4, 9] == 1) { RankIn = 5; }
+        else if (AllScore[3, 9] == 1) { RankIn = 4; }
+        else if (AllScore[2, 9] == 1) { RankIn = 3; }
+        else if (AllScore[1, 9] == 1) { RankIn = 2; }
+        else if (AllScore[0, 9] == 1) { RankIn = 1; }
+        else { RankIn = 0; }
+        return RankIn;
+    }
+
+    //二次元配列をキーの降順にソートする
+    public int[,] BubbleSort(int[,]Array,int Key1,int Key2,int Key3)
+    {
+
+        int Length1 = Array.GetLength(0);
+        int Length2 = Array.GetLength(1);
+        Debug.Log(Length1+"-"+Length2);
+
+        for(int i = 0; i < Length1; i++)
+        {
+            for(int j = Length1 - 1; i < j; j--)
+            {
+                if (Array[j, Key1]>Array[j-1,Key1])
+                {
+                    for (int k = 0; k < Length2; k++)
+                    {
+                        Swap(ref Array[j,k], ref Array[j - 1,k]);
+                    }
+                   
+                }
+                else if (Array[j, Key1] == Array[j - 1, Key1])
+                {
+                    if(Array[j, Key2] > Array[j - 1, Key2])
+                    {
+                        for (int k = 0; k < Length2; k++)
+                        {
+                            Swap(ref Array[j, k], ref Array[j - 1, k]);
+                        }
+                    }
+                    else if(Array[j, Key2] == Array[j - 1, Key2])
+                    {
+                        if (Array[j, Key3] > Array[j - 1, Key3])
+                        {
+                            for (int k = 0; k < Length2; k++)
+                            {
+                                Swap(ref Array[j, k], ref Array[j - 1, k]);
+                            }
+                        }
+
+
+                    }
+
+                }
+
+            }
+
+        }
+        int[,] Result = Array;
+        return Result;
+    }
+    //値入れ替え用
+    public static void Swap<T>(ref T a, ref T b)
+    {
+        var tmp = a;
+        a = b;
+        b = tmp;
+    }
     //ハイスコアの順位確認
     public int CheckHighScore()
     {
-        RankInNumber = 0;
-        int result = 1;
-        //過去のスコアにまさっているかどうか確認し、まさっていれば挿入してスコアを更新
-        if (MaxG == 0)
-        {
-            if (MaxDays > MaxDays1)
-            {
-                HighScoreRankIn1();
-            }
-            else if (MaxDays > MaxDays2)
-            {
-                HighScoreRankIn2();
-            }
-            else if (MaxDays > MaxDays3)
-            {
-                HighScoreRankIn3();
-            }
-            else if (MaxDays > MaxDays4)
-            {
-                HighScoreRankIn4();
-
-            }
-            else if (MaxDays > MaxDays5)
-            {
-                HighScoreRankIn5();
-            }
-            else if(MaxDays == MaxDays1)
-            {
-                if (MaxGetG > MaxGetG1)
-                {
-                    HighScoreRankIn1();
-                }
-                else if (MaxGetG > MaxGetG2)
-                {
-                    HighScoreRankIn2();
-                }
-                else if (MaxGetG > MaxGetG3)
-                {
-                    HighScoreRankIn3();
-                }
-                else if (MaxGetG > MaxGetG4)
-                {
-                    HighScoreRankIn4();
-
-                }
-                else if (MaxGetG > MaxGetG5)
-                {
-                    HighScoreRankIn5();
-                }
-                else
-                {
-                    result = 0;
-                }
-            }
-            else
-            {
-                result = 0;
-            }
-
-        }
-        else
-        {
-            if (MaxG > MaxG1)
-            {
-                HighScoreRankIn1();
-            }
-            else if (MaxG > MaxG2)
-            {
-                HighScoreRankIn2();
-            }
-            else if (MaxG > MaxG3)
-            {
-                HighScoreRankIn3();
-            }
-            else if (MaxG > MaxG4)
-            {
-                HighScoreRankIn4();
-
-            }
-            else if (MaxG > MaxG5)
-            {
-                HighScoreRankIn5();
-            }
-            else
-            {
-
-                result = 0;
-            }
-        }
+        int result = SortHighScore();
+        WriteHighScore();
+        RankInNumber = result;
         return result;
     }
     //客リストの記録
@@ -1459,7 +1569,18 @@ public void Load()
         PlayerPrefs.SetInt(CountPlay5Key, CountPlay5);
         PlayerPrefs.SetInt(EndCard5Key, EndCard5);
 
-    }
+        //プレイ中のスコア箱を初期化しておく
+        //今回のゲームでのスコア
+EndCard = 0;//エンドカード
+MaxLv = 0;//到達レベル
+MaxDays = 0;//到達日付
+MaxKill = 0;//殺人数
+MaxCustomer = 0;//さばいた客の数
+MaxCustomerVictory = 0;//うち魅了した客の数
+ MaxG = 0;//最終的な持ち金＝スコア
+MaxGetG = 0;//かせいだ売上の総和　持ち金を引けば利益率が出る
+
+}
     //スコアリセット　デバッグ用
     public void ScoreReset()
     {

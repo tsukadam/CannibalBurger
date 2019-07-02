@@ -572,7 +572,7 @@ public class GameController : MonoBehaviour
     public void SaveEnd()
     {
         //BGM止める
-        GetComponent<SoundController>().StopStoreBgm();
+      //  GetComponent<SoundController>().StopStoreBgm();
 
         //セーブ
         GetHighScore();
@@ -943,7 +943,6 @@ public class GameController : MonoBehaviour
         //バンズはさむ
         iTween.MoveTo(Buns1, iTween.Hash("position", new Vector3(0, -360f, 0f), "time", Time5, "easeType", iTween.EaseType.easeOutBack));
         iTween.MoveTo(Buns2, iTween.Hash("position", new Vector3(0, -450f, 0f), "time", Time5, "easeType", iTween.EaseType.easeOutBack));
-        //  GetComponent<SoundController>().PlaySE("BansDon");
 
         yield return new WaitForSeconds(Time5);//遅延
         GetComponent<SoundController>().PlaySE("BansSteam");
@@ -1503,7 +1502,7 @@ public class GameController : MonoBehaviour
         //スコア記録
         StatPlayer.GetComponent<StatPlayer>().TotalCountPlay++;
         GetHighScore();
-        if (StatPlayer.GetComponent<StatPlayer>().CheckHighScore() == 1)
+        if (StatPlayer.GetComponent<StatPlayer>().CheckHighScore() != 0)
         {
             StatPlayer.GetComponent<StatPlayer>().WriteHighScore();
             if (BadEndFlag ==0)//バッドエンドでない時のみランクインを知らせる
@@ -1538,7 +1537,7 @@ public class GameController : MonoBehaviour
         PopupHand.SetActive(false);
         CustomerField.SetActive(false);
 
-        GetComponent<SoundController>().StopStoreBgm();
+      //  GetComponent<SoundController>().StopStoreBgm();
 
         if (StatGame.GetComponent<StatGame>().StatG >= StatGame.GetComponent<StatGame>().Wairo) {
             GetComponent<StoryController>().StartStory("EndingKarma2");
@@ -1567,7 +1566,7 @@ public class GameController : MonoBehaviour
         PopupHand.SetActive(false);
         CustomerField.SetActive(false);
 
-        GetComponent<SoundController>().StopStoreBgm();
+      //  GetComponent<SoundController>().StopStoreBgm();
 
         if (StatGame.GetComponent<StatGame>().StatG < 3000000)
         {
@@ -1622,6 +1621,10 @@ public class GameController : MonoBehaviour
         else { StatGame.GetComponent<StatGame>().Item4 = PickUpItem; }
 
         PopupGetItem.SetActive(true);
+
+        //手持ちボタン非表示
+        PopupHand.SetActive(false);
+
         PopupGetText.text = "だれも まんぞく しなかったので、\nそのへんで" + PickUpItem[0] + "\n を ひろいました";
         GetComponent<StatGameController>().DrawGetItem(PickUpItem);
 
@@ -1636,6 +1639,7 @@ public class GameController : MonoBehaviour
         PopupLvUp.SetActive(false);
 
         //手持ちボタン表示
+        PopupHand.SetActive(true);
         Hand.SetActive(false);
         HandButton.SetActive(true);
 
@@ -2100,6 +2104,8 @@ public class GameController : MonoBehaviour
 
         MessageDraw("");
         SelectButtonOK.SetActive(false);
+        PopupHand.SetActive(false);
+
 
         //Dispose画面を準備しておく
         BeforeDispose();
@@ -2702,6 +2708,7 @@ public void SelectOK()
 
 
         //手持ちボタン表示
+        PopupHand.SetActive(true);
         Hand.SetActive(false);
         HandButton.SetActive(true);
 
@@ -3034,6 +3041,8 @@ public void SelectOK()
 
     public void ActionMarketResult(int type)
     {
+        ButtonActionBack.SetActive(false);
+
         int Cost = 0;
         if (type == 0)
         {

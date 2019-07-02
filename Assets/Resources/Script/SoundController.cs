@@ -20,13 +20,12 @@ public class SoundController : MonoBehaviour {
     public int BgmFlag2 = 0;
 
     //bgmに使うクリップ
-    public AudioClip StoreBgm1;
-    public AudioClip StoreBgm2;
+   // public AudioClip StoreBgm1;
+   // public AudioClip StoreBgm2;
 
     //seに使うクリップ
     public AudioClip SEGGet;
     public AudioClip SEDoorOpen;
-    public AudioClip SECustomerVoice;
     public AudioClip SEKill;
     public AudioClip SETapButton;
     public AudioClip SETapButtonHigh1;
@@ -36,7 +35,6 @@ public class SoundController : MonoBehaviour {
     public AudioClip SEGGetOne;
     public AudioClip SELvUp;
     public AudioClip SEHeart;
-    public AudioClip SEBansDon;
     public AudioClip SEBurger;
     public AudioClip SEBans;
     public AudioClip SEBansSteam;
@@ -99,7 +97,6 @@ public class SoundController : MonoBehaviour {
 
         if (SEName == "GGet") { UseSE = SEGGet; }
         else if (SEName == "DoorOpen") { UseSE = SEDoorOpen; }
-        else if (SEName == "CustomerVoice") { UseSE = SECustomerVoice; }
         else if (SEName == "Kill") { UseSE = SEKill; }
         else if (SEName == "TapButton") { UseSE = SETapButton; }
         else if (SEName == "TapButtonDai") { UseSE = SETapButtonDai; }
@@ -109,7 +106,6 @@ public class SoundController : MonoBehaviour {
         else if (SEName == "GGetOne") { UseSE = SEGGetOne; }
         else if (SEName == "LvUp") { UseSE = SELvUp; }
         else if (SEName == "Heart") { UseSE = SEHeart; }
-        else if (SEName == "BansDon") { UseSE = SEBansDon; }
         else if (SEName == "Burger") { UseSE = SEBurger; }
         else if (SEName == "Bans") { UseSE = SEBans; }
         else if (SEName == "BansSteam") { UseSE = SEBansSteam; }
@@ -129,7 +125,7 @@ public class SoundController : MonoBehaviour {
         return UseSE;
     }
 
-
+    /*
     public AudioClip GetNameBgm(string BgmName)
     {
         AudioClip UseBgm = StoreBgm1;//宣言で入れるデフォ値、指定された番号のSEがないとこれが鳴ってしまう
@@ -141,6 +137,7 @@ public class SoundController : MonoBehaviour {
 
         return UseBgm;
     }
+    */
 
     //通常音量でSE
     public void PlaySE(string SEName)
@@ -164,6 +161,7 @@ public class SoundController : MonoBehaviour {
 
     }
 
+    /*
     //通常音量でBgm
     public void PlayStoreBgm(string BgmName)
     {
@@ -192,6 +190,7 @@ public void StopStoreBgm()
     }
 
 
+    */
 
     // Use this for initialization
     void Start () {

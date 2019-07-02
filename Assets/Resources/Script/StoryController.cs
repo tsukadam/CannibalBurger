@@ -82,7 +82,8 @@ public class StoryController : MonoBehaviour {
         else if (n == 16) { StoryKey = "Hint17"; }
         else if (n == 17) { StoryKey = "Hint18"; }
         else if (n == 18) { StoryKey = "Hint19"; }
-        else { StoryKey = "Hint20"; }
+        else if (n == 19) { StoryKey = "Hint20"; }
+        else { StoryKey = "Hint21"; }
         StartStory(StoryKey);
     }
 
@@ -140,7 +141,8 @@ public class StoryController : MonoBehaviour {
             StoryKey == "Hint17" |
             StoryKey == "Hint18" |
             StoryKey == "Hint19" |
-            StoryKey == "Hint20" )
+            StoryKey == "Hint20" |
+            StoryKey == "Hint21" )
         { ModeSetting(2); }
         else
         { Debug.Log("指定されたストーリーKeyはありません。モード１にします");
@@ -569,7 +571,7 @@ public class StoryController : MonoBehaviour {
             EndScore = 1;
         }
         else if (NowStoryKey == "EndingKarma2"| NowStoryKey == "SkipEndingKarma2") { EndMassage = "ゲームクリア…？";
-            GetComponent<SoundController>().PlaySE("SEBadEnd");
+            GetComponent<SoundController>().PlaySE("SEGoodEnd");
             EndKey = "tabi";
             EndScore = 4;
         }

@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-D:/Build/Build19062901.aab
+D:/Build/製品版/Android1_0_6.aab
 SceneListBegin?
 Assets/SceneMain.unity
 SceneListEnd?
@@ -96,7 +96,6 @@ e28ce91e0fac5aaf36cac548e1d497bd Assembly-CSharp.dll:.StatCustomer
 c427ebcc70979cdae21dbfd6841602e3 Assembly-CSharp.dll:.SelectButton
 766efc4c8258b8741d72fe2647e5522b Assembly-CSharp.dll:.Pointer
 11aada67eb197fdc1ca1a2b4577e60a6 Assembly-CSharp.dll:.Glower2
-6784338e62f5c21bb019dcc679fc8242 Assembly-CSharp.dll:.Music
 71bb6a6b6c8f052f948db64c7dd3ca4f UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 06f0fef534ca4c1d6064fd77a26bf722 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
 8747051d8c53856e2def93af4f2a8b08 UnityEngine.Timeline.dll:UnityEngine.Timeline.AnimationPlayableAsset
@@ -189,7 +188,7 @@ c6666661329916e218bee7f5e79e60f5 Unity.TextMeshPro.dll:TMPro.TextMeshPro
 3165968ba45c74472d279ba04455fccb Unity.TextMeshPro.dll:TMPro.TMP_ColorGradient
 8649814970b42d345b89944b862453cc Unity.TextMeshPro.dll:TMPro.TMP_SubMesh
 96227c4dd11a87f88d2614eba6efd257 Assembly-CSharp.dll:.StoryController
-2e06359963f2c26cf89cd7b2bdd68243 Assembly-CSharp.dll:.SoundController
+559b0c9a0612cb4c6c4f115996e96b22 Assembly-CSharp.dll:.SoundController
 7f730c4f72cc4785d3f0327556cac41a Assembly-CSharp.dll:.DebugController
 94881f00fac8c776bcda443b095a1b03 Assembly-CSharp.dll:Coffee.UIExtensions.UIEffectCapturedImage
 71bb6a6b6c8f052f948db64c7dd3ca4f Assembly-CSharp.dll:.PixelBase
